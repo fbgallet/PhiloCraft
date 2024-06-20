@@ -13,7 +13,10 @@ const prompt =
   "Insère avant le concept une émoji qui pourrait le symboliser. " +
   "Voici les deux termes proposés: ";
 
-export const claudeAPImessage = async (content: string) => {
+export const claudeAPImessage = async (
+  content: string,
+  isCombination: boolean = true
+) => {
   try {
     const { data } = await axios.post(
       "http://localhost:3000/anthropic/message",
@@ -22,12 +25,12 @@ export const claudeAPImessage = async (content: string) => {
       // No data is stored on the server or displayed in any log
       {
         key: null,
-        prompt: prompt + content,
+        prompt: (isCombination ? prompt : "") + content,
         // context: content,
         model: "claude-3-haiku-20240307",
       }
     );
-    console.log(data);
+    // console.log(data);
     return data.response.content[0].text;
   } catch (error: any) {
     console.log(error.response?.data?.message);
