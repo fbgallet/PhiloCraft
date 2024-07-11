@@ -20,17 +20,24 @@ export default () => {
       </div>
       <div
         className="dndnode"
-        onDragStart={(event) => onDragStart(event, "néant")}
+        onDragStart={(event) => onDragStart(event, "négation")}
         draggable
       >
-        Néant
+        Négation
       </div>
       <div
         className="dndnode"
-        onDragStart={(event) => onDragStart(event, "principe")}
+        onDragStart={(event) => onDragStart(event, "identité")}
         draggable
       >
-        Principe
+        Identité
+      </div>
+      <div
+        className="dndnode"
+        onDragStart={(event) => onDragStart(event, "matière")}
+        draggable
+      >
+        Matière
       </div>
     </aside>
   );

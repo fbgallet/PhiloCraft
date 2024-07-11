@@ -1,11 +1,11 @@
 import type { Edge, EdgeTypes } from "reactflow";
 
 export const initialEdges = [
-  {
-    id: "a->b",
-    source: "a",
-    target: "b",
-  },
+  // {
+  //   id: "a->b",
+  //   source: "a",
+  //   target: "b",
+  // },
 ] satisfies Edge[];
 
 export const edgeTypes = {

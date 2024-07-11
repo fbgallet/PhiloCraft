@@ -11,7 +11,7 @@ body,
   margin: 0;
 }
 
-.react-flow__node.highlight {
+.react-flow__node.highlight > .react-flow__node-default {
   background: #ff0072;
   color: white;
 }

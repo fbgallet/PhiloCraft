@@ -1,6 +1,6 @@
 import type { OnConnect } from "reactflow";
 
-import { useState, useCallback, MouseEvent, useRef } from "react";
+import { useState, useCallback, MouseEvent, useRef, useEffect } from "react";
 import {
   applyEdgeChanges,
   applyNodeChanges,
@@ -48,8 +48,6 @@ function Flow() {
   const onNodeDrag = useCallback((_: MouseEvent, node: Node) => {
     const intersections = getIntersectingNodes(node).map((n) => n.id);
 
-    // console.log("intersections :>> ", intersections);
-
     setNodes((ns) =>
       ns.map((n) => ({
         ...n,
@@ -59,39 +57,44 @@ function Flow() {
   }, []);
 
   const onNodeDragStop = useCallback(async (_: MouseEvent, node: Node) => {
-    console.log("node :>> ", node);
+    // console.log("node :>> ", node);
     const intersections = getIntersectingNodes(node);
 
-    console.log("intersections :>> ", intersections);
-
     if (intersections.length) {
-      const newNode = {
-        id: "new Id",
-        // type,
-        position: {
-          x: intersections[0].position.x,
-          y: intersections[0].position.y,
-        },
-        data: {
-          label: await claudeAPImessage(
-            intersections[0].data.label + ", " + node.data.label
-          ),
-        },
-      };
-
-      setNodes((nds) =>
-        nds
-          .filter((ns) => ns.id !== node.id && ns.id !== intersections[0].id)
-          .concat(newNode)
-      );
+      combineTwoNodesInOne(node, intersections);
     }
   }, []);
 
+  const combineTwoNodesInOne = async (node, intersections) => {
+    const newNode = {
+      id: getId(),
+      type: "node-toolbar",
+      position: {
+        x: intersections[0].position.x,
+        y: intersections[0].position.y,
+      },
+      data: {
+        label: await claudeAPImessage(
+          intersections[0].data.label + ", " + node.data.label
+        ),
+      },
+    };
+
+    setNodes((nds) =>
+      nds
+        .filter((ns) => !(ns.id === node.id || ns.id === intersections[0].id))
+        .concat(newNode)
+    );
+  };
+
   const onPaneClick = async (event: React.MouseEvent) => {
-    console.log("event :>> ", event);
     const newWord = await claudeAPImessage(
-      "Propose un terme quelconque issu du corpus des oeuvres de philosophie, rien le terme ou concept, sans phrase ni explication. " +
-        "Ce peut être un terme très commun comme liberté, mal, science, ou un concept plus technique comme falsification, hétéronimie."
+      "Propose aléatoirement UN et UN SEUL terme (ou syntagme) issu du vocabulaire philosophique ou sur lequel peuvent porter les discussions philosophiques, " +
+        "dans tous les domaines possibles que peut aborder la philosophie." +
+        "Fournis rien le terme ou concept, SANS phrase NI explication, précédé d'une émoji qui pourrait le symboliser. " +
+        "Le terme peut être un objet de discussion commun comme la conscience, liberté, le courage, ou un concept " +
+        "introduit par des philosophes pour résoudre un problème ou représenter une idée originale.",
+      false
     );
     const position = screenToFlowPosition({
       x: event.clientX - 150,
@@ -99,12 +102,13 @@ function Flow() {
     });
     const newNode = {
       id: getId(),
-      // type,
+      type: "node-toolbar",
       position,
       data: {
         label: newWord,
       },
     };
+
     setNodes((nds) => nds.concat(newNode));
   };
 
@@ -113,6 +117,26 @@ function Flow() {
     (event) => {
       event.preventDefault();
       event.dataTransfer.dropEffect = "move";
+
+      let position = screenToFlowPosition({
+        x: event.clientX - 150,
+        y: event.clientY - 40,
+      });
+      const rect = {
+        x: position.x,
+        y: position.y,
+        width: 150,
+        height: 40,
+      };
+
+      const intersections = getIntersectingNodes(rect).map((n) => n.id);
+
+      setNodes((ns) =>
+        ns.map((n) => ({
+          ...n,
+          className: intersections.includes(n.id) ? "highlight" : "",
+        }))
+      );
     },
     [screenToFlowPosition]
   );
@@ -129,15 +153,22 @@ function Flow() {
       }
 
       const position = screenToFlowPosition({
-        x: event.clientX,
-        y: event.clientY,
+        x: event.clientX - 150,
+        y: event.clientY - 40,
       });
       const newNode = {
         id: getId(),
-        // type,
+        type: "node-toolbar",
         position,
+        dimensions: {
+          height: 80,
+          width: 350,
+        },
         data: { label: `${content}` },
       };
+
+      const intersections = getIntersectingNodes(newNode);
+      console.log("intersections :>> ", intersections);
 
       setNodes((nds) => nds.concat(newNode));
     },

@@ -1,17 +1,26 @@
 import type { Node, NodeTypes } from "reactflow";
-import { PositionLoggerNode } from "./PositionLoggerNode";
+// import { PositionLoggerNode } from "./PositionLoggerNode";
+import { NodeWithToolBar } from "./NodeWithToolbar";
 
 export const initialNodes = [
-  { id: "a", type: "input", position: { x: 0, y: 0 }, data: { label: "être" } },
+  {
+    id: "a",
+    type: "node-toolbar",
+    position: { x: 0, y: 0 },
+    data: { label: "être" },
+    className: "",
+  },
   {
     id: "b",
-    position: { x: -100, y: 100 },
+    type: "node-toolbar",
+    position: { x: 0, y: 100 },
     data: { label: "néant" },
+    className: "",
   },
-  { id: "c", position: { x: 100, y: 100 }, data: { label: "force" } },
 ] satisfies Node[];
 
 export const nodeTypes = {
-  "position-logger": PositionLoggerNode,
+  // "position-logger": PositionLoggerNode,
   // Add any of your custom nodes here!
+  "node-toolbar": NodeWithToolBar,
 } satisfies NodeTypes;
