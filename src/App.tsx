@@ -23,7 +23,6 @@ import { initialEdges, edgeTypes } from "./edges";
 import { claudeAPImessage } from "./ai/api-requets";
 import {
   addToExistingConcepts,
-  concepts,
   getConceptIcon,
   getConceptTitle,
 } from "./utils/data.ts";
@@ -75,6 +74,8 @@ function Flow() {
   const combineTwoNodesInOne = async (node, intersections) => {
     const conceptA = getConceptTitle(node.data.label);
     const conceptB = getConceptTitle(intersections[0].data.label);
+    console.log("conceptA :>> ", conceptA);
+    console.log("conceptB :>> ", conceptB);
 
     const newNode = {
       id: getId(),
@@ -85,7 +86,7 @@ function Flow() {
       },
       data: {
         label: await claudeAPImessage(
-          `${conceptA} + ${conceptB} = [if these concepts had a baby, it would be]`
+          `${conceptA} + ${conceptB} = [resulting term to be provided as your response]`
         ),
       },
     };

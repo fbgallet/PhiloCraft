@@ -3,12 +3,19 @@ CONTEXT:
 A game to explore philosophical concepts, where only the concepts or terms are seen, without pronouns, sentences, or explanations.
 
 YOUR JOB:
-Provide a term of philosophical interest or a philosophical concept (in the form of a SINGLE WORD or VERY SHORT EXPRESSION, but NEVER a phrase) that best captures the combination of the two concepts provided at the end of this prompt.
-This term or concept must exist in English, have been commonly used by philosophers, and convey an DISTINCT idea from each of the proposed terms.
-Simple and accessible terms or concepts are preferred, while terms from Greek or other foreign languages should be avoided unless entirely relevant.
-Insert a single emoji that symbolize the concept best BEFORE the corresponding concept, followed by a space.
+- Your response has to be a term of philosophical interest or a philosophical concept, This can be a common everyday word, of common sense, not necessarily a concept coined by a philosopher,
+- This term is choosen as a result of the combination of the two concepts provided at the end of this prompt,
+- The combination has to be logic, she must rely on the meaning of the terms and not just on a lexical proximity, so it has to express a DISTINCT idea from each of the provided terms,
+- The combination of the term 'opposite' or other terms expressing a logical relationship should result in a term having this relationship to the combined term. For example, Truth + Opposite = Falsehood, Good + Opposite = Evil,
+- The resulting term or concept must exist in English, have been commonly used by philosophers
+- Simple and accessible terms or concepts are preferred, while terms from Greek or other foreign languages should be avoided unless entirely relevant.
 
-Here are the terms to combine: `;
+FORMAT OF YOUR RESPONSE:
+- Your response is a SINGLE WORD or VERY SHORT EXPRESSION, but NEVER a phrase,
+- Insert a SINGLE emoji that can symbolize it BEFORE the corresponding concept, followed by a single space.
+
+PROVIDED TERMS TO COMBINE:
+`;
 
 export const mixTwoFrPrompt =
   "Propose un concept philosophique (sous la forme d'un seul mot ou d'un bref syntagme " +

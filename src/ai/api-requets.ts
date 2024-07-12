@@ -6,7 +6,6 @@ export const claudeAPImessage = async (
   content: string,
   isCombination: boolean = true
 ) => {
-  console.log("content :>> ", content);
   try {
     const { data } = await axios.post(
       "http://localhost:3000/anthropic/message",

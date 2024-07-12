@@ -1,5 +1,5 @@
-const emojiRegex = /[\p{Emoji}]+/u;
-const conceptOnlyRegex = /[^\p{Emoji}\s].*[^\p{Emoji}\s]/u;
+const emojiRegex = /[^\p{L}\s]/u;
+const conceptOnlyRegex = /^[^\p{L}]*([\p{L}\p{Zs}]+)[^\p{L}]*$/u;
 
 export const concepts = [
   {
@@ -7,16 +7,16 @@ export const concepts = [
     icon: "🌟",
   },
   {
-    title: "Nothingness",
-    icon: "⚫",
+    title: "Opposite",
+    icon: "❌",
   },
   {
-    title: "Identity",
-    icon: "🪞",
+    title: "Good",
+    icon: "😇",
   },
   {
-    title: "Principle",
-    icon: "🏛️",
+    title: "Truth",
+    icon: "🔍",
   },
 ];
 // export const concepts = [
@@ -50,7 +50,7 @@ export const addToExistingConcepts = ({ title, icon }) => {
 
 export const getConceptTitle = (label: string) => {
   let matchingConcept = label.match(conceptOnlyRegex);
-  return matchingConcept ? matchingConcept[0].trim() : "";
+  return matchingConcept ? matchingConcept[1].trim() : "";
 };
 
 export const getConceptIcon = (label: string) => {

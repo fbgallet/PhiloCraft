@@ -10,13 +10,13 @@ export const initialNodes = [
     data: { label: "🌟 Being" },
     className: "",
   },
-  {
-    id: "b",
-    type: "node-toolbar",
-    position: { x: 0, y: 100 },
-    data: { label: "⚫ Nothingness" },
-    className: "",
-  },
+  // {
+  //   id: "b",
+  //   type: "node-toolbar",
+  //   position: { x: 0, y: 100 },
+  //   data: { label: "⚫ Nothingness" },
+  //   className: "",
+  // },
 ] satisfies Node[];
 
 export const nodeTypes = {
