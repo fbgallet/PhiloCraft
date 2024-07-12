@@ -31,7 +31,22 @@ body,
 }
 
 .dndflow aside .description {
-  margin-bottom: 10px;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.dndflow aside .nodes {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.dndflow aside .nodes .sideconcept {
+  padding: 8px 20px;
+  font-size: 16px;
+  border: 1px solid black;
+  border-radius: 5px;
 }
 
 .dndflow .dndnode {

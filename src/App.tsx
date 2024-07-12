@@ -1,6 +1,6 @@
 import type { OnConnect } from "reactflow";
 
-import { useState, useCallback, MouseEvent, useRef, useEffect } from "react";
+import { useState, useCallback, MouseEvent, useRef } from "react";
 import {
   applyEdgeChanges,
   applyNodeChanges,
@@ -14,12 +14,19 @@ import {
 } from "reactflow";
 
 import Sidebar from "./components/Sidebar.jsx";
+import { randomConceptFrPrompt } from "./ai/prompts.ts";
 
 import "reactflow/dist/style.css";
 
 import { initialNodes, nodeTypes } from "./nodes";
 import { initialEdges, edgeTypes } from "./edges";
 import { claudeAPImessage } from "./ai/api-requets";
+import {
+  addToExistingConcepts,
+  concepts,
+  getConceptIcon,
+  getConceptTitle,
+} from "./utils/data.ts";
 
 let id = 2;
 const getId = () => `${id++}`;
@@ -40,6 +47,7 @@ function Flow() {
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
     []
   );
+
   const onEdgesChange = useCallback(
     (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
     []
@@ -57,7 +65,6 @@ function Flow() {
   }, []);
 
   const onNodeDragStop = useCallback(async (_: MouseEvent, node: Node) => {
-    // console.log("node :>> ", node);
     const intersections = getIntersectingNodes(node);
 
     if (intersections.length) {
@@ -66,6 +73,9 @@ function Flow() {
   }, []);
 
   const combineTwoNodesInOne = async (node, intersections) => {
+    const conceptA = getConceptTitle(node.data.label);
+    const conceptB = getConceptTitle(intersections[0].data.label);
+
     const newNode = {
       id: getId(),
       type: "node-toolbar",
@@ -75,10 +85,17 @@ function Flow() {
       },
       data: {
         label: await claudeAPImessage(
-          intersections[0].data.label + ", " + node.data.label
+          `${conceptA} + ${conceptB} = [if these concepts had a baby, it would be]`
         ),
       },
     };
+
+    const icon = getConceptIcon(newNode.data.label);
+    const title = getConceptTitle(newNode.data.label);
+    const existingConcept = addToExistingConcepts({ title, icon });
+
+    if (existingConcept)
+      newNode.data.label = `${existingConcept.icon} ${existingConcept.title}`;
 
     setNodes((nds) =>
       nds
@@ -88,14 +105,7 @@ function Flow() {
   };
 
   const onPaneClick = async (event: React.MouseEvent) => {
-    const newWord = await claudeAPImessage(
-      "Propose aléatoirement UN et UN SEUL terme (ou syntagme) issu du vocabulaire philosophique ou sur lequel peuvent porter les discussions philosophiques, " +
-        "dans tous les domaines possibles que peut aborder la philosophie." +
-        "Fournis rien le terme ou concept, SANS phrase NI explication, précédé d'une émoji qui pourrait le symboliser. " +
-        "Le terme peut être un objet de discussion commun comme la conscience, liberté, le courage, ou un concept " +
-        "introduit par des philosophes pour résoudre un problème ou représenter une idée originale.",
-      false
-    );
+    const newWord = await claudeAPImessage(randomConceptFrPrompt, false);
     const position = screenToFlowPosition({
       x: event.clientX - 150,
       y: event.clientY - 40,
@@ -160,17 +170,18 @@ function Flow() {
         id: getId(),
         type: "node-toolbar",
         position,
-        dimensions: {
-          height: 80,
-          width: 350,
-        },
+        positionAbsolute: position,
         data: { label: `${content}` },
+        height: 40,
+        width: 173,
       };
 
-      const intersections = getIntersectingNodes(newNode);
-      console.log("intersections :>> ", intersections);
-
       setNodes((nds) => nds.concat(newNode));
+
+      setTimeout(() => {
+        const intersections = getIntersectingNodes(newNode);
+        if (intersections.length) combineTwoNodesInOne(newNode, intersections);
+      }, 20);
     },
     [screenToFlowPosition]
   );

@@ -7,14 +7,14 @@ export const initialNodes = [
     id: "a",
     type: "node-toolbar",
     position: { x: 0, y: 0 },
-    data: { label: "être" },
+    data: { label: "🌟 Being" },
     className: "",
   },
   {
     id: "b",
     type: "node-toolbar",
     position: { x: 0, y: 100 },
-    data: { label: "néant" },
+    data: { label: "⚫ Nothingness" },
     className: "",
   },
 ] satisfies Node[];
