@@ -1,14 +1,10 @@
 const emojiRegex = /[^\p{L}\s]/u;
-const conceptOnlyRegex = /^[^\p{L}]*([\p{L}\p{Zs}]+)[^\p{L}]*$/u;
+const conceptOnlyRegex = /^[^\p{L}]*([\p{L}\p{Zs}-]+)[^\p{L}]*$/u;
 
 export const concepts = [
   {
     title: "Being",
     icon: "🌟",
-  },
-  {
-    title: "Opposite",
-    icon: "❌",
   },
   {
     title: "Good",
@@ -17,6 +13,10 @@ export const concepts = [
   {
     title: "Truth",
     icon: "🔍",
+  },
+  {
+    title: "Opposite",
+    icon: "❌",
   },
 ];
 // export const concepts = [
@@ -38,10 +38,13 @@ export const concepts = [
 //   },
 // ];
 
+export const combinationsDB =
+  (localStorage.InfinitCombinations &&
+    JSON.parse(localStorage.InfinitCombinations)) ||
+  [];
+
 export const addToExistingConcepts = ({ title, icon }) => {
-  console.log("title :>> ", title);
   const isExisting = concepts.find((concept) => title === concept.title);
-  console.log("isExisting :>> ", isExisting);
   if (!isExisting) {
     concepts.push({ title, icon });
     return null;
@@ -56,4 +59,20 @@ export const getConceptTitle = (label: string) => {
 export const getConceptIcon = (label: string) => {
   const matchingIcon = label.match(emojiRegex);
   return matchingIcon ? matchingIcon[0].trim() : "";
+};
+
+export const getStoredCombination = (tulpe: [string, string]) => {
+  const existingCombination = combinationsDB.find(
+    (combination) =>
+      (combination.combined[0] === tulpe[0] &&
+        combination.combined[1] === tulpe[1]) ||
+      (combination.combined[0] === tulpe[1] &&
+        combination.combined[1] === tulpe[0])
+  );
+  console.log("existingCombination :>> ", existingCombination);
+  if (existingCombination) {
+    existingCombination.count++;
+    return existingCombination.result;
+  }
+  return null;
 };

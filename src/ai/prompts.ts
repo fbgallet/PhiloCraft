@@ -1,21 +1,44 @@
-export const mixTwoEnPrompt = `
+const contextEnPrompt = `
 CONTEXT:
 A game to explore philosophical concepts, where only the concepts or terms are seen, without pronouns, sentences, or explanations.
 
-YOUR JOB:
-- Your response has to be a term of philosophical interest or a philosophical concept, This can be a common everyday word, of common sense, not necessarily a concept coined by a philosopher,
-- This term is choosen as a result of the combination of the two concepts provided at the end of this prompt,
-- The combination has to be logic, she must rely on the meaning of the terms and not just on a lexical proximity, so it has to express a DISTINCT idea from each of the provided terms,
-- The combination of the term 'opposite' or other terms expressing a logical relationship should result in a term having this relationship to the combined term. For example, Truth + Opposite = Falsehood, Good + Opposite = Evil,
-- The resulting term or concept must exist in English, have been commonly used by philosophers
-- Simple and accessible terms or concepts are preferred, while terms from Greek or other foreign languages should be avoided unless entirely relevant.
-
+`;
+const formatPrompt = `
 FORMAT OF YOUR RESPONSE:
-- Your response is a SINGLE WORD or VERY SHORT EXPRESSION, but NEVER a phrase,
-- Insert a SINGLE emoji that can symbolize it BEFORE the corresponding concept, followed by a single space.
+- Your response is only a SINGLE WORD or VERY SHORT EXPRESSION, but NEVER a phrase,
+- Insert a SINGLE emoji that can symbolize it BEFORE the corresponding concept, followed by a single space.`;
 
+export const mixTwoEnPrompt =
+  contextEnPrompt +
+  `
+YOUR JOB:
+- Your response has to be a term of philosophical interest or a philosophical concept, this can be a common everyday word, of common sense, not necessarily a concept coined by a philosopher.
+- Simple and accessible terms or concepts are preferred, while terms from Greek or other foreign languages should be avoided unless entirely relevant.
+- The resulting term or concept must exist in English, have been commonly used by philosophers.
+- It can concern any field of philosophy, be of interest in general or in particular in certain branches such as metaphysics, ethics, epistemology, political philosophy, aesthetics, philosophy of mind, philosophy of culture or technology, etc.
+- This term is choosen as a possible result of the combination of the two concepts provided at the end of this prompt.
+- The combination has to be logic, she must rely on the meaning of the terms and not just on a lexical proximity, so it has to express a DISTINCT idea from each of the provided terms.
+- The combination of the term 'opposite' or other terms expressing a logical relationship should result in a term having this relationship to the combined term. For example, Being + Opposite = Nothingness, Good + Opposite = Evil (here the logic is: "the opposite of X is ...).
+
+` +
+  formatPrompt +
+  `
 PROVIDED TERMS TO COMBINE:
 `;
+
+export const randomConceptEnPrompt =
+  contextEnPrompt +
+  `
+YOUR JOB:
+- Give a SINGLE random term of philosophical interest or a philosophical concept, this can be a common everyday word, of common sense, not necessarily a concept coined by a philosopher. Simple and accessible terms or concepts are preferred.
+- The SINGLE term you choose can concern any field of philosophy, be of interest in general or in particular in certain branches such as metaphysics, ethics, epistemology, political philosophy, aesthetics, philosophy of mind, philosophy of culture or technology, etc.
+- This term must exist in English and have been commonly used by philosophers.
+` +
+  formatPrompt;
+
+/**********/
+// FRENCH //
+/**********/
 
 export const mixTwoFrPrompt =
   "Propose un concept philosophique (sous la forme d'un seul mot ou d'un bref syntagme " +

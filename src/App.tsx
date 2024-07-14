@@ -14,7 +14,7 @@ import {
 } from "reactflow";
 
 import Sidebar from "./components/Sidebar.jsx";
-import { randomConceptFrPrompt } from "./ai/prompts.ts";
+import { randomConceptEnPrompt } from "./ai/prompts.ts";
 
 import "reactflow/dist/style.css";
 
@@ -23,8 +23,11 @@ import { initialEdges, edgeTypes } from "./edges";
 import { claudeAPImessage } from "./ai/api-requets";
 import {
   addToExistingConcepts,
+  combinationsDB,
+  concepts,
   getConceptIcon,
   getConceptTitle,
+  getStoredCombination,
 } from "./utils/data.ts";
 
 let id = 2;
@@ -74,8 +77,20 @@ function Flow() {
   const combineTwoNodesInOne = async (node, intersections) => {
     const conceptA = getConceptTitle(node.data.label);
     const conceptB = getConceptTitle(intersections[0].data.label);
-    console.log("conceptA :>> ", conceptA);
-    console.log("conceptB :>> ", conceptB);
+
+    const existingCombination = getStoredCombination([conceptA, conceptB]);
+    let nodeLabel = "";
+    if (existingCombination) {
+      const matchingConcept = concepts.find(
+        (concept) => concept.title === existingCombination
+      );
+      const matchingIcon = matchingConcept?.icon;
+      nodeLabel = matchingIcon + " " + existingCombination;
+    } else {
+      nodeLabel = await claudeAPImessage(
+        `${conceptA} + ${conceptB} = [resulting term to be provided as your response]`
+      );
+    }
 
     const newNode = {
       id: getId(),
@@ -85,9 +100,7 @@ function Flow() {
         y: intersections[0].position.y,
       },
       data: {
-        label: await claudeAPImessage(
-          `${conceptA} + ${conceptB} = [resulting term to be provided as your response]`
-        ),
+        label: nodeLabel,
       },
     };
 
@@ -98,6 +111,15 @@ function Flow() {
     if (existingConcept)
       newNode.data.label = `${existingConcept.icon} ${existingConcept.title}`;
 
+    if (!existingCombination) {
+      combinationsDB.push({
+        combined: [conceptA, conceptB],
+        result: title,
+        count: 1,
+      });
+      localStorage.InfiniteCombinations = JSON.stringify(combinationsDB);
+    }
+
     setNodes((nds) =>
       nds
         .filter((ns) => !(ns.id === node.id || ns.id === intersections[0].id))
@@ -106,7 +128,7 @@ function Flow() {
   };
 
   const onPaneClick = async (event: React.MouseEvent) => {
-    const newWord = await claudeAPImessage(randomConceptFrPrompt, false);
+    const newWord = await claudeAPImessage(randomConceptEnPrompt, false);
     const position = screenToFlowPosition({
       x: event.clientX - 150,
       y: event.clientY - 40,
