@@ -1,6 +1,6 @@
 const contextEnPrompt = `
 CONTEXT:
-A game to explore philosophical concepts, where only the concepts or terms are seen, without pronouns, sentences, or explanations.
+A game to explore existing philosophical concepts through their combination, where only the concepts or terms are seen, without pronouns, sentences, or explanations.
 
 `;
 const formatPrompt = `
@@ -12,13 +12,15 @@ export const mixTwoEnPrompt =
   contextEnPrompt +
   `
 YOUR JOB:
-- Your response has to be a term of philosophical interest or a philosophical concept, this can be a common everyday word, of common sense, not necessarily a concept coined by a philosopher.
-- Simple and accessible terms or concepts are preferred, while terms from Greek or other foreign languages should be avoided unless entirely relevant.
-- The resulting term or concept must exist in English, have been commonly used by philosophers.
-- It can concern any field of philosophy, be of interest in general or in particular in certain branches such as metaphysics, ethics, epistemology, political philosophy, aesthetics, philosophy of mind, philosophy of culture or technology, etc.
-- This term is choosen as a possible result of the combination of the two concepts provided at the end of this prompt.
+- Your response has to be a term of philosophical interest or a philosophical concept, choosen as precisely as possible as a possible result of the combination of the two concepts provided at the end of this prompt.
+- Your response has to be accurate and not too general, to the combination of other terms should not result in the same as the combination of other terms.
 - The combination has to be logic, she must rely on the meaning of the terms and not just on a lexical proximity, so it has to express a DISTINCT idea from each of the provided terms.
+- Your response could be the completion of this kind of logic: [term 1] of [term 2] is [your response].
 - The combination of the term 'opposite' or other terms expressing a logical relationship should result in a term having this relationship to the combined term. For example, Being + Opposite = Nothingness, Good + Opposite = Evil (here the logic is: "the opposite of X is ...).
+- The resulting term can be a common everyday word, of common sense, not necessarily a concept coined by a philosopher.
+- Simple and accessible terms or concepts are preferred, while terms from Greek or other foreign languages should be avoided unless entirely relevant.
+- The resulting term has to be used in English and used by some philosophers.
+- It can concern any field of philosophy, be of interest in general or in particular in certain branches such as metaphysics, ethics, epistemology, political philosophy, aesthetics, philosophy of mind, philosophy of culture or technology, etc.
 
 ` +
   formatPrompt +

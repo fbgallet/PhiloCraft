@@ -85,7 +85,7 @@ function Flow() {
 
     const existingCombination: ConceptsCombination | null =
       getStoredCombination([conceptA, conceptB]);
-    let nodeLabel: string = "";
+    let nodeLabel: string | undefined;
     if (existingCombination) {
       const matchingConcept: Concept | undefined = concepts.find(
         (concept) => concept.title === existingCombination.result
@@ -97,6 +97,8 @@ function Flow() {
         `${conceptA} + ${conceptB} = [resulting term to be provided as your response]`
       );
     }
+
+    if (!nodeLabel) return;
 
     const newNode: Node = {
       id: getId(),
@@ -137,10 +139,11 @@ function Flow() {
   };
 
   const onPaneClick = async (event: React.MouseEvent): Promise<void> => {
-    const newWord: string = await claudeAPImessage(
+    const newWord: string | undefined = await claudeAPImessage(
       randomConceptEnPrompt,
       false
     );
+    if (!newWord) return;
     const position: XYPosition = screenToFlowPosition({
       x: event.clientX - 150,
       y: event.clientY - 40,
@@ -189,8 +192,8 @@ function Flow() {
   );
 
   const onDrop = useCallback(
-    // (event: React.DragEvent<HTMLDivElement>) => {
-    (event) => {
+    (event: React.DragEvent<HTMLDivElement>) => {
+      // (event) => {
       event.preventDefault();
 
       const content: string | undefined = event.dataTransfer.getData(
