@@ -5,7 +5,7 @@ import { mixTwoEnPrompt } from "./prompts.ts";
 export const claudeAPImessage = async (
   content: string,
   isCombination: boolean = true
-) => {
+): Promise<string | undefined> => {
   try {
     const { data } = await axios.post(
       "http://localhost:3000/anthropic/message",

@@ -1,4 +1,4 @@
-import type { Edge, Node, OnConnect } from "reactflow";
+import type { Edge, Node, OnConnect, Rect, XYPosition } from "reactflow";
 
 import { useState, useCallback, MouseEvent, useRef } from "react";
 import {
@@ -13,7 +13,7 @@ import {
   useReactFlow,
 } from "reactflow";
 
-import Sidebar from "./components/Sidebar.jsx";
+import Sidebar from "./components/Sidebar.js";
 import { randomConceptEnPrompt } from "./ai/prompts.ts";
 
 import "reactflow/dist/style.css";
@@ -24,14 +24,16 @@ import { claudeAPImessage } from "./ai/api-requets";
 import {
   addToExistingConcepts,
   combinationsDB,
+  Concept,
   concepts,
+  ConceptsCombination,
   getConceptIcon,
   getConceptTitle,
   getStoredCombination,
 } from "./utils/data.ts";
 
-let id: string = "2";
-const getId = (): string => `${parseInt(id) + 1}`;
+let id: number = 1;
+const getId = (): string => `${(id++).toString()}`;
 
 function Flow() {
   const reactFlowWrapper = useRef(null);
@@ -81,21 +83,22 @@ function Flow() {
     const conceptA: string = getConceptTitle(node.data.label);
     const conceptB: string = getConceptTitle(intersections[0].data.label);
 
-    const existingCombination = getStoredCombination([conceptA, conceptB]);
-    let nodeLabel = "";
+    const existingCombination: ConceptsCombination | null =
+      getStoredCombination([conceptA, conceptB]);
+    let nodeLabel: string = "";
     if (existingCombination) {
-      const matchingConcept = concepts.find(
-        (concept) => concept.title === existingCombination
+      const matchingConcept: Concept | undefined = concepts.find(
+        (concept) => concept.title === existingCombination.result
       );
-      const matchingIcon = matchingConcept?.icon;
-      nodeLabel = matchingIcon + " " + existingCombination;
+      const matchingIcon: string | undefined = matchingConcept?.icon;
+      nodeLabel = matchingIcon + " " + existingCombination.result;
     } else {
       nodeLabel = await claudeAPImessage(
         `${conceptA} + ${conceptB} = [resulting term to be provided as your response]`
       );
     }
 
-    const newNode = {
+    const newNode: Node = {
       id: getId(),
       type: "node-toolbar",
       position: {
@@ -107,9 +110,12 @@ function Flow() {
       },
     };
 
-    const icon = getConceptIcon(newNode.data.label);
-    const title = getConceptTitle(newNode.data.label);
-    const existingConcept = addToExistingConcepts({ title, icon });
+    const icon: string = getConceptIcon(newNode.data.label);
+    const title: string = getConceptTitle(newNode.data.label);
+    const existingConcept: Concept | null = addToExistingConcepts({
+      title,
+      icon,
+    });
 
     if (existingConcept)
       newNode.data.label = `${existingConcept.icon} ${existingConcept.title}`;
@@ -130,13 +136,16 @@ function Flow() {
     );
   };
 
-  const onPaneClick = async (event: React.MouseEvent) => {
-    const newWord = await claudeAPImessage(randomConceptEnPrompt, false);
-    const position = screenToFlowPosition({
+  const onPaneClick = async (event: React.MouseEvent): Promise<void> => {
+    const newWord: string = await claudeAPImessage(
+      randomConceptEnPrompt,
+      false
+    );
+    const position: XYPosition = screenToFlowPosition({
       x: event.clientX - 150,
       y: event.clientY - 40,
     });
-    const newNode = {
+    const newNode: Node = {
       id: getId(),
       type: "node-toolbar",
       position,
@@ -150,22 +159,24 @@ function Flow() {
 
   // external drops
   const onDragOver = useCallback(
-    (event) => {
+    (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
       event.dataTransfer.dropEffect = "move";
 
-      let position = screenToFlowPosition({
+      let position: XYPosition = screenToFlowPosition({
         x: event.clientX - 150,
         y: event.clientY - 40,
       });
-      const rect = {
+      const rect: Rect = {
         x: position.x,
         y: position.y,
         width: 150,
         height: 40,
       };
 
-      const intersections = getIntersectingNodes(rect).map((n) => n.id);
+      const intersections: string[] = getIntersectingNodes(rect).map(
+        (n) => n.id
+      );
 
       setNodes((ns) =>
         ns.map((n) => ({
@@ -178,21 +189,24 @@ function Flow() {
   );
 
   const onDrop = useCallback(
+    // (event: React.DragEvent<HTMLDivElement>) => {
     (event) => {
       event.preventDefault();
 
-      const content = event.dataTransfer.getData("application/reactflow");
+      const content: string | undefined = event.dataTransfer.getData(
+        "application/reactflow"
+      );
 
       // check if the dropped element is valid
       if (typeof content === "undefined" || !content) {
         return;
       }
 
-      const position = screenToFlowPosition({
+      const position: XYPosition = screenToFlowPosition({
         x: event.clientX - 150,
         y: event.clientY - 40,
       });
-      const newNode = {
+      const newNode: Node = {
         id: getId(),
         type: "node-toolbar",
         position,
@@ -202,10 +216,13 @@ function Flow() {
         width: 173,
       };
 
+      console.log("newNode :>> ", newNode);
+      console.log("nodes :>> ", nodes);
+
       setNodes((nds) => nds.concat(newNode));
 
       setTimeout(() => {
-        const intersections = getIntersectingNodes(newNode);
+        const intersections: Node[] = getIntersectingNodes(newNode);
         if (intersections.length) combineTwoNodesInOne(newNode, intersections);
       }, 20);
     },

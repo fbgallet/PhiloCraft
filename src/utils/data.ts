@@ -1,7 +1,7 @@
 const emojiRegex: RegExp = /[^\p{L}\s]/u;
 const conceptOnlyRegex: RegExp = /^[^\p{L}]*([\p{L}\p{Zs}-]+)[^\p{L}]*$/u;
 
-interface Concept {
+export interface Concept {
   title: string;
   icon: string;
 }
@@ -43,7 +43,7 @@ export const concepts: Concept[] = [
 //   },
 // ];
 
-interface ConceptsCombination {
+export interface ConceptsCombination {
   combined: [string, string];
   result: string;
   count: number;
@@ -79,7 +79,7 @@ export const getConceptIcon = (label: string): string => {
 
 export const getStoredCombination = (
   tulpe: [string, string]
-): string | null => {
+): ConceptsCombination | null => {
   const existingCombination = combinationsDB.find(
     (combination) =>
       (combination.combined[0] === tulpe[0] &&
@@ -90,7 +90,7 @@ export const getStoredCombination = (
   console.log("existingCombination :>> ", existingCombination);
   if (existingCombination) {
     existingCombination.count++;
-    return existingCombination.result;
+    return existingCombination;
   }
   return null;
 };

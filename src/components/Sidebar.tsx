@@ -1,5 +1,5 @@
 import React from "react";
-import { concepts } from "../utils/data";
+import { concepts, Concept } from "../utils/data";
 import SideConcept from "./SideConcept";
 
 export default () => {
@@ -7,7 +7,7 @@ export default () => {
     <aside>
       <div className="description">INFINITE CONCEPTS</div>
       <div className="nodes">
-        {concepts.map((concept, index) => (
+        {concepts.map((concept: Concept, index: number) => (
           <SideConcept title={concept.title} icon={concept.icon} key={index} />
         ))}
       </div>
