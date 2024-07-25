@@ -4,7 +4,7 @@ import { NodeWithToolBar } from "./NodeWithToolbar";
 
 export const initialNodes = [
   {
-    id: "a",
+    id: "0",
     type: "node-toolbar",
     position: { x: 0, y: 0 },
     data: { label: "🌟 Being" },

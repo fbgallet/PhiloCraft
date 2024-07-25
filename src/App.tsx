@@ -1,4 +1,4 @@
-import type { OnConnect } from "reactflow";
+import type { Edge, Node, OnConnect } from "reactflow";
 
 import { useState, useCallback, MouseEvent, useRef } from "react";
 import {
@@ -30,13 +30,13 @@ import {
   getStoredCombination,
 } from "./utils/data.ts";
 
-let id = 2;
-const getId = () => `${id++}`;
+let id: string = "2";
+const getId = (): string => `${parseInt(id) + 1}`;
 
 function Flow() {
   const reactFlowWrapper = useRef(null);
-  const [nodes, setNodes] = useState(initialNodes);
-  const [edges, setEdges] = useState(initialEdges);
+  const [nodes, setNodes] = useState<Node[]>(initialNodes);
+  const [edges, setEdges] = useState<Edge[]>(initialEdges);
   const { getIntersectingNodes } = useReactFlow();
   const { screenToFlowPosition } = useReactFlow();
 
@@ -46,17 +46,17 @@ function Flow() {
   );
 
   const onNodesChange = useCallback(
-    (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
+    (changes: any) => setNodes((nds) => applyNodeChanges(changes, nds)),
     []
   );
 
   const onEdgesChange = useCallback(
-    (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
+    (changes: any) => setEdges((eds) => applyEdgeChanges(changes, eds)),
     []
   );
 
   const onNodeDrag = useCallback((_: MouseEvent, node: Node) => {
-    const intersections = getIntersectingNodes(node).map((n) => n.id);
+    const intersections: string[] = getIntersectingNodes(node).map((n) => n.id);
 
     setNodes((ns) =>
       ns.map((n) => ({
@@ -67,16 +67,19 @@ function Flow() {
   }, []);
 
   const onNodeDragStop = useCallback(async (_: MouseEvent, node: Node) => {
-    const intersections = getIntersectingNodes(node);
+    const intersections: Node[] = getIntersectingNodes(node);
 
     if (intersections.length) {
       combineTwoNodesInOne(node, intersections);
     }
   }, []);
 
-  const combineTwoNodesInOne = async (node, intersections) => {
-    const conceptA = getConceptTitle(node.data.label);
-    const conceptB = getConceptTitle(intersections[0].data.label);
+  const combineTwoNodesInOne = async (
+    node: Node,
+    intersections: Node[]
+  ): Promise<void> => {
+    const conceptA: string = getConceptTitle(node.data.label);
+    const conceptB: string = getConceptTitle(intersections[0].data.label);
 
     const existingCombination = getStoredCombination([conceptA, conceptB]);
     let nodeLabel = "";
