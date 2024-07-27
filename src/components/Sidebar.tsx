@@ -1,8 +1,8 @@
 import React from "react";
-import { concepts, Concept } from "../utils/data";
 import SideConcept from "./SideConcept";
+import { Concept } from "../data/concept.ts";
 
-export default () => {
+export default function SideBar({ concepts }) {
   return (
     <aside>
       <div className="description">INFINITE CONCEPTS</div>
@@ -13,4 +13,4 @@ export default () => {
       </div>
     </aside>
   );
-};
+}

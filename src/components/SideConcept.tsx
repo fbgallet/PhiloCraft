@@ -1,4 +1,4 @@
-import { Concept } from "../utils/data";
+import { Concept } from "../data/concept";
 
 const SideConcept = ({ title, icon }: Concept) => {
   const onDragStart = (

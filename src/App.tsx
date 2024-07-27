@@ -1,6 +1,6 @@
 import type { Edge, Node, OnConnect, Rect, XYPosition } from "reactflow";
 
-import { useState, useCallback, MouseEvent, useRef } from "react";
+import { useState, useCallback, MouseEvent, useRef, useEffect } from "react";
 import {
   applyEdgeChanges,
   applyNodeChanges,
@@ -13,7 +13,7 @@ import {
   useReactFlow,
 } from "reactflow";
 
-import Sidebar from "./components/Sidebar.js";
+import Sidebar from "./components/Sidebar.tsx";
 import { randomConceptEnPrompt } from "./ai/prompts.ts";
 
 import "reactflow/dist/style.css";
@@ -24,13 +24,14 @@ import { claudeAPImessage } from "./ai/api-requets";
 import {
   addToExistingConcepts,
   combinationsDB,
-  Concept,
-  concepts,
   ConceptsCombination,
   getConceptIcon,
   getConceptTitle,
   getStoredCombination,
+  // setClonedConcepts,
 } from "./utils/data.ts";
+import axios from "axios";
+import { Concept, initialConcepts, setClonedConcepts } from "./data/concept.ts";
 
 let id: number = 1;
 const getId = (): string => `${(id++).toString()}`;
@@ -39,8 +40,33 @@ function Flow() {
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
+  const [concepts, setConcepts] = useState<Concept[]>([]);
+  const [userConcepts, setUserConcepts] = useState<Concept[]>(initialConcepts);
   const { getIntersectingNodes } = useReactFlow();
   const { screenToFlowPosition } = useReactFlow();
+
+  useEffect(() => {
+    const fetchConcepts = async (): Promise<void> => {
+      try {
+        const { data } = await axios.get("http://localhost:3001/concepts");
+        console.log("concepts :>> ", data);
+        if (data) setClonedConcepts(data);
+      } catch (error: any) {
+        console.log(error.message);
+      }
+    };
+    // const fetchCombinations = async (): Promise<void> => {
+    //   try {
+    //     const { data } = await axios.get("http://localhost:3001/combinations");
+    //     console.log("combinations :>> ", data);
+    //     if (data) setClonedConcepts(data);
+    //   } catch (error: any) {
+    //     console.log(error.message);
+    //   }
+    // };
+    fetchConcepts();
+    // fetchCombinations();
+  }, []);
 
   const onConnect: OnConnect = useCallback(
     (connection) => setEdges((edges) => addEdge(connection, edges)),
@@ -114,13 +140,13 @@ function Flow() {
 
     const icon: string = getConceptIcon(newNode.data.label);
     const title: string = getConceptTitle(newNode.data.label);
-    const existingConcept: Concept | null = addToExistingConcepts({
-      title,
-      icon,
-    });
-
-    if (existingConcept)
-      newNode.data.label = `${existingConcept.icon} ${existingConcept.title}`;
+    // const existingConcept: Concept | null = addToExistingConcepts({
+    //   title,
+    //   icon,
+    // });
+    //
+    // if (existingConcept)
+    //   newNode.data.label = `${existingConcept.icon} ${existingConcept.title}`;
 
     if (!existingCombination) {
       combinationsDB.push({
@@ -257,7 +283,7 @@ function Flow() {
           <Controls />
         </ReactFlow>
       </div>
-      <Sidebar />
+      <Sidebar concepts={userConcepts} />
     </div>
   );
 }
