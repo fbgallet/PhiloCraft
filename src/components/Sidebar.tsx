@@ -11,6 +11,7 @@ export default function SideBar({ concepts }) {
             title={concept.title}
             icon={concept.icon}
             _id={concept._id}
+            isNew={concept.isNew}
             key={index}
           />
         ))}

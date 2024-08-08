@@ -79,6 +79,18 @@ body,
   margin-top: 10px;
 }
 
+/* Sidebar */
+
+.sideconcept-new {
+  position: relative;
+}
+
+.icon-new {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+}
+
 @media screen and (min-width: 768px) {
   .dndflow {
     flex-direction: row;

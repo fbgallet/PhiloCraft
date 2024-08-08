@@ -4,7 +4,8 @@ export interface Concept {
   icon: string;
   field?: string;
   model?: string;
-  count?: number;
+  counter?: number;
+  isNew?: boolean;
 }
 
 export let clonedConcepts: Concept[] = [];

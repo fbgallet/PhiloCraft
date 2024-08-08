@@ -113,70 +113,6 @@ function Flow() {
     [userConcepts, combinations]
   );
 
-  const combineTwoNodesInOne = async (
-    node: Node,
-    intersections: Node[]
-  ): Promise<void> => {
-    const conceptA: Concept | undefined = userConcepts.find(
-      (concept) => concept._id === node.data.conceptId
-    );
-    const conceptB: Concept | undefined = userConcepts.find(
-      (concept) => concept._id === intersections[0].data.conceptId
-    );
-    if (!conceptA || !conceptB) return;
-
-    let combination: Combination | undefined = combinations.find(
-      (combi) =>
-        combi.combined[0]._id === conceptA._id &&
-        combi.combined[1]._id === conceptB._id
-    );
-
-    combination && console.log("existing combination :>> ", combination);
-
-    if (!combination) {
-      const { data } = await axios.post(
-        "http://localhost:3001/combination/create",
-        {
-          toCombine: [conceptA._id, conceptB._id],
-        }
-      );
-      console.log("data :>> ", data);
-      if (data) {
-        combination = data;
-        combination && combinations.push(combination);
-        if (
-          !userConcepts.find(
-            (concept) => concept._id === combination?.result._id
-          )
-        ) {
-          setUserConcepts((prev) =>
-            combination ? [...prev, combination.result] : prev
-          );
-        }
-      }
-      //localStorage.InfiniteCombinations = JSON.stringify(combinationsDB);
-    }
-
-    const newNode: Node = {
-      id: getId(),
-      type: "node-toolbar",
-      position: {
-        x: intersections[0].position.x,
-        y: intersections[0].position.y,
-      },
-      data: {
-        label: combination?.result.icon + " " + combination?.result.title,
-        conceptId: combination?.result._id,
-      },
-    };
-
-    setNodes((nds) =>
-      nds
-        .filter((ns) => !(ns.id === node.id || ns.id === intersections[0].id))
-        .concat(newNode)
-    );
-  };
-
   // const onPaneClick = async (event: React.MouseEvent): Promise<void> => {
   //   const newWord: string | undefined = await claudeAPImessage(
   //     randomConceptEnPrompt,
@@ -276,6 +212,84 @@ function Flow() {
     },
     [screenToFlowPosition, nodes, userConcepts]
   );
+
+  const combineTwoNodesInOne = async (
+    node: Node,
+    intersections: Node[]
+  ): Promise<void> => {
+    let resultingConcept: Concept;
+    let isNewResultingConcept: boolean = false;
+
+    const conceptA: Concept | undefined = userConcepts.find(
+      (concept) => concept._id === node.data.conceptId
+    );
+    const conceptB: Concept | undefined = userConcepts.find(
+      (concept) => concept._id === intersections[0].data.conceptId
+    );
+    if (!conceptA || !conceptB) return;
+
+    axios.put(`http://localhost:3001/concept/use/${conceptA._id}`);
+    axios.put(`http://localhost:3001/concept/use/${conceptB._id}`);
+    conceptA.counter++;
+    conceptB.counter++;
+
+    let combination: Combination | undefined = combinations.find(
+      (combi) =>
+        combi.combined[0]._id === conceptA._id &&
+        combi.combined[1]._id === conceptB._id
+    );
+
+    combination && console.log("existing combination :>> ", combination);
+
+    if (!combination) {
+      const { data } = await axios.post(
+        "http://localhost:3001/combination/create",
+        {
+          toCombine: [conceptA._id, conceptB._id],
+        }
+      );
+      console.log("data :>> ", data);
+      if (data) {
+        combination = data.combination;
+        combination && (resultingConcept = combination.result);
+        resultingConcept.isNew = data.isNewResultingConcept;
+        if (resultingConcept.isNew) console.log("NEW CONCEPT DISCOVERED !!!");
+
+        combination && combinations.push(combination);
+      }
+      //localStorage.InfiniteCombinations = JSON.stringify(combinationsDB);
+    } else {
+      axios.put(`http://localhost:3001/combination/use/${combination._id}`);
+      combination.counter++;
+      resultingConcept = combination.result;
+    }
+
+    if (!userConcepts.find((concept) => concept._id === resultingConcept._id)) {
+      setUserConcepts((prev) =>
+        combination ? [...prev, resultingConcept] : prev
+      );
+    }
+
+    const newNode: Node = {
+      id: getId(),
+      type: "node-toolbar",
+      position: {
+        x: intersections[0].position.x,
+        y: intersections[0].position.y,
+      },
+      data: {
+        label: resultingConcept.icon + " " + resultingConcept.title,
+        conceptId: resultingConcept._id,
+        isNew: resultingConcept.isNew,
+      },
+    };
+
+    setNodes((nds) =>
+      nds
+        .filter((ns) => !(ns.id === node.id || ns.id === intersections[0].id))
+        .concat(newNode)
+    );
+  };
 
   return (
     <div className="dndflow">
