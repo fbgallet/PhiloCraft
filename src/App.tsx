@@ -25,13 +25,10 @@ import {
   addToExistingConcepts,
   combinationsDB,
   ConceptsCombination,
-  getConceptIcon,
-  getConceptTitle,
-  getStoredCombination,
-  // setClonedConcepts,
 } from "./utils/data.ts";
 import axios from "axios";
-import { Concept, initialConcepts, setClonedConcepts } from "./data/concept.ts";
+import { Concept, initialConcepts } from "./data/concept.ts";
+import { Combination } from "./data/combination.ts";
 
 let id: number = 1;
 const getId = (): string => `${(id++).toString()}`;
@@ -41,7 +38,8 @@ function Flow() {
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
   const [concepts, setConcepts] = useState<Concept[]>([]);
-  const [userConcepts, setUserConcepts] = useState<Concept[]>(initialConcepts);
+  const [userConcepts, setUserConcepts] = useState<Concept[]>([]);
+  const [combinations, setCombinations] = useState<Combination[]>([]);
   const { getIntersectingNodes } = useReactFlow();
   const { screenToFlowPosition } = useReactFlow();
 
@@ -49,23 +47,27 @@ function Flow() {
     const fetchConcepts = async (): Promise<void> => {
       try {
         const { data } = await axios.get("http://localhost:3001/concepts");
-        console.log("concepts :>> ", data);
-        if (data) setClonedConcepts(data);
+        console.log("concepts loaded from DB:>> ", data);
+        if (data) {
+          setConcepts(data);
+          setUserConcepts([...data.slice(0, 4)]);
+          console.log("data.slice(0, 4) :>> ", data.slice(0, 4));
+        }
       } catch (error: any) {
         console.log(error.message);
       }
     };
-    // const fetchCombinations = async (): Promise<void> => {
-    //   try {
-    //     const { data } = await axios.get("http://localhost:3001/combinations");
-    //     console.log("combinations :>> ", data);
-    //     if (data) setClonedConcepts(data);
-    //   } catch (error: any) {
-    //     console.log(error.message);
-    //   }
-    // };
+    const fetchCombinations = async (): Promise<void> => {
+      try {
+        const { data } = await axios.get("http://localhost:3001/combinations");
+        console.log("combinations from DB:>> ", data);
+        if (data) setCombinations(data);
+      } catch (error: any) {
+        console.log(error.message);
+      }
+    };
     fetchConcepts();
-    // fetchCombinations();
+    fetchCombinations();
   }, []);
 
   const onConnect: OnConnect = useCallback(
@@ -86,6 +88,9 @@ function Flow() {
   const onNodeDrag = useCallback((_: MouseEvent, node: Node) => {
     const intersections: string[] = getIntersectingNodes(node).map((n) => n.id);
 
+    // console.log("nodes :>> ", nodes);
+    // console.log("userConcepts :>> ", userConcepts);
+
     setNodes((ns) =>
       ns.map((n) => ({
         ...n,
@@ -94,37 +99,63 @@ function Flow() {
     );
   }, []);
 
-  const onNodeDragStop = useCallback(async (_: MouseEvent, node: Node) => {
-    const intersections: Node[] = getIntersectingNodes(node);
+  const onNodeDragStop = useCallback(
+    async (_: MouseEvent, node: Node) => {
+      const intersections: Node[] = getIntersectingNodes(node);
 
-    if (intersections.length) {
-      combineTwoNodesInOne(node, intersections);
-    }
-  }, []);
+      console.log("node :>> ", node);
+      console.log("intersections :>> ", intersections);
+
+      if (intersections.length) {
+        combineTwoNodesInOne(node, intersections);
+      }
+    },
+    [userConcepts, combinations]
+  );
 
   const combineTwoNodesInOne = async (
     node: Node,
     intersections: Node[]
   ): Promise<void> => {
-    const conceptA: string = getConceptTitle(node.data.label);
-    const conceptB: string = getConceptTitle(intersections[0].data.label);
+    const conceptA: Concept | undefined = userConcepts.find(
+      (concept) => concept._id === node.data.conceptId
+    );
+    const conceptB: Concept | undefined = userConcepts.find(
+      (concept) => concept._id === intersections[0].data.conceptId
+    );
+    if (!conceptA || !conceptB) return;
 
-    const existingCombination: ConceptsCombination | null =
-      getStoredCombination([conceptA, conceptB]);
-    let nodeLabel: string | undefined;
-    if (existingCombination) {
-      const matchingConcept: Concept | undefined = concepts.find(
-        (concept) => concept.title === existingCombination.result
+    let combination: Combination | undefined = combinations.find(
+      (combi) =>
+        combi.combined[0]._id === conceptA._id &&
+        combi.combined[1]._id === conceptB._id
+    );
+
+    combination && console.log("existing combination :>> ", combination);
+
+    if (!combination) {
+      const { data } = await axios.post(
+        "http://localhost:3001/combination/create",
+        {
+          toCombine: [conceptA._id, conceptB._id],
+        }
       );
-      const matchingIcon: string | undefined = matchingConcept?.icon;
-      nodeLabel = matchingIcon + " " + existingCombination.result;
-    } else {
-      nodeLabel = await claudeAPImessage(
-        `${conceptA} + ${conceptB} = [resulting term to be provided as your response]`
-      );
+      console.log("data :>> ", data);
+      if (data) {
+        combination = data;
+        combination && combinations.push(combination);
+        if (
+          !userConcepts.find(
+            (concept) => concept._id === combination?.result._id
+          )
+        ) {
+          setUserConcepts((prev) =>
+            combination ? [...prev, combination.result] : prev
+          );
+        }
+      }
+      //localStorage.InfiniteCombinations = JSON.stringify(combinationsDB);
     }
-
-    if (!nodeLabel) return;
 
     const newNode: Node = {
       id: getId(),
@@ -134,28 +165,10 @@ function Flow() {
         y: intersections[0].position.y,
       },
       data: {
-        label: nodeLabel,
+        label: combination?.result.icon + " " + combination?.result.title,
+        conceptId: combination?.result._id,
       },
     };
-
-    const icon: string = getConceptIcon(newNode.data.label);
-    const title: string = getConceptTitle(newNode.data.label);
-    // const existingConcept: Concept | null = addToExistingConcepts({
-    //   title,
-    //   icon,
-    // });
-    //
-    // if (existingConcept)
-    //   newNode.data.label = `${existingConcept.icon} ${existingConcept.title}`;
-
-    if (!existingCombination) {
-      combinationsDB.push({
-        combined: [conceptA, conceptB],
-        result: title,
-        count: 1,
-      });
-      localStorage.InfiniteCombinations = JSON.stringify(combinationsDB);
-    }
 
     setNodes((nds) =>
       nds
@@ -164,27 +177,27 @@ function Flow() {
     );
   };
 
-  const onPaneClick = async (event: React.MouseEvent): Promise<void> => {
-    const newWord: string | undefined = await claudeAPImessage(
-      randomConceptEnPrompt,
-      false
-    );
-    if (!newWord) return;
-    const position: XYPosition = screenToFlowPosition({
-      x: event.clientX - 150,
-      y: event.clientY - 40,
-    });
-    const newNode: Node = {
-      id: getId(),
-      type: "node-toolbar",
-      position,
-      data: {
-        label: newWord,
-      },
-    };
+  // const onPaneClick = async (event: React.MouseEvent): Promise<void> => {
+  //   const newWord: string | undefined = await claudeAPImessage(
+  //     randomConceptEnPrompt,
+  //     false
+  //   );
+  //   if (!newWord) return;
+  //   const position: XYPosition = screenToFlowPosition({
+  //     x: event.clientX - 150,
+  //     y: event.clientY - 40,
+  //   });
+  //   const newNode: Node = {
+  //     id: getId(),
+  //     type: "node-toolbar",
+  //     position,
+  //     data: {
+  //       label: newWord,
+  //     },
+  //   };
 
-    setNodes((nds) => nds.concat(newNode));
-  };
+  //   setNodes((nds) => nds.concat(newNode));
+  // };
 
   // external drops
   const onDragOver = useCallback(
@@ -222,14 +235,20 @@ function Flow() {
       // (event) => {
       event.preventDefault();
 
-      const content: string | undefined = event.dataTransfer.getData(
+      const conceptId: string | undefined = event.dataTransfer.getData(
         "application/reactflow"
       );
-
+      console.log("userConcepts :>> ", userConcepts);
       // check if the dropped element is valid
-      if (typeof content === "undefined" || !content) {
+      if (typeof conceptId === "undefined" || !conceptId) {
         return;
       }
+
+      const droppedConcept: Concept | undefined = userConcepts.find(
+        (concept) => concept._id === conceptId
+      );
+      console.log("droppedConcept :>> ", droppedConcept);
+      if (!droppedConcept) return;
 
       const position: XYPosition = screenToFlowPosition({
         x: event.clientX - 150,
@@ -240,13 +259,13 @@ function Flow() {
         type: "node-toolbar",
         position,
         positionAbsolute: position,
-        data: { label: `${content}` },
+        data: {
+          label: `${droppedConcept.icon} ${droppedConcept.title}`,
+          conceptId,
+        },
         height: 40,
         width: 173,
       };
-
-      console.log("newNode :>> ", newNode);
-      console.log("nodes :>> ", nodes);
 
       setNodes((nds) => nds.concat(newNode));
 
@@ -255,7 +274,7 @@ function Flow() {
         if (intersections.length) combineTwoNodesInOne(newNode, intersections);
       }, 20);
     },
-    [screenToFlowPosition]
+    [screenToFlowPosition, nodes, userConcepts]
   );
 
   return (
@@ -274,7 +293,7 @@ function Flow() {
           onNodeDragStop={onNodeDragStop}
           fitView
           selectNodesOnDrag={false}
-          onPaneClick={onPaneClick}
+          // onPaneClick={onPaneClick}
           onDrop={onDrop}
           onDragOver={onDragOver}
         >
@@ -283,7 +302,7 @@ function Flow() {
           <Controls />
         </ReactFlow>
       </div>
-      <Sidebar concepts={userConcepts} />
+      {userConcepts ? <Sidebar concepts={userConcepts} /> : null}
     </div>
   );
 }

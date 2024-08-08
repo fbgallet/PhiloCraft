@@ -3,13 +3,13 @@ import type { Node, NodeTypes } from "reactflow";
 import { NodeWithToolBar } from "./NodeWithToolbar";
 
 export const initialNodes = [
-  {
-    id: "0",
-    type: "node-toolbar",
-    position: { x: 0, y: 0 },
-    data: { label: "🌟 Being" },
-    className: "",
-  },
+  // {
+  //   id: "0",
+  //   type: "node-toolbar",
+  //   position: { x: 0, y: 0 },
+  //   data: { label: "🌟 Being" },
+  //   className: "",
+  // },
   // {
   //   id: "b",
   //   type: "node-toolbar",

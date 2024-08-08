@@ -50,15 +50,15 @@ const getConceptLocaly = (
 //   }
 // };
 
-export const getConceptTitle = (label: string): string => {
-  let matchingConcept = label.match(conceptOnlyRegex);
-  return matchingConcept ? matchingConcept[1].trim() : "";
-};
+// export const getConceptTitle = (label: string): string => {
+//   let matchingConcept = label.match(conceptOnlyRegex);
+//   return matchingConcept ? matchingConcept[1].trim() : "";
+// };
 
-export const getConceptIcon = (label: string): string => {
-  const matchingIcon = label.match(emojiRegex);
-  return matchingIcon ? matchingIcon[0].trim() : "";
-};
+// export const getConceptIcon = (label: string): string => {
+//   const matchingIcon = label.match(emojiRegex);
+//   return matchingIcon ? matchingIcon[0].trim() : "";
+// };
 
 export const getStoredCombination = (
   tulpe: [string, string]
