@@ -12,6 +12,7 @@
     "@anthropic-ai/sdk": "^0.24.0",
     "axios": "^1.7.2",
     "react": "^18.2.0",
+    "react-canvas-confetti": "^2.0.7",
     "react-dom": "^18.2.0",
     "reactflow": "^11.10.3"
   },

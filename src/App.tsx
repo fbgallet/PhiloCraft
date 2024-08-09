@@ -25,21 +25,26 @@ import {
   addToExistingConcepts,
   combinationsDB,
   ConceptsCombination,
+  getStoredUserconcepts,
 } from "./utils/data.ts";
 import axios from "axios";
 import { Concept, initialConcepts } from "./data/concept.ts";
 import { Combination } from "./data/combination.ts";
+import Confetti from "./components/Confetti.tsx";
 
 let id: number = 1;
 const getId = (): string => `${(id++).toString()}`;
 
-function Flow() {
+function InfiniteConcepts() {
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
   const [concepts, setConcepts] = useState<Concept[]>([]);
-  const [userConcepts, setUserConcepts] = useState<Concept[]>([]);
+  const [userConcepts, setUserConcepts] = useState<Concept[]>(
+    getStoredUserconcepts() || []
+  );
   const [combinations, setCombinations] = useState<Combination[]>([]);
+  const [throwConfetti, setThrowConfetti] = useState<boolean>(false);
   const { getIntersectingNodes } = useReactFlow();
   const { screenToFlowPosition } = useReactFlow();
 
@@ -50,8 +55,8 @@ function Flow() {
         console.log("concepts loaded from DB:>> ", data);
         if (data) {
           setConcepts(data);
-          setUserConcepts([...data.slice(0, 4)]);
-          console.log("data.slice(0, 4) :>> ", data.slice(0, 4));
+          if (!userConcepts.length) setUserConcepts([...data.slice(0, 4)]);
+          // console.log("data.slice(0, 4) :>> ", data.slice(0, 4));
         }
       } catch (error: any) {
         console.log(error.message);
@@ -69,6 +74,12 @@ function Flow() {
     fetchConcepts();
     fetchCombinations();
   }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setThrowConfetti(false);
+    }, 5000);
+  }, [throwConfetti]);
 
   const onConnect: OnConnect = useCallback(
     (connection) => setEdges((edges) => addEdge(connection, edges)),
@@ -218,7 +229,6 @@ function Flow() {
     intersections: Node[]
   ): Promise<void> => {
     let resultingConcept: Concept;
-    let isNewResultingConcept: boolean = false;
 
     const conceptA: Concept | undefined = userConcepts.find(
       (concept) => concept._id === node.data.conceptId
@@ -253,11 +263,13 @@ function Flow() {
         combination = data.combination;
         combination && (resultingConcept = combination.result);
         resultingConcept.isNew = data.isNewResultingConcept;
-        if (resultingConcept.isNew) console.log("NEW CONCEPT DISCOVERED !!!");
+        if (resultingConcept.isNew) {
+          console.log("NEW CONCEPT DISCOVERED !!!");
+          setThrowConfetti(true);
+        }
 
         combination && combinations.push(combination);
       }
-      //localStorage.InfiniteCombinations = JSON.stringify(combinationsDB);
     } else {
       axios.put(`http://localhost:3001/combination/use/${combination._id}`);
       combination.counter++;
@@ -268,6 +280,10 @@ function Flow() {
       setUserConcepts((prev) =>
         combination ? [...prev, resultingConcept] : prev
       );
+      resultingConcept &&
+        (localStorage.userConcepts = JSON.stringify(
+          userConcepts.concat(resultingConcept)
+        ));
     }
 
     const newNode: Node = {
@@ -317,6 +333,7 @@ function Flow() {
         </ReactFlow>
       </div>
       {userConcepts ? <Sidebar concepts={userConcepts} /> : null}
+      {throwConfetti ? <Confetti /> : null}
     </div>
   );
 }
@@ -324,7 +341,7 @@ function Flow() {
 export default function App() {
   return (
     <ReactFlowProvider>
-      <Flow />
+      <InfiniteConcepts />
     </ReactFlowProvider>
   );
 }
