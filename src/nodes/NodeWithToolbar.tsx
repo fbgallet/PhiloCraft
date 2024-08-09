@@ -1,4 +1,4 @@
-import { NodeToolbar } from "reactflow";
+import { NodeToolbar } from "@xyflow/react";
 
 export function NodeWithToolBar({ data }: NodeProps<PositionLoggerNodeData>) {
   return (

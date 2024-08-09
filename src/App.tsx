@@ -1,4 +1,4 @@
-import type { Edge, Node, OnConnect, Rect, XYPosition } from "reactflow";
+import type { Edge, Node, OnConnect, Rect, XYPosition } from "@xyflow/react";
 
 import { useState, useCallback, MouseEvent, useRef, useEffect } from "react";
 import {
@@ -6,17 +6,18 @@ import {
   applyNodeChanges,
   Background,
   Controls,
+  ColorMode,
   MiniMap,
   ReactFlow,
   ReactFlowProvider,
   addEdge,
   useReactFlow,
-} from "reactflow";
+} from "@xyflow/react";
 
 import Sidebar from "./components/Sidebar.tsx";
 import { randomConceptEnPrompt } from "./ai/prompts.ts";
 
-import "reactflow/dist/style.css";
+import "@xyflow/react/dist/style.css";
 
 import { initialNodes, nodeTypes } from "./nodes";
 import { initialEdges, edgeTypes } from "./edges";
@@ -97,10 +98,9 @@ function InfiniteConcepts() {
   );
 
   const onNodeDrag = useCallback((_: MouseEvent, node: Node) => {
-    const intersections: string[] = getIntersectingNodes(node).map((n) => n.id);
-
-    // console.log("nodes :>> ", nodes);
-    // console.log("userConcepts :>> ", userConcepts);
+    const intersections: string[] = getIntersectingNodes(node)
+      .slice(0, 1) // only one-to-on intersection
+      .map((n) => n.id);
 
     setNodes((ns) =>
       ns.map((n) => ({
@@ -163,9 +163,9 @@ function InfiniteConcepts() {
         height: 40,
       };
 
-      const intersections: string[] = getIntersectingNodes(rect).map(
-        (n) => n.id
-      );
+      const intersections: string[] = getIntersectingNodes(rect)
+        .slice(0, 1)
+        .map((n) => n.id);
 
       setNodes((ns) =>
         ns.map((n) => ({
@@ -185,7 +185,6 @@ function InfiniteConcepts() {
       const conceptId: string | undefined = event.dataTransfer.getData(
         "application/reactflow"
       );
-      console.log("userConcepts :>> ", userConcepts);
       // check if the dropped element is valid
       if (typeof conceptId === "undefined" || !conceptId) {
         return;
@@ -194,7 +193,6 @@ function InfiniteConcepts() {
       const droppedConcept: Concept | undefined = userConcepts.find(
         (concept) => concept._id === conceptId
       );
-      console.log("droppedConcept :>> ", droppedConcept);
       if (!droppedConcept) return;
 
       const position: XYPosition = screenToFlowPosition({
@@ -312,6 +310,7 @@ function InfiniteConcepts() {
       <div className="reactflow-wrapper" ref={reactFlowWrapper}>
         <ReactFlow
           className="intersection-flow"
+          colorMode={"dark"}
           nodes={nodes}
           nodeTypes={nodeTypes}
           onNodesChange={onNodesChange}

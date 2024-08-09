@@ -1,4 +1,4 @@
-import type { Node, NodeTypes } from "reactflow";
+import type { Node, NodeTypes } from "@xyflow/react";
 // import { PositionLoggerNode } from "./PositionLoggerNode";
 import { NodeWithToolBar } from "./NodeWithToolbar";
 
