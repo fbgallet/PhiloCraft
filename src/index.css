@@ -1,3 +1,4 @@
+@import url("@xyflow/react/dist/style.css");
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -13,6 +14,10 @@ body,
 
 .react-flow__node.highlight > .react-flow__node-default {
   background: #ff0072;
+  color: white;
+}
+.dndflow:has(.dark) .react-flow__node.highlight > .react-flow__node-default {
+  background: #4f0000;
   color: white;
 }
 
@@ -52,6 +57,13 @@ body,
   margin-top: 10px;
 }
 
+.react-flow__node-default {
+  padding: 8px;
+  width: fit-content;
+  min-width: 100px;
+  font-size: 10px;
+}
+
 /*************/
 /*  Sidebar  */
 /*************/
@@ -61,6 +73,14 @@ body,
   padding: 15px 10px;
   font-size: 12px;
   background: #fcfcfc;
+  width: 30%;
+}
+.dndflow:has(.dark) aside {
+  color: white;
+  border-right: 1px solid white;
+  padding: 15px 10px;
+  font-size: 12px;
+  background: rgba(0, 0, 0, 0.85);
   width: 30%;
 }
 
@@ -81,6 +101,13 @@ body,
   font-size: 16px;
   border: 1px solid black;
   border-radius: 5px;
+}
+.dndflow:has(.dark) aside .nodes .sideconcept {
+  padding: 8px 20px;
+  font-size: 16px;
+  border: 1px solid #3c3c3c;
+  border-radius: 5px;
+  background-color: #1e1e1e;
 }
 
 .sideconcept-new {

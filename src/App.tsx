@@ -12,12 +12,11 @@ import {
   ReactFlowProvider,
   addEdge,
   useReactFlow,
+  Panel,
 } from "@xyflow/react";
 
 import Sidebar from "./components/Sidebar.tsx";
 import { randomConceptEnPrompt } from "./ai/prompts.ts";
-
-import "@xyflow/react/dist/style.css";
 
 import { initialNodes, nodeTypes } from "./nodes";
 import { initialEdges, edgeTypes } from "./edges";
@@ -38,6 +37,7 @@ const getId = (): string => `${(id++).toString()}`;
 
 function InfiniteConcepts() {
   const reactFlowWrapper = useRef(null);
+  const [colorMode, setColorMode] = useState<ColorMode>("system");
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
   const [concepts, setConcepts] = useState<Concept[]>([]);
@@ -81,6 +81,10 @@ function InfiniteConcepts() {
       setThrowConfetti(false);
     }, 5000);
   }, [throwConfetti]);
+
+  const onColorModeChange: ChangeEventHandler<HTMLSelectElement> = (evt) => {
+    setColorMode(evt.target.value as ColorMode);
+  };
 
   const onConnect: OnConnect = useCallback(
     (connection) => setEdges((edges) => addEdge(connection, edges)),
@@ -310,7 +314,7 @@ function InfiniteConcepts() {
       <div className="reactflow-wrapper" ref={reactFlowWrapper}>
         <ReactFlow
           className="intersection-flow"
-          colorMode={"dark"}
+          colorMode={colorMode}
           nodes={nodes}
           nodeTypes={nodeTypes}
           onNodesChange={onNodesChange}
@@ -329,6 +333,13 @@ function InfiniteConcepts() {
           <Background />
           <MiniMap />
           <Controls />
+          <Panel position="top-right">
+            <select onChange={onColorModeChange} data-testid="colormode-select">
+              <option value="dark">dark</option>
+              <option value="light">light</option>
+              <option value="system">system</option>
+            </select>
+          </Panel>
         </ReactFlow>
       </div>
       {userConcepts ? <Sidebar concepts={userConcepts} /> : null}
