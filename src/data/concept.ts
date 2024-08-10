@@ -2,6 +2,7 @@ export interface Concept {
   _id: string;
   title: string;
   icon: string;
+  explanation: string;
   field?: string;
   model?: string;
   counter?: number;

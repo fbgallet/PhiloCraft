@@ -3,7 +3,6 @@ import type { Edge, Node, OnConnect, Rect, XYPosition } from "@xyflow/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 
-import { InfinitySpin } from "react-loader-spinner";
 import { useState, useCallback, MouseEvent, useRef, useEffect } from "react";
 import {
   applyEdgeChanges,
@@ -36,6 +35,8 @@ import axios from "axios";
 import { Concept, initialConcepts } from "./data/concept.ts";
 import { Combination } from "./data/combination.ts";
 import Confetti from "./components/Confetti.tsx";
+import DetailsOverlay from "./components/DetailsDialog.tsx";
+import InfinitySpinner from "./components/InfinitySpinner.tsx";
 
 let id: number = 1;
 const getId = (): string => `${(id++).toString()}`;
@@ -169,6 +170,13 @@ function InfiniteConcepts() {
     []
   );
 
+  const onNodeRightClick = (e: MouseEvent, node: Node) => {
+    e.preventDefault();
+    console.log("e :>> ", e);
+    console.log("node :>> ", node);
+    setNodes((ns) => ns.filter((n) => n.id !== node.id));
+  };
+
   const onNodeDrag = useCallback((_: MouseEvent, node: Node) => {
     const intersections: string[] = getIntersectingNodes(node)
       .slice(0, 1) // only one-to-on intersection
@@ -278,6 +286,7 @@ function InfiniteConcepts() {
         data: {
           label: `${droppedConcept.icon} ${droppedConcept.title}`,
           conceptId,
+          explanation: droppedConcept.explanation,
         },
         height: 40,
         width: 173,
@@ -348,12 +357,7 @@ function InfiniteConcepts() {
         label: resultingConcept ? (
           resultingConcept.icon + " " + resultingConcept.title
         ) : (
-          <InfinitySpin
-            visible={true}
-            width="100"
-            color="#4fa94d"
-            ariaLabel="infinity-spin-loading"
-          />
+          <InfinitySpinner />
         ),
         conceptId: resultingConcept && resultingConcept._id,
         isNew: resultingConcept && resultingConcept.isNew,
@@ -376,6 +380,7 @@ function InfiniteConcepts() {
           nodes={nodes}
           nodeTypes={nodeTypes}
           onNodesChange={onNodesChange}
+          onNodeContextMenu={onNodeRightClick}
           edges={edges}
           edgeTypes={edgeTypes}
           onEdgesChange={onEdgesChange}

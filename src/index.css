@@ -1,4 +1,6 @@
 @import url("@xyflow/react/dist/style.css");
+@import "normalize.css";
+@import "@blueprintjs/core/lib/css/blueprint.css";
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -130,6 +132,22 @@ body,
   position: absolute;
   top: -8px;
   right: -10px;
+}
+
+/*************/
+/*  Dialog   */
+/*************/
+
+.bp5-dialog {
+  width: 90%;
+  max-width: 650px;
+}
+.bp5-dialog-header {
+  font-size: 20px;
+}
+.bp5-dialog-body-scroll-container {
+  line-height: 1.4rem;
+  padding: 20px;
 }
 
 @media screen and (min-width: 768px) {
