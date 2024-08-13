@@ -48,7 +48,9 @@ interface PendingCombination {
 
 function InfiniteConcepts() {
   const reactFlowWrapper = useRef(null);
-  const [colorMode, setColorMode] = useState<ColorMode>("light");
+  const [colorMode, setColorMode] = useState<ColorMode>(
+    localStorage.colorMode || "light"
+  );
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
   const [concepts, setConcepts] = useState<Concept[]>([]);
@@ -397,9 +399,11 @@ function InfiniteConcepts() {
           <MiniMap />
           <Controls showInteractive={false}>
             <ControlButton
-              onClick={() =>
-                setColorMode((prev) => (prev === "light" ? "dark" : "light"))
-              }
+              onClick={() => {
+                let newColorMode = colorMode === "light" ? "dark" : "light";
+                localStorage.colorMode = newColorMode;
+                setColorMode(newColorMode);
+              }}
             >
               {colorMode === "light" ? (
                 <FontAwesomeIcon icon={faMoon} />

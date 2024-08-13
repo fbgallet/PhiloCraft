@@ -142,6 +142,17 @@ body,
   width: 90%;
   max-width: 650px;
 }
+body:has(.react-flow.dark) .bp5-dialog-header {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+body:has(.react-flow.dark) .bp5-heading {
+  font-size: 18px;
+  color: white;
+}
+body:has(.react-flow.dark) .bp5-dialog {
+  background-color: #1e1e1e;
+  color: rgba(255, 255, 255, 0.85);
+}
 .bp5-dialog-header {
   font-size: 20px;
 }
