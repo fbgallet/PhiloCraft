@@ -74,7 +74,7 @@ export const getStoredCombination = (
       (combination.combined[0] === tulpe[1] &&
         combination.combined[1] === tulpe[0])
   );
-  console.log("existingCombination :>> ", existingCombination);
+
   if (existingCombination) {
     existingCombination.count++;
     return existingCombination;

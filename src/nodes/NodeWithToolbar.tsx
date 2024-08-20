@@ -2,13 +2,24 @@ import { NodeToolbar } from "@xyflow/react";
 import axios from "axios";
 import { useState } from "react";
 import DetailsDialog from "../components/DetailsDialog";
+import JustifyDialog from "../components/JustifyDialog";
 
 export function NodeWithToolBar({ data }: NodeProps<PositionLoggerNodeData>) {
-  const [isExplanationOverlayOpen, setIsExplinationOverlayOpen] =
+  const [isDetailsDialogOpen, setIsDetailsDialogOpen] =
     useState<boolean>(false);
+  const [isJustifyDialogOpen, setIsJustifyDialogOpen] =
+    useState<boolean>(false);
+
+  const handleJustify = async () => {
+    setIsJustifyDialogOpen(true);
+  };
+
   const handleExplain = async () => {
+    setIsDetailsDialogOpen(true);
+  };
+
+  const handleRemove = async () => {
     console.log("data :>> ", data);
-    setIsExplinationOverlayOpen(true);
   };
 
   return (
@@ -17,14 +28,19 @@ export function NodeWithToolBar({ data }: NodeProps<PositionLoggerNodeData>) {
         isVisible={data.forceToolbarVisible || undefined}
         position={data.toolbarPosition}
       >
-        <button onClick={handleExplain}>?</button>
-        <button>copy</button>
-        <button>paste</button>
+        <button onClick={handleJustify}>🔀</button>
+        <button onClick={handleExplain}>ℹ️</button>
+        <button onClick={handleRemove}>❌</button>
       </NodeToolbar>
       <div className="react-flow__node-default">{data?.label}</div>
       <DetailsDialog
-        isOpen={isExplanationOverlayOpen}
-        setIsOpen={setIsExplinationOverlayOpen}
+        isOpen={isDetailsDialogOpen}
+        setIsOpen={setIsDetailsDialogOpen}
+        nodeData={data}
+      />
+      <JustifyDialog
+        isOpen={isJustifyDialogOpen}
+        setIsOpen={setIsJustifyDialogOpen}
         nodeData={data}
       />
     </>

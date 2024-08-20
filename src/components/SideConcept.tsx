@@ -1,11 +1,23 @@
 import { Concept } from "../data/concept";
 
-const SideConcept = ({ _id, title, icon, isNew }: Concept) => {
+const SideConcept = ({
+  _id,
+  title,
+  icon,
+  isBasic,
+  logic,
+  category,
+  field,
+  isNew,
+}: Concept) => {
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,
     conceptId: string
   ) => {
-    event.dataTransfer.setData("application/reactflow", conceptId);
+    event.dataTransfer.setData(
+      "application/reactflow",
+      JSON.stringify({ conceptId, isBasic })
+    );
     event.dataTransfer.effectAllowed = "move";
   };
 
@@ -15,7 +27,8 @@ const SideConcept = ({ _id, title, icon, isNew }: Concept) => {
       onDragStart={(event) => onDragStart(event, _id)}
       draggable
     >
-      {icon} {title}
+      <span>{icon}</span>
+      <span>{title}</span>
       {isNew ? <div className="icon-new">🎉</div> : null}
     </div>
   );

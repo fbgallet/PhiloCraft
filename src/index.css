@@ -85,6 +85,9 @@ body,
 /*************/
 
 .dndflow aside {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
   border-left-color: 1px solid #eee;
   padding: 15px 10px;
   font-size: 12px;
@@ -97,9 +100,17 @@ body,
   background: rgba(0, 0, 0, 0.85);
 }
 
+.dndflow aside > div:nth-child(2) {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  gap: 10px;
+}
+
 .dndflow aside .description {
   font-size: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .dndflow aside .nodes {
@@ -107,10 +118,12 @@ body,
   justify-content: flex-start;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
 }
 .dndflow aside .nodes .sideconcept {
-  padding: 8px 16px;
+  display: flex;
+  gap: 8px;
+  padding: 8px 12px;
   font-size: 16px;
   border: 1px solid black;
   border-radius: 6px;
@@ -168,7 +181,7 @@ body:has(.react-flow.dark) .bp5-dialog {
 
   .dndflow aside {
     width: 35%;
-    min-width: 300px;
+    min-width: 320px;
   }
 }
 
@@ -179,7 +192,7 @@ body:has(.react-flow.dark) .bp5-dialog {
 
   .dndflow aside {
     width: 100%;
-    height: 30%;
+    height: 40%;
     /* max-height: 450px; */
   }
 }

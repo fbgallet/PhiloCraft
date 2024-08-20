@@ -3,7 +3,15 @@ import type { Edge, Node, OnConnect, Rect, XYPosition } from "@xyflow/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 
-import { useState, useCallback, MouseEvent, useRef, useEffect } from "react";
+import {
+  useState,
+  useCallback,
+  MouseEvent,
+  useRef,
+  useEffect,
+  EventHandler,
+  StrictMode,
+} from "react";
 import {
   applyEdgeChanges,
   applyNodeChanges,
@@ -20,23 +28,17 @@ import {
 } from "@xyflow/react";
 
 import Sidebar from "./components/Sidebar.tsx";
-import { randomConceptEnPrompt } from "./ai/prompts.ts";
 
 import { initialNodes, nodeTypes } from "./nodes";
 import { initialEdges, edgeTypes } from "./edges";
-import { claudeAPImessage } from "./ai/api-requets";
-import {
-  addToExistingConcepts,
-  combinationsDB,
-  ConceptsCombination,
-  getStoredUserconcepts,
-} from "./utils/data.ts";
+
+import { getStoredUserconcepts } from "./utils/data.ts";
 import axios from "axios";
-import { Concept, initialConcepts } from "./data/concept.ts";
+import { Concept, initializeBasicConcepts } from "./data/concept.ts";
 import { Combination } from "./data/combination.ts";
 import Confetti from "./components/Confetti.tsx";
-import DetailsOverlay from "./components/DetailsDialog.tsx";
 import InfinitySpinner from "./components/InfinitySpinner.tsx";
+import FieldSelect from "./components/FieldSelect.tsx";
 
 let id: number = 1;
 const getId = (): string => `${(id++).toString()}`;
@@ -53,13 +55,14 @@ function InfiniteConcepts() {
   );
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
-  const [concepts, setConcepts] = useState<Concept[]>([]);
+  const [basicConcepts, setBasicConcepts] = useState<Concept[]>([]);
   const [userConcepts, setUserConcepts] = useState<Concept[]>(
     getStoredUserconcepts() || []
   );
   const [combinations, setCombinations] = useState<Combination[]>([]);
   const [combinationToCreate, setCombinationToCreate] =
     useState<PendingCombination | null>(null);
+  const [model, setModel] = useState<string>("gpt-4o-mini");
   const [throwConfetti, setThrowConfetti] = useState<boolean>(false);
   const { getIntersectingNodes } = useReactFlow();
   const { screenToFlowPosition } = useReactFlow();
@@ -67,12 +70,16 @@ function InfiniteConcepts() {
   useEffect(() => {
     const fetchConcepts = async (): Promise<void> => {
       try {
-        const { data } = await axios.get("http://localhost:3001/concepts");
+        const { data } = await axios.post("http://localhost:3001/concepts", {
+          onlyBasics: true,
+        });
         console.log("concepts loaded from DB:>> ", data);
-        if (data) {
-          setConcepts(data);
-          if (!userConcepts.length) setUserConcepts([...data.slice(0, 4)]);
+        if (data && data.length) {
+          setBasicConcepts(data);
+          //if (!userConcepts.length) setUserConcepts([...data.slice(0, 4)]);
           // console.log("data.slice(0, 4) :>> ", data.slice(0, 4));
+        } else {
+          setBasicConcepts(await initializeBasicConcepts());
         }
       } catch (error: any) {
         console.log(error.message);
@@ -89,6 +96,7 @@ function InfiniteConcepts() {
     };
     fetchConcepts();
     fetchCombinations();
+    handleBPColorMode();
   }, []);
 
   useEffect(() => {
@@ -100,12 +108,14 @@ function InfiniteConcepts() {
             combinationToCreate.idsToCombine[0],
             combinationToCreate.idsToCombine[1],
           ],
+          model,
         }
       );
-      console.log("data :>> ", data);
+      console.log("data from /combination/create :>> ", data);
       if (data) {
         let combination = data.combination;
         let resultingConcept = combination.result;
+        if (!resultingConcept) return;
         resultingConcept.isNew = data.isNewResultingConcept;
         if (resultingConcept.isNew) {
           setThrowConfetti(true);
@@ -119,7 +129,11 @@ function InfiniteConcepts() {
                   data: {
                     label: resultingConcept.icon + " " + resultingConcept.title,
                     conceptId: resultingConcept._id,
+                    conceptTitle: resultingConcept.title,
+                    logic: [combination.logic],
+                    category: resultingConcept.category,
                     isNew: resultingConcept.isNew,
+                    model,
                   },
                 }
               : n
@@ -127,16 +141,22 @@ function InfiniteConcepts() {
         );
         // console.log("nodeToUpdate :>> ", nodeToUpdate);
 
-        if (
-          !userConcepts.find((concept) => concept._id === resultingConcept._id)
-        ) {
+        const existingUserConcept = userConcepts.find(
+          (concept) => concept._id === resultingConcept._id
+        );
+
+        if (existingUserConcept) {
+          existingUserConcept.logic.push(combination.logic);
+          setUserConcepts((prev) => [...prev]);
+        } else {
+          resultingConcept.logic = [combination.logic];
           setUserConcepts((prev) =>
             combination ? [...prev, resultingConcept] : prev
           );
-          resultingConcept &&
-            (localStorage.userConcepts = JSON.stringify(
-              userConcepts.concat(resultingConcept)
-            ));
+          // resultingConcept &&
+          //   (localStorage.userConcepts = JSON.stringify(
+          //     userConcepts.concat(resultingConcept)
+          //   ));
         }
       }
       // setNodes((ns) => [...ns]);
@@ -148,13 +168,27 @@ function InfiniteConcepts() {
   }, [combinationToCreate]);
 
   useEffect(() => {
+    localStorage.userConcepts = JSON.stringify(userConcepts);
+  }, [userConcepts]);
+
+  useEffect(() => {
     setTimeout(() => {
       setThrowConfetti(false);
     }, 2000);
   }, [throwConfetti]);
 
-  const onColorModeChange: ChangeEventHandler<HTMLSelectElement> = (evt) => {
-    setColorMode(evt.target.value as ColorMode);
+  const onColorModeChange = () => {
+    let newColorMode: ColorMode = colorMode === "light" ? "dark" : "light";
+    localStorage.colorMode = newColorMode;
+    handleBPColorMode(newColorMode);
+    setColorMode(newColorMode);
+  };
+
+  const handleBPColorMode = (mode = colorMode) => {
+    const body = document.querySelector("body");
+    mode === "light"
+      ? body?.classList.remove("bp5-dark")
+      : body?.classList.add("bp5-dark");
   };
 
   const onConnect: OnConnect = useCallback(
@@ -264,18 +298,20 @@ function InfiniteConcepts() {
       // (event) => {
       event.preventDefault();
 
-      const conceptId: string | undefined = event.dataTransfer.getData(
-        "application/reactflow"
+      const { conceptId, isBasic } = JSON.parse(
+        event.dataTransfer.getData("application/reactflow")
       );
       // check if the dropped element is valid
       if (typeof conceptId === "undefined" || !conceptId) {
         return;
       }
 
-      const droppedConcept: Concept | undefined = userConcepts.find(
-        (concept) => concept._id === conceptId
-      );
+      const droppedConcept: Concept | undefined = isBasic
+        ? basicConcepts.find((concept) => concept._id === conceptId)
+        : userConcepts.find((concept) => concept._id === conceptId);
       if (!droppedConcept) return;
+
+      console.log("droppedConcept :>> ", droppedConcept);
 
       const position: XYPosition = screenToFlowPosition({
         x: event.clientX - 80,
@@ -288,7 +324,11 @@ function InfiniteConcepts() {
         data: {
           label: `${droppedConcept.icon} ${droppedConcept.title}`,
           conceptId,
-          explanation: droppedConcept.explanation,
+          conceptTitle: droppedConcept.title,
+          explanation: getExplanationByModel(droppedConcept.explanation, model),
+          logic: droppedConcept.logic,
+          category: droppedConcept.category,
+          model,
         },
         height: 40,
         width: 173,
@@ -304,6 +344,15 @@ function InfiniteConcepts() {
     [screenToFlowPosition, nodes, userConcepts]
   );
 
+  const getExplanationByModel = (explanationsArray: [{}], model: string) => {
+    if (!explanationsArray.length) return undefined;
+    const explanationForModel = explanationsArray.find(
+      (expl) => expl.model === model
+    );
+    if (explanationForModel) return explanationForModel.content;
+    else return undefined;
+  };
+
   const combineTwoNodesInOne = async (
     droppedNode: Node,
     intersections: Node[]
@@ -311,12 +360,12 @@ function InfiniteConcepts() {
     let resultingConcept: Concept | undefined;
     const targetNode = intersections[0];
 
-    const droppedConcept: Concept | undefined = userConcepts.find(
-      (concept) => concept._id === droppedNode.data.conceptId
-    );
-    const targetConcept: Concept | undefined = userConcepts.find(
-      (concept) => concept._id === targetNode.data.conceptId
-    );
+    const droppedConcept: Concept | undefined = basicConcepts
+      .concat(userConcepts)
+      .find((concept) => concept._id === droppedNode.data.conceptId);
+    const targetConcept: Concept | undefined = basicConcepts
+      .concat(userConcepts)
+      .find((concept) => concept._id === targetNode.data.conceptId);
     if (!droppedConcept || !targetConcept) return;
 
     axios.put(`http://localhost:3001/concept/use/${droppedConcept._id}`);
@@ -329,8 +378,6 @@ function InfiniteConcepts() {
         combi.combined[0]._id === droppedConcept._id &&
         combi.combined[1]._id === targetConcept._id
     );
-
-    combination && console.log("existing combination :>> ", combination);
 
     droppedNode.className = "hidden-node";
     targetNode.className = "hidden-node";
@@ -346,7 +393,6 @@ function InfiniteConcepts() {
       combination.counter++;
     }
     resultingConcept = combination && combination.result;
-    console.log("resultingConcept :>> ", resultingConcept);
 
     const newNode: Node = {
       id: newNodeId,
@@ -362,9 +408,14 @@ function InfiniteConcepts() {
           <InfinitySpinner />
         ),
         conceptId: resultingConcept && resultingConcept._id,
+        conceptTitle: resultingConcept && resultingConcept.title,
+        category: resultingConcept && resultingConcept.category,
+        logic: combination ? combination.logic : [],
         isNew: resultingConcept && resultingConcept.isNew,
+        model,
       },
     };
+    console.log("newNode :>> ", newNode);
 
     setNodes((nds) =>
       nds
@@ -398,13 +449,7 @@ function InfiniteConcepts() {
           <Background />
           <MiniMap />
           <Controls showInteractive={false}>
-            <ControlButton
-              onClick={() => {
-                let newColorMode = colorMode === "light" ? "dark" : "light";
-                localStorage.colorMode = newColorMode;
-                setColorMode(newColorMode);
-              }}
-            >
+            <ControlButton onClick={onColorModeChange}>
               {colorMode === "light" ? (
                 <FontAwesomeIcon icon={faMoon} />
               ) : (
@@ -412,12 +457,12 @@ function InfiniteConcepts() {
               )}
             </ControlButton>
           </Controls>
-          {/* <Panel position="top-right">
-            
-          </Panel> */}
+          <Panel position="top-left"></Panel>
         </ReactFlow>
       </div>
-      {userConcepts ? <Sidebar concepts={userConcepts} /> : null}
+      {userConcepts ? (
+        <Sidebar basicConcepts={basicConcepts} userConcepts={userConcepts} />
+      ) : null}
       {throwConfetti ? <Confetti /> : null}
     </div>
   );
@@ -425,8 +470,10 @@ function InfiniteConcepts() {
 
 export default function App() {
   return (
-    <ReactFlowProvider>
-      <InfiniteConcepts />
-    </ReactFlowProvider>
+    <StrictMode>
+      <ReactFlowProvider>
+        <InfiniteConcepts />
+      </ReactFlowProvider>
+    </StrictMode>
   );
 }

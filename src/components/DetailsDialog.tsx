@@ -11,24 +11,27 @@ import InfinitySpinner from "./InfinitySpinner";
 
 export default function DetailsDialog({ isOpen, setIsOpen, nodeData }) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [explanation, setExplanation] = useState<[{}]>(nodeData.explanation);
+  const [explanation, setExplanation] = useState<{}>(nodeData.explanation);
   const [interestIsOpen, setInterestIsOpen] = useState<boolean>(false);
   const [refIsOpen, setRefIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (!isOpen) return;
+    console.log("nodeData :>> ", nodeData);
     const loadExplanation = async () => {
-      if (!explanation.length) {
+      if (!explanation) {
         console.log("No explication");
         const response = await axios.post(
           "http://localhost:3001/concept/explain",
           {
             id: nodeData.conceptId,
-            model: "claude",
+            title: nodeData.conceptTitle,
+            category: nodeData.category,
+            model: nodeData.model,
           }
         );
-        // console.log("response :>> ", response.data);
-        setExplanation([response.data]);
+        //console.log("response :>> ", response.data);
+        setExplanation(response.data);
       }
       setIsLoading(false);
     };
@@ -43,8 +46,8 @@ export default function DetailsDialog({ isOpen, setIsOpen, nodeData }) {
 
   return (
     <Dialog
-      title={nodeData.label}
-      icon={nodeData.icon}
+      title={`${nodeData.label} (${nodeData.category} concept)`}
+      // icon={nodeData.icon}
       isOpen={isOpen}
       onClose={toggleOverlay}
     >
@@ -57,37 +60,45 @@ export default function DetailsDialog({ isOpen, setIsOpen, nodeData }) {
           <InfinitySpinner />
         ) : (
           <div>
-            <p>{explanation[0].meaning}</p>
-            <p>{explanation[0].example}</p>
+            <p>{explanation.meaning}</p>
+            <p>{explanation.example}</p>
             <br />
-            <h4
-              style={{ cursor: "pointer" }}
-              onClick={() => setInterestIsOpen((prev) => !prev)}
-            >
-              {interestIsOpen ? "−" : "+"} Why is it worth thinking about ?
-            </h4>
-            <Collapse isOpen={interestIsOpen}>
-              <p>{explanation[0].interest}</p>
-            </Collapse>
-            <h4
-              style={{ cursor: "pointer" }}
-              onClick={() => setRefIsOpen((prev) => !prev)}
-            >
-              {refIsOpen ? "−" : "+"} Wondering what{" "}
-              {explanation[0].views?.supportingPhilosopher} and{" "}
-              {explanation[0].views?.criticalPhilosopher} think about this{" "}
-              {explanation[0].category} ?
-            </h4>
-            <Collapse isOpen={refIsOpen}>
-              <ul>
-                <li>
-                  <p>{explanation[0].views?.supportingView}</p>
-                </li>
-                <li>
-                  <p>{explanation[0].views?.criticalView}</p>
-                </li>
-              </ul>
-            </Collapse>
+            {explanation.interest ? (
+              <>
+                <h4
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setInterestIsOpen((prev) => !prev)}
+                >
+                  {interestIsOpen ? "−" : "+"} Why is it worth thinking about ?
+                </h4>
+                <Collapse isOpen={interestIsOpen}>
+                  <p>{explanation.interest}</p>
+                </Collapse>
+              </>
+            ) : null}
+            {explanation.views?.supportingPhilosopher ? (
+              <>
+                <h4
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setRefIsOpen((prev) => !prev)}
+                >
+                  {refIsOpen ? "−" : "+"} Wondering what{" "}
+                  {explanation.views?.supportingPhilosopher} and{" "}
+                  {explanation.views?.criticalPhilosopher} think about{" "}
+                  {nodeData.title} ?
+                </h4>
+                <Collapse isOpen={refIsOpen}>
+                  <ul>
+                    <li>
+                      <p>{explanation.views?.supportingView}</p>
+                    </li>
+                    <li>
+                      <p>{explanation.views?.criticalView}</p>
+                    </li>
+                  </ul>
+                </Collapse>
+              </>
+            ) : null}
           </div>
         )}
         {/* - 1. What does it mean?  
