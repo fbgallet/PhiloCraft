@@ -3,9 +3,19 @@ import { Concept } from "../data/concept.ts";
 import { useState } from "react";
 import { FIELDS_LIST, Field, FieldSelect } from "./FieldSelect.tsx";
 import { Divider } from "@blueprintjs/core";
+import SideControls from "./SideControls.tsx";
 
-export default function SideBar({ basicConcepts, userConcepts }) {
+export default function SideBar({
+  basicConcepts,
+  userConcepts,
+  setUserConcepts,
+  setIsSortChange,
+}) {
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedField, setSelectedField] = useState<Field>(FIELDS_LIST[0]);
+  const [filter, setFilter] = useState<string>("");
+  const [visibleUserConcepts, setVisibleUserConcepts] =
+    useState<Concept[]>(userConcepts);
 
   return (
     <aside>
@@ -24,28 +34,28 @@ export default function SideBar({ basicConcepts, userConcepts }) {
               concept.field[0] === selectedField.title.toLowerCase()
           )
           .map((concept: Concept, index: number) => (
-            <SideConcept
-              // title={concept.title}
-              // icon={concept.icon}
-              // _id={concept._id}
-              // isNew={concept.isNew}
-              {...concept}
-              key={index}
-            />
+            <SideConcept {...concept} key={index} />
           ))}
       </div>
       <Divider />
+      <SideControls
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        userConcepts={userConcepts}
+        setUserConcepts={setUserConcepts}
+        filter={filter}
+        setFilter={setFilter}
+        setIsSortChange={setIsSortChange}
+        setVisibleUserConcepts={setVisibleUserConcepts}
+      />
       <div className="nodes">
-        {userConcepts.map((concept: Concept, index: number) => (
-          <SideConcept
-            // title={concept.title}
-            // icon={concept.icon}
-            // _id={concept._id}
-            // isNew={concept.isNew}
-            {...concept}
-            key={index}
-          />
-        ))}
+        {searchQuery || filter
+          ? visibleUserConcepts.map((concept: Concept, index: number) => (
+              <SideConcept {...concept} key={index} />
+            ))
+          : userConcepts.map((concept: Concept, index: number) => (
+              <SideConcept {...concept} key={index} />
+            ))}
       </div>
     </aside>
   );

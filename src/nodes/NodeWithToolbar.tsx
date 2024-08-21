@@ -1,10 +1,11 @@
-import { NodeToolbar } from "@xyflow/react";
+import { NodeToolbar, useReactFlow } from "@xyflow/react";
 import axios from "axios";
 import { useState } from "react";
 import DetailsDialog from "../components/DetailsDialog";
 import JustifyDialog from "../components/JustifyDialog";
 
-export function NodeWithToolBar({ data }: NodeProps<PositionLoggerNodeData>) {
+export function NodeWithToolBar({ id, data }: NodeProps) {
+  const reactFlow = useReactFlow();
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] =
     useState<boolean>(false);
   const [isJustifyDialogOpen, setIsJustifyDialogOpen] =
@@ -20,6 +21,8 @@ export function NodeWithToolBar({ data }: NodeProps<PositionLoggerNodeData>) {
 
   const handleRemove = async () => {
     console.log("data :>> ", data);
+    console.log("id :>> ", id);
+    reactFlow.setNodes((ns) => ns.filter((n) => n.id !== id));
   };
 
   return (
@@ -27,6 +30,7 @@ export function NodeWithToolBar({ data }: NodeProps<PositionLoggerNodeData>) {
       <NodeToolbar
         isVisible={data.forceToolbarVisible || undefined}
         position={data.toolbarPosition}
+        align={"start"}
       >
         <button onClick={handleJustify}>🔀</button>
         <button onClick={handleExplain}>ℹ️</button>

@@ -64,6 +64,7 @@ function InfiniteConcepts() {
     useState<PendingCombination | null>(null);
   const [model, setModel] = useState<string>("gpt-4o-mini");
   const [throwConfetti, setThrowConfetti] = useState<boolean>(false);
+  const [isSortChange, setIsSortChange] = useState<boolean>(false);
   const { getIntersectingNodes } = useReactFlow();
   const { screenToFlowPosition } = useReactFlow();
 
@@ -78,9 +79,10 @@ function InfiniteConcepts() {
           setBasicConcepts(data);
           //if (!userConcepts.length) setUserConcepts([...data.slice(0, 4)]);
           // console.log("data.slice(0, 4) :>> ", data.slice(0, 4));
-        } else {
-          setBasicConcepts(await initializeBasicConcepts());
         }
+        // else {
+        //   setBasicConcepts(await initializeBasicConcepts());
+        // }
       } catch (error: any) {
         console.log(error.message);
       }
@@ -168,6 +170,11 @@ function InfiniteConcepts() {
   }, [combinationToCreate]);
 
   useEffect(() => {
+    console.log("userConcepts :>> ", userConcepts);
+    if (isSortChange) {
+      setIsSortChange(false);
+      return;
+    }
     localStorage.userConcepts = JSON.stringify(userConcepts);
   }, [userConcepts]);
 
@@ -461,7 +468,12 @@ function InfiniteConcepts() {
         </ReactFlow>
       </div>
       {userConcepts ? (
-        <Sidebar basicConcepts={basicConcepts} userConcepts={userConcepts} />
+        <Sidebar
+          basicConcepts={basicConcepts}
+          userConcepts={userConcepts}
+          setUserConcepts={setUserConcepts}
+          setIsSortChange={setIsSortChange}
+        />
       ) : null}
       {throwConfetti ? <Confetti /> : null}
     </div>
