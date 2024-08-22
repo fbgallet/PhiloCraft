@@ -49,7 +49,7 @@ export default function SideControls({
               return b.title.localeCompare(a.title);
             case "Time":
             default:
-              return a._id.localeCompare(b._id);
+              return a.timestamp - b.timestamp;
           }
         }),
       ];

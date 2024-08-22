@@ -152,6 +152,7 @@ function InfiniteConcepts() {
           setUserConcepts((prev) => [...prev]);
         } else {
           resultingConcept.logic = [combination.logic];
+          resultingConcept.timestamp = Date.now();
           setUserConcepts((prev) =>
             combination ? [...prev, resultingConcept] : prev
           );
