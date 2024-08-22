@@ -13,9 +13,10 @@ export interface Concept extends BasicConcept {
   explanation: [{}];
   logic: [string];
   model?: string;
-  timestamp?: number;
-  counter?: number;
-  isNew?: boolean;
+  timestamp: number;
+  usedCounter: number;
+  craftedCounter: number;
+  isNew: boolean;
 }
 
 // export const basicConcepts: BasicConcept[] = [

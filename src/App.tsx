@@ -65,39 +65,54 @@ function InfiniteConcepts() {
   const [model, setModel] = useState<string>("gpt-4o-mini");
   const [throwConfetti, setThrowConfetti] = useState<boolean>(false);
   const [isSortChange, setIsSortChange] = useState<boolean>(false);
+  const [nbCombinations, setNbCombinations] = useState<number>(0);
+  const [nbReleasedCombinations, setNbReleasedCombinations] =
+    useState<number>(0);
   const { getIntersectingNodes } = useReactFlow();
   const { screenToFlowPosition } = useReactFlow();
 
   useEffect(() => {
+    const fetchCombinations = async (): Promise<void> => {
+      try {
+        const { data } = await axios.get("http://localhost:3001/combinations");
+        console.log("combinations from DB:>> ", data);
+        if (data) {
+          console.log("data.length :>> ", data.length);
+          setNbCombinations(data.length);
+          setNbReleasedCombinations(
+            data.reduce((sum: number, combination: Combination) => {
+              return sum + combination.counter;
+            }, 0)
+          );
+          setCombinations(data);
+        }
+      } catch (error: any) {
+        console.log(error.message);
+      }
+    };
     const fetchConcepts = async (): Promise<void> => {
       try {
         const { data } = await axios.post("http://localhost:3001/concepts", {
           onlyBasics: true,
         });
         console.log("concepts loaded from DB:>> ", data);
-        if (data && data.length) {
-          setBasicConcepts(data);
+        if (data && data.concepts.length) {
+          setBasicConcepts(data.concepts);
+          console.log("concept count", data.conceptsNb);
+
           //if (!userConcepts.length) setUserConcepts([...data.slice(0, 4)]);
           // console.log("data.slice(0, 4) :>> ", data.slice(0, 4));
         }
         // else {
         //   setBasicConcepts(await initializeBasicConcepts());
         // }
-      } catch (error: any) {
-        console.log(error.message);
-      }
-    };
-    const fetchCombinations = async (): Promise<void> => {
-      try {
-        const { data } = await axios.get("http://localhost:3001/combinations");
-        console.log("combinations from DB:>> ", data);
-        if (data) setCombinations(data);
+        await fetchCombinations();
       } catch (error: any) {
         console.log(error.message);
       }
     };
     fetchConcepts();
-    fetchCombinations();
+
     handleBPColorMode();
   }, []);
 
@@ -117,11 +132,13 @@ function InfiniteConcepts() {
       if (data) {
         let combination = data.combination;
         let resultingConcept = combination.result;
+        combination.result = resultingConcept._id;
         if (!resultingConcept) return;
         resultingConcept.isNew = data.isNewResultingConcept;
         if (resultingConcept.isNew) {
           setThrowConfetti(true);
         }
+        setNbCombinations((prev) => ++prev);
         combination && combinations.push(combination);
         setNodes((ns) =>
           ns.map((n) =>
@@ -376,16 +393,16 @@ function InfiniteConcepts() {
       .find((concept) => concept._id === targetNode.data.conceptId);
     if (!droppedConcept || !targetConcept) return;
 
-    axios.put(`http://localhost:3001/concept/use/${droppedConcept._id}`);
-    axios.put(`http://localhost:3001/concept/use/${targetConcept._id}`);
-    droppedConcept.counter++;
-    targetConcept.counter++;
+    setNbReleasedCombinations((prev) => ++prev);
+    droppedConcept.usedCounter++;
+    targetConcept.usedCounter++;
 
     let combination: Combination | undefined = combinations.find(
       (combi) =>
-        combi.combined[0]._id === droppedConcept._id &&
-        combi.combined[1]._id === targetConcept._id
+        combi.combined[0] === droppedConcept._id &&
+        combi.combined[1] === targetConcept._id
     );
+    console.log("existing combination :>> ", combination);
 
     droppedNode.className = "hidden-node";
     targetNode.className = "hidden-node";
@@ -399,8 +416,19 @@ function InfiniteConcepts() {
     } else {
       axios.put(`http://localhost:3001/combination/use/${combination._id}`);
       combination.counter++;
+      // combination.result?.craftedCounter++;
+      resultingConcept = userConcepts.find(
+        (concept) => concept._id === combination.result
+      );
+      if (!resultingConcept) {
+        const { data } = await axios.put(
+          `http://localhost:3001/concept/${combination.result}`
+        );
+        resultingConcept = data;
+        resultingConcept &&
+          setUserConcepts((prev) => [...prev, resultingConcept]);
+      }
     }
-    resultingConcept = combination && combination.result;
 
     const newNode: Node = {
       id: newNodeId,
@@ -465,7 +493,10 @@ function InfiniteConcepts() {
               )}
             </ControlButton>
           </Controls>
-          <Panel position="top-left"></Panel>
+          <Panel position="top-left">
+            <div>Combinations: {nbCombinations}</div>
+            <div>Released combinations: {nbReleasedCombinations}</div>
+          </Panel>
         </ReactFlow>
       </div>
       {userConcepts ? (

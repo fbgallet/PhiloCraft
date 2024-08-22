@@ -1,11 +1,11 @@
 import { Concept } from "./concept";
 
 export interface Combination {
-  id: string;
-  combined: [Concept, Concept];
-  result: Concept;
+  _id: string;
+  combined: [string, string];
+  result: string | Concept; // only concept._id or populated Concept
   logic: string;
   field?: string;
   model?: string;
-  count?: number;
+  counter: number;
 }

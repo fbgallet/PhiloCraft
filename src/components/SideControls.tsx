@@ -1,14 +1,13 @@
 import {
   Button,
   ControlGroup,
-  Dialog,
   InputGroup,
   Menu,
   MenuItem,
   Popover,
 } from "@blueprintjs/core";
 import { Concept } from "../data/concept";
-import { useState } from "react";
+import { ReactPropTypes, useState } from "react";
 import ConfirmDialog from "./ConfirmDialog";
 
 export default function SideControls({
@@ -49,7 +48,7 @@ export default function SideControls({
               return b.title.localeCompare(a.title);
             case "Time":
             default:
-              return a.timestamp - b.timestamp;
+              return a.timestamp && b.timestamp ? a.timestamp - b.timestamp : 0;
           }
         }),
       ];
