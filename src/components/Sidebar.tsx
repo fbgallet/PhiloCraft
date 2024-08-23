@@ -48,7 +48,7 @@ export default function SideBar({
         setIsSortChange={setIsSortChange}
         setVisibleUserConcepts={setVisibleUserConcepts}
       />
-      <div className="nodes">
+      <div className="nodes user-concepts">
         {searchQuery || filter
           ? visibleUserConcepts.map((concept: Concept, index: number) => (
               <SideConcept {...concept} key={index} />

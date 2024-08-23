@@ -96,12 +96,17 @@ body,
   padding: 15px 10px;
   font-size: 12px;
   background: #fcfcfc;
-  width: 30%;
-  overflow-y: scroll;
 }
 .dndflow:has(.dark) aside {
   color: white;
   background: rgba(0, 0, 0, 0.85);
+}
+
+.dndflow aside .nodes.user-concepts {
+  padding-top: 5px;
+  padding-right: 6px;
+  overflow-x: none;
+  overflow-y: auto;
 }
 
 .dndflow aside > div:nth-child(2) {
@@ -128,7 +133,7 @@ body,
   display: flex;
   gap: 8px;
   padding: 8px 12px;
-  font-size: 16px;
+  font-size: 14px;
   border: 1px solid black;
   border-radius: 6px;
 }
@@ -186,6 +191,7 @@ body:has(.react-flow.dark) .bp5-dialog {
   .dndflow aside {
     width: 35%;
     min-width: 320px;
+    max-width: 580px;
   }
 }
 

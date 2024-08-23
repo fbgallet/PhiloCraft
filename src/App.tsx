@@ -65,9 +65,10 @@ function InfiniteConcepts() {
   const [model, setModel] = useState<string>("gpt-4o-mini");
   const [throwConfetti, setThrowConfetti] = useState<boolean>(false);
   const [isSortChange, setIsSortChange] = useState<boolean>(false);
-  const [nbCombinations, setNbCombinations] = useState<number>(0);
-  const [nbReleasedCombinations, setNbReleasedCombinations] =
+  const [nbOfCombinations, setNbOfCombinations] = useState<number>(0);
+  const [nbOfReleasedCombinations, setNbOfReleasedCombinations] =
     useState<number>(0);
+  const [nbOfConcepts, setNbOfConcepts] = useState<number>(0);
   const { getIntersectingNodes } = useReactFlow();
   const { screenToFlowPosition } = useReactFlow();
 
@@ -78,8 +79,8 @@ function InfiniteConcepts() {
         console.log("combinations from DB:>> ", data);
         if (data) {
           console.log("data.length :>> ", data.length);
-          setNbCombinations(data.length);
-          setNbReleasedCombinations(
+          setNbOfCombinations(data.length);
+          setNbOfReleasedCombinations(
             data.reduce((sum: number, combination: Combination) => {
               return sum + combination.counter;
             }, 0)
@@ -92,16 +93,18 @@ function InfiniteConcepts() {
     };
     const fetchConcepts = async (): Promise<void> => {
       try {
-        const { data } = await axios.post("http://localhost:3001/concepts", {
-          onlyBasics: true,
-        });
-        console.log("concepts loaded from DB:>> ", data);
-        if (data && data.concepts.length) {
-          setBasicConcepts(data.concepts);
-          console.log("concept count", data.conceptsNb);
+        if (!basicConcepts.length) {
+          const { data } = await axios.post("http://localhost:3001/concepts", {
+            onlyBasics: true,
+          });
+          console.log("concepts loaded from DB:>> ", data);
+          if (data && data.concepts.length) {
+            setBasicConcepts(data.concepts);
+            setNbOfConcepts(data.conceptsNb);
 
-          //if (!userConcepts.length) setUserConcepts([...data.slice(0, 4)]);
-          // console.log("data.slice(0, 4) :>> ", data.slice(0, 4));
+            //if (!userConcepts.length) setUserConcepts([...data.slice(0, 4)]);
+            // console.log("data.slice(0, 4) :>> ", data.slice(0, 4));
+          }
         }
         // else {
         //   setBasicConcepts(await initializeBasicConcepts());
@@ -111,8 +114,8 @@ function InfiniteConcepts() {
         console.log(error.message);
       }
     };
-    fetchConcepts();
 
+    fetchConcepts();
     handleBPColorMode();
   }, []);
 
@@ -138,7 +141,7 @@ function InfiniteConcepts() {
         if (resultingConcept.isNew) {
           setThrowConfetti(true);
         }
-        setNbCombinations((prev) => ++prev);
+        setNbOfCombinations((prev) => ++prev);
         combination && combinations.push(combination);
         setNodes((ns) =>
           ns.map((n) =>
@@ -393,7 +396,7 @@ function InfiniteConcepts() {
       .find((concept) => concept._id === targetNode.data.conceptId);
     if (!droppedConcept || !targetConcept) return;
 
-    setNbReleasedCombinations((prev) => ++prev);
+    setNbOfReleasedCombinations((prev) => ++prev);
     droppedConcept.usedCounter++;
     targetConcept.usedCounter++;
 
@@ -494,8 +497,9 @@ function InfiniteConcepts() {
             </ControlButton>
           </Controls>
           <Panel position="top-left">
-            <div>Combinations: {nbCombinations}</div>
-            <div>Released combinations: {nbReleasedCombinations}</div>
+            <div>Released combinations: {nbOfReleasedCombinations}</div>
+            <div>Combinations in DB: {nbOfCombinations}</div>
+            <div>Concepts in DB: {nbOfConcepts}</div>
           </Panel>
         </ReactFlow>
       </div>

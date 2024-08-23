@@ -29,10 +29,12 @@ export default function SideControls({
     value &&
       setVisibleUserConcepts([
         ...userConcepts.filter((concept: Concept) =>
-          value.includes(
-            concept.category ||
-              (value === "Ordinary concepts" && !concept.category)
-          )
+          value === "Discovered 🎉"
+            ? concept.isNew
+            : value.includes(
+                concept.category ||
+                  (value === "Ordinary concepts" && !concept.category)
+              )
         ),
       ]);
   };
@@ -46,7 +48,8 @@ export default function SideControls({
               return a.title.localeCompare(b.title);
             case "AlphaDes":
               return b.title.localeCompare(a.title);
-            case "Time":
+            case "ChronoDes":
+              return a.timestamp && b.timestamp ? b.timestamp - a.timestamp : 0;
             default:
               return a.timestamp && b.timestamp ? a.timestamp - b.timestamp : 0;
           }
@@ -74,7 +77,7 @@ export default function SideControls({
         value={searchQuery}
         fill={true}
         type="search"
-        placeholder="Search..."
+        placeholder={`Search... (${userConcepts.length} concepts)`}
         onChange={(evt) => {
           setSearchQuery(evt.target.value);
           setVisibleUserConcepts([
@@ -99,6 +102,11 @@ export default function SideControls({
             <MenuItem
               text="All"
               icon={!filter ? "small-tick" : null}
+              onClick={handleFilter}
+            />
+            <MenuItem
+              text="Discovered 🎉"
+              icon={filter === "Discovered 🎉" ? "small-tick" : null}
               onClick={handleFilter}
             />
             <MenuItem
@@ -144,8 +152,13 @@ export default function SideControls({
             />
             <MenuItem
               icon="sort-numerical"
-              text="By creation order"
-              onClick={() => handleSort("Time")}
+              text="Chronologicaly"
+              onClick={() => handleSort("ChronoAsc")}
+            />
+            <MenuItem
+              icon="sort-numerical-desc"
+              text="Chronologicaly descending"
+              onClick={() => handleSort("ChronoDes")}
             />
           </Menu>
         }
