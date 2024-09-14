@@ -19,7 +19,6 @@ export default function SideBar({
 
   return (
     <aside>
-      <div className="description">INFINITE CONCEPTS</div>
       <div>
         <span>Basic concepts of </span>
         <FieldSelect

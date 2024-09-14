@@ -17,6 +17,24 @@ body,
 .react-flow__attribution {
   display: none;
 }
+.react-flow__panel.bottom.right {
+  opacity: 0.7;
+  transform: scale(0.8) translate(30px, 25px);
+}
+.react-flow__panel.top.left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 10px;
+}
+.react-flow__panel.top.left > p {
+  opacity: 1;
+  font-size: larger;
+  margin-bottom: 5px;
+}
+.react-flow__panel.top.left > div {
+  opacity: 0.2;
+}
 
 .react-flow__node.highlight > .react-flow__node-default {
   background: #ff0072;
@@ -34,16 +52,31 @@ body,
   height: 100%;
 }
 
+.react-flow__node-default {
+  border-color: #c7c7c7;
+}
+.dndflow:has(.dark) .react-flow__node-default {
+  border-color: #3c3c3c;
+}
+.dndflow .react-flow__node-default:hover {
+  transform: scale(1.1);
+  z-index: 10;
+  box-shadow: 7px 4px 4px rgba(0, 0, 0, 0.2);
+}
+
 .dndflow .dndnode {
   height: 20px;
   padding: 4px;
-  border: 1px solid #1a192b;
+  border: 1px solid #c7c7c7;
   border-radius: 2px;
   margin-bottom: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: grab;
+}
+.dndflow:has(.dark) .dndnode {
+  border-color: #1a192b;
 }
 
 .dndflow .dndnode.input {
@@ -84,6 +117,13 @@ body,
   margin-bottom: -20px;
 }
 
+.react-flow__node-toolbar {
+  opacity: 0.5;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 /*************/
 /*  Sidebar  */
 /*************/
@@ -93,7 +133,7 @@ body,
   flex-direction: column;
   gap: 5px;
   border-left-color: 1px solid #eee;
-  padding: 15px 10px;
+  padding: 6px 10px;
   font-size: 12px;
   background: #fcfcfc;
 }
@@ -103,13 +143,14 @@ body,
 }
 
 .dndflow aside .nodes.user-concepts {
-  padding-top: 5px;
-  padding-right: 6px;
+  margin-left: -8px;
+  margin-right: -3px;
+  padding: 5px 8px;
   overflow-x: none;
   overflow-y: auto;
 }
 
-.dndflow aside > div:nth-child(2) {
+.dndflow aside > div:first-child {
   font-size: 14px;
   display: flex;
   align-items: center;
@@ -134,7 +175,7 @@ body,
   gap: 8px;
   padding: 8px 12px;
   font-size: 14px;
-  border: 1px solid black;
+  border: 1px solid #c7c7c7;
   border-radius: 6px;
 }
 .dndflow:has(.dark) aside .nodes .sideconcept {
@@ -143,7 +184,8 @@ body,
 }
 .dndflow aside .nodes .sideconcept:hover {
   transform: scale(1.1);
-  box-shadow: 10px 5px 5px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  box-shadow: 7px 4px 4px rgba(0, 0, 0, 0.2);
 }
 
 .sideconcept-new {

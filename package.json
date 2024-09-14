@@ -12,6 +12,7 @@
     "@anthropic-ai/sdk": "^0.24.0",
     "@blueprintjs/core": "^5.11.0",
     "@blueprintjs/select": "^5.2.2",
+    "@fortawesome/free-regular-svg-icons": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@xyflow/react": "^12.0.4",

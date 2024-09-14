@@ -1,4 +1,12 @@
 import { NodeToolbar, useReactFlow } from "@xyflow/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  // faQuestion,
+  faCircleQuestion,
+  faRightToBracket,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
+// import { faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
 import axios from "axios";
 import { useState } from "react";
 import DetailsDialog from "../components/DetailsDialog";
@@ -30,11 +38,21 @@ export function NodeWithToolBar({ id, data }: NodeProps) {
       <NodeToolbar
         isVisible={data.forceToolbarVisible || undefined}
         position={data.toolbarPosition}
-        align={"start"}
+        align="start"
       >
-        <button onClick={handleJustify}>🔀</button>
-        <button onClick={handleExplain}>ℹ️</button>
-        <button onClick={handleRemove}>❌</button>
+        <FontAwesomeIcon
+          icon={faRightToBracket}
+          size="lg"
+          onClick={handleJustify}
+        />
+
+        <FontAwesomeIcon
+          icon={faCircleQuestion}
+          size="lg"
+          onClick={handleExplain}
+        />
+
+        <FontAwesomeIcon icon={faTrash} onClick={handleRemove} />
       </NodeToolbar>
       <div className="react-flow__node-default">{data?.label}</div>
       <DetailsDialog

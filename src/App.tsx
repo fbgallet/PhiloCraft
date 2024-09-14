@@ -507,7 +507,7 @@ function InfiniteConcepts() {
           onDragOver={onDragOver}
         >
           <Background />
-          <MiniMap />
+          <MiniMap pannable position="bottom-right" />
           <Controls showInteractive={false}>
             <ControlButton onClick={onColorModeChange}>
               {colorMode === "light" ? (
@@ -518,9 +518,10 @@ function InfiniteConcepts() {
             </ControlButton>
           </Controls>
           <Panel position="top-left">
-            <div>Released combinations: {nbOfReleasedCombinations}</div>
-            <div>Combinations in DB: {nbOfCombinations}</div>
-            <div>Concepts in DB: {nbOfConcepts}</div>
+            <p>INFINITE CONCEPTS ♾️</p>
+            <div>{nbOfReleasedCombinations} released combinations</div>
+            <div>{nbOfCombinations} combinations in DB</div>
+            <div>{nbOfConcepts} concepts in DB</div>
           </Panel>
         </ReactFlow>
       </div>
