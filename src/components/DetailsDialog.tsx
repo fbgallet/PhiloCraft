@@ -8,6 +8,7 @@ import {
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import InfinitySpinner from "./InfinitySpinner";
+import { headers } from "../App";
 
 interface Explanation {
   meaning: string;
@@ -50,7 +51,8 @@ export default function DetailsDialog({ isOpen, setIsOpen, nodeData }) {
             category: nodeData.category,
             model: nodeData.model,
             step: "basics",
-          }
+          },
+          headers
         );
         console.log("explanation basics :>> ", data);
         setExplanation(data);
@@ -72,7 +74,8 @@ export default function DetailsDialog({ isOpen, setIsOpen, nodeData }) {
             category: nodeData.category,
             model: nodeData.model,
             step: "details",
-          }
+          },
+          headers
         );
         console.log("explanation details :>> ", data);
         setExplanation((prev) => ({ ...prev, ...data }));

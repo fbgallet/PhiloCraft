@@ -1,4 +1,5 @@
 import axios from "axios";
+import { headers } from "../App";
 
 interface BasicConcept {
   title: string;
@@ -74,7 +75,8 @@ export const initializeBasicConcepts = async (): Promise<Concept[] | []> => {
           field: [basic.field],
           category: "Ordinary",
           isBasic: true,
-        }
+        },
+        headers
       );
       initializedBasicConcepts.push(data);
       console.log("basic concept loaded from DB:>> ", data);

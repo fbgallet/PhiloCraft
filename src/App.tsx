@@ -9,7 +9,6 @@ import {
   MouseEvent,
   useRef,
   useEffect,
-  EventHandler,
   StrictMode,
 } from "react";
 import {
@@ -32,13 +31,20 @@ import Sidebar from "./components/Sidebar.tsx";
 import { initialNodes, nodeTypes } from "./nodes";
 import { initialEdges, edgeTypes } from "./edges";
 
-import { getStoredUserconcepts } from "./utils/data.ts";
+import { getStoredBasicConcepts, getStoredUserConcepts } from "./utils/data.ts";
 import axios from "axios";
 import { Concept, initializeBasicConcepts } from "./data/concept.ts";
 import { Combination } from "./data/combination.ts";
 import Confetti from "./components/Confetti.tsx";
 import InfinitySpinner from "./components/InfinitySpinner.tsx";
 import FieldSelect from "./components/FieldSelect.tsx";
+
+const apiKey = import.meta.env.VITE_API_KEY;
+export const headers = {
+  headers: {
+    "x-api-key": apiKey,
+  },
+};
 
 let id: number = 1;
 const getId = (): string => `${(id++).toString()}`;
@@ -55,9 +61,11 @@ function InfiniteConcepts() {
   );
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
-  const [basicConcepts, setBasicConcepts] = useState<Concept[]>([]);
+  const [basicConcepts, setBasicConcepts] = useState<Concept[]>(
+    getStoredBasicConcepts() || []
+  );
   const [userConcepts, setUserConcepts] = useState<Concept[]>(
-    getStoredUserconcepts() || []
+    getStoredUserConcepts() || []
   );
   const [combinations, setCombinations] = useState<Combination[]>([]);
   const [combinationToCreate, setCombinationToCreate] =
@@ -75,7 +83,10 @@ function InfiniteConcepts() {
   useEffect(() => {
     const fetchCombinations = async (): Promise<void> => {
       try {
-        const { data } = await axios.get("http://localhost:3001/combinations");
+        const { data } = await axios.get(
+          "http://localhost:3001/combinations",
+          headers
+        );
         console.log("combinations from DB:>> ", data);
         if (data) {
           console.log("data.length :>> ", data.length);
@@ -94,11 +105,16 @@ function InfiniteConcepts() {
     const fetchConcepts = async (): Promise<void> => {
       try {
         if (!basicConcepts.length) {
-          const { data } = await axios.post("http://localhost:3001/concepts", {
-            onlyBasics: true,
-          });
+          const { data } = await axios.post(
+            "http://localhost:3001/concepts",
+            {
+              onlyBasics: true,
+            },
+            headers
+          );
           console.log("concepts loaded from DB:>> ", data);
           if (data && data.concepts.length) {
+            localStorage.basicConcepts = JSON.stringify(data.concepts);
             setBasicConcepts(data.concepts);
             setNbOfConcepts(data.conceptsNb);
 
@@ -129,7 +145,8 @@ function InfiniteConcepts() {
             combinationToCreate.idsToCombine[1],
           ],
           model,
-        }
+        },
+        headers
       );
       console.log("data from /combination/create :>> ", data);
       if (data) {
@@ -417,7 +434,10 @@ function InfiniteConcepts() {
         targetNodeId: newNodeId,
       });
     } else {
-      axios.put(`http://localhost:3001/combination/use/${combination._id}`);
+      axios.put(
+        `http://localhost:3001/combination/use/${combination._id}`,
+        headers
+      );
       combination.counter++;
       // combination.result?.craftedCounter++;
       resultingConcept = userConcepts.find(
@@ -425,7 +445,8 @@ function InfiniteConcepts() {
       );
       if (!resultingConcept) {
         const { data } = await axios.put(
-          `http://localhost:3001/concept/${combination.result}`
+          `http://localhost:3001/concept/${combination.result}`,
+          headers
         );
         resultingConcept = data;
         resultingConcept &&

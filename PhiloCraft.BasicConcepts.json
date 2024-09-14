@@ -1,0 +1,544 @@
+[{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb314a"
+  },
+  "title": "Being",
+  "icon": "🌟",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "metaphysic"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 2
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb314e"
+  },
+  "title": "Nothingness",
+  "icon": "🕳️",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "metaphysic"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb3152"
+  },
+  "title": "Principle",
+  "icon": "🏛️",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "metaphysic"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb3156"
+  },
+  "title": "Cause",
+  "icon": "🔗",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "metaphysic"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb3158"
+  },
+  "title": "Identity",
+  "icon": "🟰",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "logic"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb315c"
+  },
+  "title": "Contradiction",
+  "icon": "⊥",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "logic"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb3160"
+  },
+  "title": "Implication",
+  "icon": "➡️",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "logic"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb3164"
+  },
+  "title": "Consistency",
+  "icon": "✅",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "logic"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb3168"
+  },
+  "title": "Truth",
+  "icon": "🔍",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "epistemology"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb316c"
+  },
+  "title": "Belief",
+  "icon": "🙏",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "epistemology"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb3170"
+  },
+  "title": "Justification",
+  "icon": "⚖️",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "epistemology"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb3174"
+  },
+  "title": "Experience",
+  "icon": "🧪",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "epistemology"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb3178"
+  },
+  "title": "Consciousness",
+  "icon": "💡",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "philosophy of mind"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb317c"
+  },
+  "title": "Free will",
+  "icon": "🤔",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "philosophy of mind"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb3180"
+  },
+  "title": "Personal identity",
+  "icon": "🪪",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "philosophy of mind"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb3184"
+  },
+  "title": "Reason",
+  "icon": "🧠",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "philosophy of mind"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb3188"
+  },
+  "title": "Good",
+  "icon": "😇",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "ethic"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb318c"
+  },
+  "title": "Duty",
+  "icon": "📌",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "ethic"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb318e"
+  },
+  "title": "Value",
+  "icon": "⚖️",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "ethic"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb3192"
+  },
+  "title": "Others",
+  "icon": "👥",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "ethic"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb3196"
+  },
+  "title": "Justice",
+  "icon": "⚖️",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "political philosophy"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb319a"
+  },
+  "title": "Freedom",
+  "icon": "🕊️",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "political philosophy"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb319e"
+  },
+  "title": "Power",
+  "icon": "👑",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "political philosophy"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb31a0"
+  },
+  "title": "Law",
+  "icon": "📜",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "political philosophy"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb31a4"
+  },
+  "title": "Beauty",
+  "icon": "🌺",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "aesthetics"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb31a8"
+  },
+  "title": "Taste",
+  "icon": "👁️",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "aesthetics"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb31ac"
+  },
+  "title": "Feelings",
+  "icon": "💖",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "aesthetics"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb31b0"
+  },
+  "title": "Genius",
+  "icon": "👩‍🎨",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "aesthetics"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb31b2"
+  },
+  "title": "Language",
+  "icon": "🗣️",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "other fields"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb31b6"
+  },
+  "title": "History",
+  "icon": "📜",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "other fields"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb31ba"
+  },
+  "title": "Religion",
+  "icon": "🙏",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "other fields"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb31be"
+  },
+  "title": "Nature",
+  "icon": "🌿",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "other fields"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb31c2"
+  },
+  "title": "Technology",
+  "icon": "💻",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "other fields"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c8ad11989133092ccb31d2"
+  },
+  "title": "Society",
+  "icon": "👥",
+  "isBasic": true,
+  "category": "Ordinary",
+  "field": [
+    "other fields"
+  ],
+  "usedCounter": 0,
+  "craftedCounter": 0,
+  "explanation": [],
+  "__v": 0
+}]
