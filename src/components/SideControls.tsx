@@ -31,10 +31,12 @@ export default function SideControls({
         ...userConcepts.filter((concept: Concept) =>
           value === "Discovered 🎉"
             ? concept.isNew
-            : value.includes(
-                concept.category ||
-                  (value === "Ordinary concepts" && !concept.category)
-              )
+            : value
+                .toLowerCase()
+                .includes(
+                  concept.category.toLowerCase() ||
+                    (value === "Common concepts" && !concept.category)
+                )
         ),
       ]);
   };
@@ -110,19 +112,14 @@ export default function SideControls({
               onClick={handleFilter}
             />
             <MenuItem
-              text="Ordinary concepts"
-              icon={filter === "Ordinary concepts" ? "small-tick" : null}
+              text="Common concepts"
+              icon={filter === "Common concepts" ? "small-tick" : null}
               //   icon={selectedField.title === field.title ? "small-tick" : null}
               onClick={handleFilter}
             />
             <MenuItem
-              text="Technical concepts"
-              icon={filter === "Technical concepts" ? "small-tick" : null}
-              onClick={handleFilter}
-            />
-            <MenuItem
-              icon={filter === "Analytical concepts" ? "small-tick" : null}
-              text="Analytical concepts"
+              text="Proprietary concepts"
+              icon={filter === "Proprietary concepts" ? "small-tick" : null}
               onClick={handleFilter}
             />
             <MenuItem

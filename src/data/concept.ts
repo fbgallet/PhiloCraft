@@ -13,6 +13,7 @@ export interface Concept extends BasicConcept {
   category: string;
   explanation: [{}];
   logic: [string];
+  philosopher: string;
   model?: string;
   timestamp: number;
   usedCounter: number;

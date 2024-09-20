@@ -79,6 +79,7 @@ function InfiniteConcepts() {
   const [nbOfConcepts, setNbOfConcepts] = useState<number>(0);
   const { getIntersectingNodes } = useReactFlow();
   const { screenToFlowPosition } = useReactFlow();
+  const loadingBasics = useRef(false);
 
   useEffect(() => {
     const fetchCombinations = async (): Promise<void> => {
@@ -104,7 +105,8 @@ function InfiniteConcepts() {
     };
     const fetchConcepts = async (): Promise<void> => {
       try {
-        if (!basicConcepts.length) {
+        if (!basicConcepts.length && !loadingBasics.current) {
+          loadingBasics.current = true;
           const { data } = await axios.post(
             "http://localhost:3001/concepts",
             {
@@ -121,10 +123,16 @@ function InfiniteConcepts() {
             //if (!userConcepts.length) setUserConcepts([...data.slice(0, 4)]);
             // console.log("data.slice(0, 4) :>> ", data.slice(0, 4));
           }
+        } else {
+          const { data } = await axios.post(
+            "http://localhost:3001/concepts",
+            {
+              getOnlyNb: true,
+            },
+            headers
+          );
+          data && setNbOfConcepts(data.conceptsNb);
         }
-        // else {
-        //   setBasicConcepts(await initializeBasicConcepts());
-        // }
         await fetchCombinations();
       } catch (error: any) {
         console.log(error.message);
@@ -171,6 +179,7 @@ function InfiniteConcepts() {
                     conceptTitle: resultingConcept.title,
                     logic: [combination.logic],
                     category: resultingConcept.category,
+                    philosopher: resultingConcept.philosopher,
                     isNew: resultingConcept.isNew,
                     model,
                   },
@@ -373,6 +382,7 @@ function InfiniteConcepts() {
           explanation: getExplanationByModel(droppedConcept.explanation, model),
           logic: droppedConcept.logic,
           category: droppedConcept.category,
+          philosopher: droppedConcept.philosopher || "",
           model,
         },
         height: 40,
@@ -436,6 +446,7 @@ function InfiniteConcepts() {
     } else {
       axios.put(
         `http://localhost:3001/combination/use/${combination._id}`,
+        {},
         headers
       );
       combination.counter++;
@@ -446,6 +457,7 @@ function InfiniteConcepts() {
       if (!resultingConcept) {
         const { data } = await axios.put(
           `http://localhost:3001/concept/${combination.result}`,
+          {},
           headers
         );
         resultingConcept = data;

@@ -49,6 +49,7 @@ export default function DetailsDialog({ isOpen, setIsOpen, nodeData }) {
             id: nodeData.conceptId,
             title: nodeData.conceptTitle,
             category: nodeData.category,
+            philosopher: nodeData.philosopher,
             model: nodeData.model,
             step: "basics",
           },
@@ -72,6 +73,7 @@ export default function DetailsDialog({ isOpen, setIsOpen, nodeData }) {
             id: nodeData.conceptId,
             title: nodeData.conceptTitle,
             category: nodeData.category,
+            philosopher: nodeData.philosopher,
             model: nodeData.model,
             step: "details",
           },
@@ -92,7 +94,11 @@ export default function DetailsDialog({ isOpen, setIsOpen, nodeData }) {
 
   return (
     <Dialog
-      title={`${nodeData.label} (${nodeData.category} concept)`}
+      title={`${nodeData.label} (${
+        nodeData.category.toLowerCase() === "proprietary"
+          ? nodeData.philosopher
+          : nodeData.category + " concept"
+      })`}
       // icon={nodeData.icon}
       isOpen={isOpen}
       onClose={toggleOverlay}
