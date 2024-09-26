@@ -33,11 +33,11 @@ import { initialEdges, edgeTypes } from "./edges";
 
 import { getStoredBasicConcepts, getStoredUserConcepts } from "./utils/data.ts";
 import axios from "axios";
-import { Concept, initializeBasicConcepts } from "./data/concept.ts";
+import { Concept } from "./data/concept.ts";
 import { Combination } from "./data/combination.ts";
 import Confetti from "./components/Confetti.tsx";
 import InfinitySpinner from "./components/InfinitySpinner.tsx";
-import FieldSelect from "./components/FieldSelect.tsx";
+// import FieldSelect from "./components/FieldSelect.tsx";
 
 const apiKey = import.meta.env.VITE_API_KEY;
 export const headers = {
@@ -177,6 +177,7 @@ function InfiniteConcepts() {
                     label: resultingConcept.icon + " " + resultingConcept.title,
                     conceptId: resultingConcept._id,
                     conceptTitle: resultingConcept.title,
+                    alternativeConcepts: combination.otherResults,
                     logic: [combination.logic],
                     category: resultingConcept.category,
                     philosopher: resultingConcept.philosopher,

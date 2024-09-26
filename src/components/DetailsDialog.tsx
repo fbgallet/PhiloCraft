@@ -95,7 +95,7 @@ export default function DetailsDialog({ isOpen, setIsOpen, nodeData }) {
   return (
     <Dialog
       title={`${nodeData.label} (${
-        nodeData.category.toLowerCase() === "proprietary"
+        nodeData.category?.toLowerCase() === "proprietary"
           ? nodeData.philosopher
           : nodeData.category + " concept"
       })`}
