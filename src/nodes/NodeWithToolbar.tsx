@@ -7,12 +7,16 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 // import { faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
-import axios from "axios";
 import { useState } from "react";
 import DetailsDialog from "../components/DetailsDialog";
 import JustifyDialog from "../components/JustifyDialog";
 
-export function NodeWithToolBar({ id, data }: NodeProps) {
+interface NodeWithToolBarProps {
+  id: string;
+  data: any;
+}
+
+export function NodeWithToolBar({ id, data }: NodeWithToolBarProps) {
   const reactFlow = useReactFlow();
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] =
     useState<boolean>(false);
