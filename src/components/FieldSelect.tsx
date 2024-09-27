@@ -76,9 +76,11 @@ export function FieldSelect({
     handleFieldSelect(fieldToRemove[0]);
   };
 
+  const SelectAny = Select as any;
+
   return (
     <div style={{ display: "flex", flexDirection: "row", gap: "5px" }}>
-      <Select
+      <SelectAny
         items={FIELDS_LIST}
         itemRenderer={renderfield}
         noResults={<MenuItem disabled text="No results." />}
@@ -87,10 +89,9 @@ export function FieldSelect({
         selectedItems={selectedField}
         onClear={handleClear}
         query={queryStr}
-        onQueryChange={(q, e) => {
-          console.log("e onQuery", e);
+        onQueryChange={(query: string, e: Event) => {
           e?.stopPropagation();
-          setQueryStr(q);
+          setQueryStr(query);
         }}
         inputProps={{
           inputClassName: "input-class",
@@ -105,7 +106,7 @@ export function FieldSelect({
           },
         }}
         popoverProps={{ minimal: true }}
-        itemPredicate={(query, item) => {
+        itemPredicate={(query: string, item: Field) => {
           if (!query.trim()) return true;
           return item.title.toLowerCase().includes(query.toLowerCase());
         }}
@@ -116,7 +117,7 @@ export function FieldSelect({
           }
           rightIcon="double-caret-vertical"
         />
-      </Select>
+      </SelectAny>
     </div>
   );
 }
