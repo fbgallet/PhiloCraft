@@ -11,7 +11,7 @@ export interface Concept extends BasicConcept {
   _id: string;
   isBasic?: boolean;
   category: string;
-  explanation: [{}];
+  explanation: [{ model: string; content: {} }];
   logic: [string];
   philosopher: string;
   model?: string;
@@ -21,42 +21,42 @@ export interface Concept extends BasicConcept {
   isNew: boolean;
 }
 
-// export const basicConcepts: BasicConcept[] = [
-//   { title: "Being", icon: "🌟", field: "metaphysic" },
-//   { title: "Nothingness", icon: "🕳️", field: "metaphysic" },
-//   { title: "Principle", icon: "🏛️", field: "metaphysic" },
-//   { title: "Cause", icon: "🔗", field: "metaphysic" },
-//   { title: "Identity", icon: "🟰", field: "logic" },
-//   { title: "Contradiction", icon: "⊥", field: "logic" },
-//   { title: "Implication", icon: "➡️", field: "logic" },
-//   { title: "Consistency", icon: "✅", field: "logic" },
-//   { title: "Truth", icon: "🔍", field: "epistemology" },
-//   { title: "Belief", icon: "🙏", field: "epistemology" },
-//   { title: "Justification", icon: "⚖️", field: "epistemology" },
-//   { title: "Experience", icon: "🧪", field: "epistemology" },
-//   { title: "Consciousness", icon: "💡", field: "philosophy of mind" },
-//   { title: "Free will", icon: "🤔", field: "philosophy of mind" },
-//   { title: "Personal identity", icon: "🪪", field: "philosophy of mind" },
-//   { title: "Reason", icon: "🧠", field: "philosophy of mind" },
-//   { title: "Good", icon: "😇", field: "ethic" },
-//   { title: "Duty", icon: "📌", field: "ethic" },
-//   { title: "Value", icon: "⚖️", field: "ethic" },
-//   { title: "Others", icon: "👥", field: "ethic" },
-//   { title: "Justice", icon: "⚖️", field: "political philosophy" },
-//   { title: "Freedom", icon: "🕊️", field: "political philosophy" },
-//   { title: "Power", icon: "👑", field: "political philosophy" },
-//   { title: "Law", icon: "📜", field: "political philosophy" },
-//   { title: "Beauty", icon: "🌺", field: "aesthetics" },
-//   { title: "Taste", icon: "👁️", field: "aesthetics" },
-//   { title: "Feelings", icon: "💖", field: "aesthetics" },
-//   { title: "Genius", icon: "👩‍🎨", field: "aesthetics" },
-//   { title: "Language", icon: "🗣️", field: "other fields" },
-//   { title: "History", icon: "📜", field: "other fields" },
-//   { title: "Religion", icon: "🙏", field: "other fields" },
-//   { title: "Nature", icon: "🌿", field: "other fields" },
-//   { title: "Technology", icon: "💻", field: "other fields" },
-//   { title: "Society", icon: "👥", field: "other fields" },
-// ];
+export const basicConcepts: BasicConcept[] = [
+  { title: "Being", icon: "🌟", field: "metaphysic" },
+  { title: "Nothingness", icon: "🕳️", field: "metaphysic" },
+  { title: "Principle", icon: "🏛️", field: "metaphysic" },
+  { title: "Cause", icon: "🔗", field: "metaphysic" },
+  { title: "Identity", icon: "🟰", field: "logic" },
+  { title: "Contradiction", icon: "⊥", field: "logic" },
+  { title: "Implication", icon: "➡️", field: "logic" },
+  { title: "Consistency", icon: "✅", field: "logic" },
+  { title: "Truth", icon: "🔍", field: "epistemology" },
+  { title: "Belief", icon: "🙏", field: "epistemology" },
+  { title: "Justification", icon: "⚖️", field: "epistemology" },
+  { title: "Experience", icon: "🧪", field: "epistemology" },
+  { title: "Consciousness", icon: "💡", field: "philosophy of mind" },
+  { title: "Free will", icon: "🤔", field: "philosophy of mind" },
+  { title: "Personal identity", icon: "🪪", field: "philosophy of mind" },
+  { title: "Reason", icon: "🧠", field: "philosophy of mind" },
+  { title: "Good", icon: "😇", field: "ethic" },
+  { title: "Duty", icon: "📌", field: "ethic" },
+  { title: "Value", icon: "⚖️", field: "ethic" },
+  { title: "Others", icon: "👥", field: "ethic" },
+  { title: "Justice", icon: "⚖️", field: "political philosophy" },
+  { title: "Freedom", icon: "🕊️", field: "political philosophy" },
+  { title: "Power", icon: "👑", field: "political philosophy" },
+  { title: "Law", icon: "📜", field: "political philosophy" },
+  { title: "Beauty", icon: "🌺", field: "aesthetics" },
+  { title: "Taste", icon: "👁️", field: "aesthetics" },
+  { title: "Feelings", icon: "💖", field: "aesthetics" },
+  { title: "Genius", icon: "👩‍🎨", field: "aesthetics" },
+  { title: "Language", icon: "🗣️", field: "other fields" },
+  { title: "History", icon: "📜", field: "other fields" },
+  { title: "Religion", icon: "🙏", field: "other fields" },
+  { title: "Nature", icon: "🌿", field: "other fields" },
+  { title: "Technology", icon: "💻", field: "other fields" },
+  { title: "Society", icon: "👥", field: "other fields" },
+];
 
 export let clonedConcepts: Concept[] = [];
 

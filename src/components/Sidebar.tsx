@@ -5,12 +5,19 @@ import { FIELDS_LIST, Field, FieldSelect } from "./FieldSelect.tsx";
 import { Divider } from "@blueprintjs/core";
 import SideControls from "./SideControls.tsx";
 
+interface SideBarProps {
+  basicConcepts: Concept[];
+  userConcepts: Concept[];
+  setUserConcepts: Function;
+  setIsSortChange: Function;
+}
+
 export default function SideBar({
   basicConcepts,
   userConcepts,
   setUserConcepts,
   setIsSortChange,
-}) {
+}: SideBarProps) {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedField, setSelectedField] = useState<Field>(FIELDS_LIST[0]);
   const [filter, setFilter] = useState<string>("");
@@ -30,6 +37,8 @@ export default function SideBar({
         {basicConcepts
           .filter(
             (concept: Concept) =>
+              concept &&
+              concept?.field?.length &&
               concept.field[0] === selectedField.title.toLowerCase()
           )
           .map((concept: Concept, index: number) => (

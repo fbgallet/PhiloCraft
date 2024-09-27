@@ -400,7 +400,10 @@ function InfiniteConcepts() {
     [screenToFlowPosition, nodes, userConcepts]
   );
 
-  const getExplanationByModel = (explanationsArray: [{}], model: string) => {
+  const getExplanationByModel = (
+    explanationsArray: [{ model: string; content: {} }],
+    model: string
+  ) => {
     if (!explanationsArray.length) return undefined;
     const explanationForModel = explanationsArray.find(
       (expl) => expl.model === model
@@ -453,7 +456,7 @@ function InfiniteConcepts() {
       combination.counter++;
       // combination.result?.craftedCounter++;
       resultingConcept = userConcepts.find(
-        (concept) => concept._id === combination.result
+        (concept) => concept._id === combination?.result
       );
       if (!resultingConcept) {
         const { data } = await axios.put(
@@ -462,8 +465,9 @@ function InfiniteConcepts() {
           headers
         );
         resultingConcept = data;
-        resultingConcept &&
-          setUserConcepts((prev) => [...prev, resultingConcept]);
+        setUserConcepts((prev) =>
+          resultingConcept ? [...prev, resultingConcept] : prev
+        );
       }
     }
 

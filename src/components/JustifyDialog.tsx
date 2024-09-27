@@ -2,9 +2,19 @@ import { Dialog, DialogBody } from "@blueprintjs/core";
 
 import { useCallback } from "react";
 
-export default function JustifyDialog({ isOpen, setIsOpen, nodeData }) {
+interface JustifyDialogProps {
+  isOpen: boolean;
+  setIsOpen: Function;
+  nodeData: any;
+}
+
+export default function JustifyDialog({
+  isOpen,
+  setIsOpen,
+  nodeData,
+}: JustifyDialogProps) {
   const toggleOverlay = useCallback(() => {
-    setIsOpen((open) => !open);
+    setIsOpen((open: boolean) => !open);
   }, [setIsOpen]);
 
   return (

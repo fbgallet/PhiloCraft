@@ -1,10 +1,4 @@
-import {
-  Button,
-  Collapse,
-  Dialog,
-  DialogBody,
-  setRef,
-} from "@blueprintjs/core";
+import { Collapse, Dialog, DialogBody } from "@blueprintjs/core";
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import InfinitySpinner from "./InfinitySpinner";
@@ -30,7 +24,17 @@ interface Explanation {
   };
 }
 
-export default function DetailsDialog({ isOpen, setIsOpen, nodeData }) {
+interface DetailsDialogProps {
+  isOpen: boolean;
+  setIsOpen: Function;
+  nodeData: any;
+}
+
+export default function DetailsDialog({
+  isOpen,
+  setIsOpen,
+  nodeData,
+}: DetailsDialogProps) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLoadingDetials, setIsLoadingDetails] = useState<boolean>(true);
   const [explanation, setExplanation] = useState<Explanation>(
@@ -89,7 +93,7 @@ export default function DetailsDialog({ isOpen, setIsOpen, nodeData }) {
 
   const toggleOverlay = useCallback(() => {
     setIsLoading(true);
-    setIsOpen((open) => !open);
+    setIsOpen((open: boolean) => !open);
   }, [setIsOpen, setIsLoading]);
 
   return (

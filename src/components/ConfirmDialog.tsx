@@ -1,10 +1,16 @@
 import { Button, Dialog, DialogBody, DialogFooter } from "@blueprintjs/core";
 
+interface ConfirmDialogProps {
+  isOpen: boolean;
+  setIsOpen: Function;
+  clearUserConcepts: Function;
+}
+
 export default function ConfirmDialog({
   isOpen,
   setIsOpen,
   clearUserConcepts,
-}) {
+}: ConfirmDialogProps) {
   const handleClose = () => {
     setIsOpen(false);
   };

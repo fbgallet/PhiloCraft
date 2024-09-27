@@ -1,15 +1,6 @@
 import { Concept } from "../data/concept";
 
-const SideConcept = ({
-  _id,
-  title,
-  icon,
-  isBasic,
-  logic,
-  category,
-  field,
-  isNew,
-}: Concept) => {
+const SideConcept = ({ _id, title, icon, isBasic, isNew }: Concept) => {
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,
     conceptId: string

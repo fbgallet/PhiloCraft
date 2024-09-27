@@ -7,6 +7,11 @@ export interface Field {
   color: string;
 }
 
+interface FieldSelectProps {
+  selectedField: any;
+  setSelectedField: Function;
+}
+
 export const FIELDS_LIST = [
   { title: "Metaphysic", color: Colors.RED5 },
   { title: "Logic", color: Colors.BLUE1 },
@@ -18,7 +23,10 @@ export const FIELDS_LIST = [
   { title: "Other fields", color: Colors.BLUE3 },
 ];
 
-export function FieldSelect({ selectedField, setSelectedField }) {
+export function FieldSelect({
+  selectedField,
+  setSelectedField,
+}: FieldSelectProps) {
   const [queryStr, setQueryStr] = useState<string>("");
 
   const handleFieldSelect = (field: Field) => {
@@ -27,7 +35,16 @@ export function FieldSelect({ selectedField, setSelectedField }) {
     }
     setQueryStr("");
   };
-  const renderfield = (field: Field, { handleClick, modifiers }) => {
+  const renderfield = (
+    field: Field,
+    {
+      handleClick,
+      modifiers,
+    }: {
+      handleClick: (event: React.MouseEvent<HTMLElement>) => void;
+      modifiers: { matchesPredicate: boolean; active: boolean };
+    }
+  ) => {
     if (!modifiers.matchesPredicate) return null;
     return (
       <MenuItem
@@ -50,7 +67,7 @@ export function FieldSelect({ selectedField, setSelectedField }) {
     setSelectedField(FIELDS_LIST[0]);
   };
 
-  const renderTag = (field: Field) => field.title;
+  const renderTag = (field: Field): string => field.title;
 
   const handleTagRemove = (title: string) => {
     const fieldToRemove: Field[] = selectedField.filter(
@@ -82,7 +99,7 @@ export function FieldSelect({ selectedField, setSelectedField }) {
           onRemove: handleTagRemove,
           tagProps: {
             interactive: true,
-            onClick: (e) => {
+            onClick: (e: MouseEvent) => {
               e.stopPropagation();
             },
           },

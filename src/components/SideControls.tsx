@@ -7,8 +7,19 @@ import {
   Popover,
 } from "@blueprintjs/core";
 import { Concept } from "../data/concept";
-import { ReactPropTypes, useState } from "react";
+import { useState } from "react";
 import ConfirmDialog from "./ConfirmDialog";
+
+interface SideControlsProps {
+  searchQuery: string;
+  setSearchQuery: Function;
+  userConcepts: Concept[];
+  setUserConcepts: Function;
+  filter: string;
+  setFilter: Function;
+  setIsSortChange: Function;
+  setVisibleUserConcepts: Function;
+}
 
 export default function SideControls({
   searchQuery,
@@ -19,10 +30,11 @@ export default function SideControls({
   setFilter,
   setIsSortChange,
   setVisibleUserConcepts,
-}) {
+}: SideControlsProps) {
   const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
 
-  const handleFilter = (evt) => {
+  // React.MouseEvent<HTMLElement, MouseEvent>
+  const handleFilter = (evt: any) => {
     const value =
       evt.target.textContent === "All" ? "" : evt.target.textContent;
     setFilter(value);
