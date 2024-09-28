@@ -4,6 +4,7 @@ interface ConfirmDialogProps {
   isOpen: boolean;
   setIsOpen: Function;
   clearUserConcepts: Function;
+  language: string;
 }
 
 export default function ConfirmDialog({

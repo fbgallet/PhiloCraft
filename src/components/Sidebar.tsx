@@ -10,6 +10,7 @@ interface SideBarProps {
   userConcepts: Concept[];
   setUserConcepts: Function;
   setIsSortChange: Function;
+  language: string;
 }
 
 export default function SideBar({
@@ -17,6 +18,7 @@ export default function SideBar({
   userConcepts,
   setUserConcepts,
   setIsSortChange,
+  language,
 }: SideBarProps) {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedField, setSelectedField] = useState<Field>(FIELDS_LIST[0]);
@@ -27,7 +29,11 @@ export default function SideBar({
   return (
     <aside>
       <div>
-        <span>Basic concepts of </span>
+        <span>
+          {language === "EN"
+            ? "Basic concepts of "
+            : "Concepts élémentaires en "}
+        </span>
         <FieldSelect
           selectedField={selectedField}
           setSelectedField={setSelectedField}

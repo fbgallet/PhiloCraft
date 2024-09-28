@@ -30,6 +30,31 @@ interface DetailsDialogProps {
   nodeData: any;
 }
 
+const dialogTitles = {
+  meaning: {
+    EN: "Meaning",
+    FR: "Signification",
+  },
+  example: {
+    EN: "Example",
+    FR: "Exemple",
+  },
+  interest: {
+    EN: "Why is it worth thinking about ?",
+    FR: "Pourquoi ça vaut la peine d'y réfléchir ?",
+  },
+  views: {
+    EN: ["Wondering what ", " and ", " think about this concept ?"],
+    FR: [
+      "Curieux d'apprendre ce que ",
+      " et ",
+      " pensent au sujet de ce concept ?",
+    ],
+  },
+};
+
+type Language = "EN" | "FR";
+
 export default function DetailsDialog({
   isOpen,
   setIsOpen,
@@ -42,6 +67,7 @@ export default function DetailsDialog({
   );
   const [interestIsOpen, setInterestIsOpen] = useState<boolean>(false);
   const [refIsOpen, setRefIsOpen] = useState<boolean>(false);
+  const language: Language = headers.headers.language;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -116,16 +142,16 @@ export default function DetailsDialog({
           <InfinitySpinner />
         ) : (
           <div>
-            <h4>Meaning</h4>
+            <h4>{dialogTitles.meaning[language]}</h4>
             <p>{explanation.meaning}</p>
-            <h4>Example</h4>
+            <h4>{dialogTitles.example[language]}</h4>
             <p>{explanation.example}</p>
 
             <h4
               style={{ cursor: "pointer" }}
               onClick={() => setInterestIsOpen((prev) => !prev)}
             >
-              {interestIsOpen ? "−" : "+"} Why is it worth thinking about ?
+              {interestIsOpen ? "−" : "+"} {dialogTitles.interest[language]}
             </h4>
             <Collapse isOpen={interestIsOpen}>
               {isLoadingDetials ? (
@@ -139,10 +165,12 @@ export default function DetailsDialog({
               style={{ cursor: "pointer" }}
               onClick={() => setRefIsOpen((prev) => !prev)}
             >
-              {refIsOpen ? "−" : "+"} Wondering what{" "}
-              {explanation?.views?.support.philosopher} and{" "}
-              {explanation?.views?.critic.philosopher} think about{" "}
-              {nodeData.title} ?
+              {refIsOpen ? "− " : "+ "}
+              {dialogTitles.views[language][0]}
+              {explanation?.views?.support.philosopher}
+              {dialogTitles.views[language][1]}
+              {explanation?.views?.critic.philosopher}
+              {dialogTitles.views[language][2]}
             </h4>
             <Collapse isOpen={refIsOpen}>
               {isLoadingDetials ? (

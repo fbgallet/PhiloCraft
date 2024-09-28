@@ -1,7 +1,7 @@
 import type { Edge, Node, OnConnect, Rect, XYPosition } from "@xyflow/react";
-
+import { Icon, Menu, MenuItem, Popover } from "@blueprintjs/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 
 import {
   useState,
@@ -43,6 +43,7 @@ const apiKey = import.meta.env.VITE_API_KEY;
 export const headers = {
   headers: {
     "x-api-key": apiKey,
+    language: localStorage.language || "EN",
   },
 };
 
@@ -61,11 +62,14 @@ function InfiniteConcepts() {
   );
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
+  const [language, setLanguage] = useState<string>(
+    localStorage.language || "EN"
+  );
   const [basicConcepts, setBasicConcepts] = useState<Concept[]>(
-    getStoredBasicConcepts() || []
+    getStoredBasicConcepts(language) || []
   );
   const [userConcepts, setUserConcepts] = useState<Concept[]>(
-    getStoredUserConcepts() || []
+    getStoredUserConcepts(language) || []
   );
   const [combinations, setCombinations] = useState<Combination[]>([]);
   const [combinationToCreate, setCombinationToCreate] =
@@ -81,67 +85,79 @@ function InfiniteConcepts() {
   const { screenToFlowPosition } = useReactFlow();
   const loadingBasics = useRef(false);
 
-  useEffect(() => {
-    const fetchCombinations = async (): Promise<void> => {
-      try {
-        const { data } = await axios.get(
-          "http://localhost:3001/combinations",
+  const fetchCombinations = async (): Promise<void> => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:3001/combinations",
+        headers
+      );
+      console.log("combinations from DB:>> ", data);
+      if (data) {
+        console.log("data.length :>> ", data.length);
+        setNbOfCombinations(data.length);
+        setNbOfReleasedCombinations(
+          data.reduce((sum: number, combination: Combination) => {
+            return sum + combination.counter;
+          }, 0)
+        );
+        setCombinations(data);
+      }
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
+  const fetchConcepts = async (): Promise<void> => {
+    try {
+      if (!basicConcepts.length && !loadingBasics.current) {
+        loadingBasics.current = true;
+        const { data } = await axios.post(
+          "http://localhost:3001/concepts",
+          {
+            onlyBasics: true,
+          },
           headers
         );
-        console.log("combinations from DB:>> ", data);
-        if (data) {
-          console.log("data.length :>> ", data.length);
-          setNbOfCombinations(data.length);
-          setNbOfReleasedCombinations(
-            data.reduce((sum: number, combination: Combination) => {
-              return sum + combination.counter;
-            }, 0)
+        console.log("concepts loaded from DB:>> ", data);
+        if (data && data.concepts.length) {
+          localStorage[`basicConcepts_${language}`] = JSON.stringify(
+            data.concepts
           );
-          setCombinations(data);
-        }
-      } catch (error: any) {
-        console.log(error.message);
-      }
-    };
-    const fetchConcepts = async (): Promise<void> => {
-      try {
-        if (!basicConcepts.length && !loadingBasics.current) {
-          loadingBasics.current = true;
-          const { data } = await axios.post(
-            "http://localhost:3001/concepts",
-            {
-              onlyBasics: true,
-            },
-            headers
-          );
-          console.log("concepts loaded from DB:>> ", data);
-          if (data && data.concepts.length) {
-            localStorage.basicConcepts = JSON.stringify(data.concepts);
-            setBasicConcepts(data.concepts);
-            setNbOfConcepts(data.conceptsNb);
+          setBasicConcepts(data.concepts);
+          setNbOfConcepts(data.conceptsNb);
 
-            //if (!userConcepts.length) setUserConcepts([...data.slice(0, 4)]);
-            // console.log("data.slice(0, 4) :>> ", data.slice(0, 4));
-          }
-        } else {
-          const { data } = await axios.post(
-            "http://localhost:3001/concepts",
-            {
-              getOnlyNb: true,
-            },
-            headers
-          );
-          data && setNbOfConcepts(data.conceptsNb);
+          //if (!userConcepts.length) setUserConcepts([...data.slice(0, 4)]);
+          // console.log("data.slice(0, 4) :>> ", data.slice(0, 4));
         }
-        await fetchCombinations();
-      } catch (error: any) {
-        console.log(error.message);
+      } else {
+        const { data } = await axios.post(
+          "http://localhost:3001/concepts",
+          {
+            getOnlyNb: true,
+          },
+          headers
+        );
+        data && setNbOfConcepts(data.conceptsNb);
       }
-    };
+      await fetchCombinations();
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
 
+  useEffect(() => {
     fetchConcepts();
     handleBPColorMode();
   }, []);
+
+  useEffect(() => {
+    localStorage.language = language;
+    headers.headers.language = language;
+    const storedBasicConcepts = getStoredBasicConcepts(language);
+    if (storedBasicConcepts) setBasicConcepts(storedBasicConcepts);
+    else fetchConcepts();
+    setUserConcepts(getStoredUserConcepts(language) || []);
+    setNodes(initialNodes);
+  }, [language]);
 
   useEffect(() => {
     const createCombination = async () => {
@@ -223,7 +239,8 @@ function InfiniteConcepts() {
       setIsSortChange(false);
       return;
     }
-    localStorage.userConcepts = JSON.stringify(userConcepts);
+    console.log("localStorage :>> ", localStorage);
+    localStorage[`userConcepts_${language}`] = JSON.stringify(userConcepts);
   }, [userConcepts]);
 
   useEffect(() => {
@@ -237,6 +254,10 @@ function InfiniteConcepts() {
     localStorage.colorMode = newColorMode;
     handleBPColorMode(newColorMode);
     setColorMode(newColorMode);
+  };
+
+  const handleMenu = (evt: MouseEvent) => {
+    console.log("evt :>> ", evt);
   };
 
   const handleBPColorMode = (mode = colorMode) => {
@@ -522,6 +543,7 @@ function InfiniteConcepts() {
           // onPaneClick={onPaneClick}
           onDrop={onDrop}
           onDragOver={onDragOver}
+          proOptions={{ hideAttribution: true }}
         >
           <Background />
           <MiniMap pannable position="bottom-right" />
@@ -533,9 +555,35 @@ function InfiniteConcepts() {
                 <FontAwesomeIcon icon={faSun} />
               )}
             </ControlButton>
+
+            <Popover
+              canEscapeKeyClose
+              minimal
+              interactionKind="click"
+              content={
+                <Menu small className="main-menu">
+                  <MenuItem text="Language">
+                    <MenuItem
+                      text="English"
+                      icon={language === "EN" ? "tick" : null}
+                      onClick={() => setLanguage("EN")}
+                    />
+                    <MenuItem
+                      text="Français"
+                      icon={language === "FR" ? "tick" : null}
+                      onClick={() => setLanguage("FR")}
+                    />
+                  </MenuItem>
+                </Menu>
+              }
+            >
+              <ControlButton>
+                <FontAwesomeIcon icon={faBars} />
+              </ControlButton>
+            </Popover>
           </Controls>
           <Panel position="top-left">
-            <p>INFINITE CONCEPTS ♾️</p>
+            <p>PHILO🧩CRAFT</p>
             <div>{nbOfReleasedCombinations} released combinations</div>
             <div>{nbOfCombinations} combinations in DB</div>
             <div>{nbOfConcepts} concepts in DB</div>
@@ -548,6 +596,7 @@ function InfiniteConcepts() {
           userConcepts={userConcepts}
           setUserConcepts={setUserConcepts}
           setIsSortChange={setIsSortChange}
+          language={language}
         />
       ) : null}
       {throwConfetti ? <Confetti /> : null}
