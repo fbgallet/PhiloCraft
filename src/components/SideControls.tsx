@@ -9,6 +9,7 @@ import {
 import { Concept } from "../data/concept";
 import { useState } from "react";
 import ConfirmDialog from "./ConfirmDialog";
+import { Language } from "../App";
 
 interface SideControlsProps {
   searchQuery: string;
@@ -19,7 +20,31 @@ interface SideControlsProps {
   setFilter: Function;
   setIsSortChange: Function;
   setVisibleUserConcepts: Function;
+  language: Language;
 }
+
+const itemsTitle: any = {
+  all: {
+    EN: "All",
+    FR: "Tout",
+  },
+  dis: {
+    EN: "Discovered 🎉",
+    FR: "Découverts 🎉",
+  },
+  com: {
+    EN: "Common concepts",
+    FR: "Concepts communs",
+  },
+  pro: {
+    EN: "Proprietary concepts",
+    FR: "Concepts propriétaires",
+  },
+  cla: {
+    EN: "Classificator concepts",
+    FR: "Concepts classificatoires",
+  },
+};
 
 export default function SideControls({
   searchQuery,
@@ -30,25 +55,39 @@ export default function SideControls({
   setFilter,
   setIsSortChange,
   setVisibleUserConcepts,
+  language,
 }: SideControlsProps) {
   const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
 
+  const getEnglishTitle = (title: string): string => {
+    let titleEN = "";
+
+    for (const key in itemsTitle) {
+      if (itemsTitle.hasOwnProperty(key)) {
+        if (itemsTitle[key][language] === title) {
+          titleEN = itemsTitle[key]["EN"];
+          break;
+        }
+      }
+    }
+    return titleEN;
+  };
+
   // React.MouseEvent<HTMLElement, MouseEvent>
   const handleFilter = (evt: any) => {
-    const value =
-      evt.target.textContent === "All" ? "" : evt.target.textContent;
-    setFilter(value);
+    let title = evt.target.textContent;
+    let value: string = language === "EN" ? title : getEnglishTitle(title);
+    if (value === "All") {
+      value = title = "";
+    }
+    setFilter(title);
     value &&
       setVisibleUserConcepts([
         ...userConcepts.filter((concept: Concept) =>
           value === "Discovered 🎉"
             ? concept.isNew
-            : value
-                .toLowerCase()
-                .includes(
-                  concept.category.toLowerCase() ||
-                    (value === "Common concepts" && !concept.category)
-                )
+            : value.toLowerCase().includes(concept.category.toLowerCase()) ||
+              (value === "Common concepts" && !concept.category)
         ),
       ]);
   };
@@ -91,7 +130,9 @@ export default function SideControls({
         value={searchQuery}
         fill={true}
         type="search"
-        placeholder={`Search... (${userConcepts.length} concepts)`}
+        placeholder={`${language === "EN" ? "Search..." : "Chercher..."} (${
+          userConcepts.length
+        } concepts)`}
         onChange={(evt) => {
           setSearchQuery(evt.target.value);
           setVisibleUserConcepts([
@@ -114,29 +155,29 @@ export default function SideControls({
         content={
           <Menu>
             <MenuItem
-              text="All"
+              text={itemsTitle.all[language]}
               icon={!filter ? "small-tick" : null}
               onClick={handleFilter}
             />
             <MenuItem
-              text="Discovered 🎉"
-              icon={filter === "Discovered 🎉" ? "small-tick" : null}
+              text={itemsTitle.dis[language]}
+              icon={filter === itemsTitle.dis[language] ? "small-tick" : null}
               onClick={handleFilter}
             />
             <MenuItem
-              text="Common concepts"
-              icon={filter === "Common concepts" ? "small-tick" : null}
+              text={itemsTitle.com[language]}
+              icon={filter === itemsTitle.com[language] ? "small-tick" : null}
               //   icon={selectedField.title === field.title ? "small-tick" : null}
               onClick={handleFilter}
             />
             <MenuItem
-              text="Proprietary concepts"
-              icon={filter === "Proprietary concepts" ? "small-tick" : null}
+              text={itemsTitle.pro[language]}
+              icon={filter === itemsTitle.pro[language] ? "small-tick" : null}
               onClick={handleFilter}
             />
             <MenuItem
-              text="Classificatory concepts"
-              icon={filter === "Classificatory concepts" ? "small-tick" : null}
+              text={itemsTitle.cla[language]}
+              icon={filter === itemsTitle.cla[language] ? "small-tick" : null}
               onClick={handleFilter}
             />
           </Menu>
@@ -179,6 +220,7 @@ export default function SideControls({
         isOpen={isConfirmOpen}
         setIsOpen={setIsConfirmOpen}
         clearUserConcepts={clearUserConcepts}
+        language={language}
       />
     </ControlGroup>
   );

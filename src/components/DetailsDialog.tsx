@@ -2,7 +2,7 @@ import { Collapse, Dialog, DialogBody } from "@blueprintjs/core";
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import InfinitySpinner from "./InfinitySpinner";
-import { headers } from "../App";
+import { Language, headers } from "../App";
 
 interface Explanation {
   meaning: string;
@@ -52,8 +52,6 @@ const dialogTitles = {
     ],
   },
 };
-
-type Language = "EN" | "FR";
 
 export default function DetailsDialog({
   isOpen,

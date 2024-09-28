@@ -1,36 +1,81 @@
 import { Button, MenuItem, Colors } from "@blueprintjs/core";
 import { Select } from "@blueprintjs/select";
 import { useState } from "react";
+import { Language } from "../App";
 
 export interface Field {
-  title: string;
-  color: string;
+  title: {
+    EN: string;
+    FR: string;
+  };
 }
 
 interface FieldSelectProps {
   selectedField: any;
   setSelectedField: Function;
+  language: Language;
 }
 
-export const FIELDS_LIST = [
-  { title: "Metaphysic", color: Colors.RED5 },
-  { title: "Logic", color: Colors.BLUE1 },
-  { title: "Epistemology", color: Colors.RED3 },
-  { title: "Philosophy of mind", color: Colors.BLUE5 },
-  { title: "Ethic", color: Colors.RED1 },
-  { title: "Political philosophy", color: Colors.RED1 },
-  { title: "Aesthetics", color: Colors.BLUE3 },
-  { title: "Other fields", color: Colors.BLUE3 },
+export const FIELDS_LIST: any = [
+  {
+    title: {
+      EN: "Metaphysic",
+      FR: "Métaphysique",
+    },
+  },
+  {
+    title: {
+      EN: "Logic",
+      FR: "Logique",
+    },
+  },
+  {
+    title: {
+      EN: "Epistemology",
+      FR: "Epistémologie",
+    },
+  },
+  {
+    title: {
+      EN: "Philosophy of mind",
+      FR: "Philosophie de l'esprit",
+    },
+  },
+  {
+    title: {
+      EN: "Ethic",
+      FR: "Ethique",
+    },
+  },
+  {
+    title: {
+      EN: "Political philosophy",
+      FR: "Philosophie politique",
+    },
+  },
+  {
+    title: {
+      EN: "Aesthetics",
+      FR: "Esthétique",
+    },
+  },
+  {
+    title: {
+      EN: "Other fields",
+      FR: "Autres domaines",
+    },
+  },
 ];
 
 export function FieldSelect({
   selectedField,
   setSelectedField,
+  language,
 }: FieldSelectProps) {
   const [queryStr, setQueryStr] = useState<string>("");
 
   const handleFieldSelect = (field: Field) => {
-    if (selectedField.title !== field.title) {
+    if (selectedField.title[language] !== field.title[language]) {
       setSelectedField(field);
     }
     setQueryStr("");
@@ -49,9 +94,13 @@ export function FieldSelect({
     return (
       <MenuItem
         roleStructure="listoption"
-        key={field.title}
-        icon={selectedField.title === field.title ? "small-tick" : null}
-        text={`${field.title}`}
+        key={field.title[language]}
+        icon={
+          selectedField.title[language] === field.title[language]
+            ? "small-tick"
+            : null
+        }
+        text={`${field.title[language]}`}
         onClick={handleClick}
         active={modifiers.active}
         // labelElement={
@@ -67,11 +116,11 @@ export function FieldSelect({
     setSelectedField(FIELDS_LIST[0]);
   };
 
-  const renderTag = (field: Field): string => field.title;
+  const renderTag = (field: Field): string => field.title[language];
 
   const handleTagRemove = (title: string) => {
     const fieldToRemove: Field[] = selectedField.filter(
-      (field: Field) => field.title === title
+      (field: Field) => field.title[language] === title
     );
     handleFieldSelect(fieldToRemove[0]);
   };
@@ -81,6 +130,7 @@ export function FieldSelect({
   return (
     <div style={{ display: "flex", flexDirection: "row", gap: "5px" }}>
       <SelectAny
+        placeholder={language === "EN" ? "Filter..." : "Filtrer..."}
         items={FIELDS_LIST}
         itemRenderer={renderfield}
         noResults={<MenuItem disabled text="No results." />}
@@ -108,12 +158,18 @@ export function FieldSelect({
         popoverProps={{ minimal: true }}
         itemPredicate={(query: string, item: Field) => {
           if (!query.trim()) return true;
-          return item.title.toLowerCase().includes(query.toLowerCase());
+          return item.title[language]
+            .toLowerCase()
+            .includes(query.toLowerCase());
         }}
       >
         <Button
           text={
-            selectedField?.title ? <div>{selectedField.title}</div> : "Field"
+            selectedField?.title[language] ? (
+              <div>{selectedField.title[language]}</div>
+            ) : (
+              "Field"
+            )
           }
           rightIcon="double-caret-vertical"
         />

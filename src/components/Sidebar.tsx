@@ -4,13 +4,14 @@ import { useState } from "react";
 import { FIELDS_LIST, Field, FieldSelect } from "./FieldSelect.tsx";
 import { Divider } from "@blueprintjs/core";
 import SideControls from "./SideControls.tsx";
+import { Language } from "../App.tsx";
 
 interface SideBarProps {
   basicConcepts: Concept[];
   userConcepts: Concept[];
   setUserConcepts: Function;
   setIsSortChange: Function;
-  language: string;
+  language: Language;
 }
 
 export default function SideBar({
@@ -30,13 +31,12 @@ export default function SideBar({
     <aside>
       <div>
         <span>
-          {language === "EN"
-            ? "Basic concepts of "
-            : "Concepts élémentaires en "}
+          {language === "EN" ? "Basic concepts of " : "Concepts élémentaires "}
         </span>
         <FieldSelect
           selectedField={selectedField}
           setSelectedField={setSelectedField}
+          language={language}
         />
       </div>
       <div className="nodes basic-concepts">
@@ -45,7 +45,7 @@ export default function SideBar({
             (concept: Concept) =>
               concept &&
               concept?.field?.length &&
-              concept.field[0] === selectedField.title.toLowerCase()
+              concept.field[0] === selectedField.title["EN"].toLowerCase()
           )
           .map((concept: Concept, index: number) => (
             <SideConcept {...concept} key={index} />
@@ -61,6 +61,7 @@ export default function SideBar({
         setFilter={setFilter}
         setIsSortChange={setIsSortChange}
         setVisibleUserConcepts={setVisibleUserConcepts}
+        language={language}
       />
       <div className="nodes user-concepts">
         {searchQuery || filter

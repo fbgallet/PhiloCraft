@@ -39,6 +39,8 @@ import Confetti from "./components/Confetti.tsx";
 import InfinitySpinner from "./components/InfinitySpinner.tsx";
 // import FieldSelect from "./components/FieldSelect.tsx";
 
+export type Language = "EN" | "FR";
+
 const apiKey = import.meta.env.VITE_API_KEY;
 export const headers = {
   headers: {
@@ -62,7 +64,7 @@ function InfiniteConcepts() {
   );
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
-  const [language, setLanguage] = useState<string>(
+  const [language, setLanguage] = useState<Language>(
     localStorage.language || "EN"
   );
   const [basicConcepts, setBasicConcepts] = useState<Concept[]>(
@@ -239,7 +241,6 @@ function InfiniteConcepts() {
       setIsSortChange(false);
       return;
     }
-    console.log("localStorage :>> ", localStorage);
     localStorage[`userConcepts_${language}`] = JSON.stringify(userConcepts);
   }, [userConcepts]);
 
