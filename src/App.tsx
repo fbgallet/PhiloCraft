@@ -39,6 +39,10 @@ import Confetti from "./components/Confetti.tsx";
 import InfinitySpinner from "./components/InfinitySpinner.tsx";
 // import FieldSelect from "./components/FieldSelect.tsx";
 
+export const backendURL =
+  "https://site--philocraft-back--2bhrm4wg9nqn.code.run";
+//const backendURL = "http://localhost:3001/";
+
 export type Language = "EN" | "FR";
 
 const apiKey = import.meta.env.VITE_API_KEY;
@@ -89,10 +93,7 @@ function InfiniteConcepts() {
 
   const fetchCombinations = async (): Promise<void> => {
     try {
-      const { data } = await axios.get(
-        "http://localhost:3001/combinations",
-        headers
-      );
+      const { data } = await axios.get(`${backendURL}/combinations`, headers);
       console.log("combinations from DB:>> ", data);
       if (data) {
         console.log("data.length :>> ", data.length);
@@ -113,7 +114,7 @@ function InfiniteConcepts() {
       if (!basicConcepts.length && !loadingBasics.current) {
         loadingBasics.current = true;
         const { data } = await axios.post(
-          "http://localhost:3001/concepts",
+          `${backendURL}/concepts`,
           {
             onlyBasics: true,
           },
@@ -132,7 +133,7 @@ function InfiniteConcepts() {
         }
       } else {
         const { data } = await axios.post(
-          "http://localhost:3001/concepts",
+          `${backendURL}/concepts`,
           {
             getOnlyNb: true,
           },
@@ -164,7 +165,7 @@ function InfiniteConcepts() {
   useEffect(() => {
     const createCombination = async () => {
       const { data } = await axios.post(
-        "http://localhost:3001/combination/create",
+        `${backendURL}/combination/create`,
         {
           toCombine: combinationToCreate && [
             combinationToCreate.idsToCombine[0],
@@ -471,7 +472,7 @@ function InfiniteConcepts() {
       });
     } else {
       axios.put(
-        `http://localhost:3001/combination/use/${combination._id}`,
+        `${backendURL}/combination/use/${combination._id}`,
         {},
         headers
       );
@@ -482,7 +483,7 @@ function InfiniteConcepts() {
       );
       if (!resultingConcept) {
         const { data } = await axios.put(
-          `http://localhost:3001/concept/${combination.result}`,
+          `${backendURL}/concept/${combination.result}`,
           {},
           headers
         );

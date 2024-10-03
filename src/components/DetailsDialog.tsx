@@ -2,7 +2,7 @@ import { Collapse, Dialog, DialogBody } from "@blueprintjs/core";
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import InfinitySpinner from "./InfinitySpinner";
-import { Language, headers } from "../App";
+import { Language, backendURL, headers } from "../App";
 
 interface Explanation {
   meaning: string;
@@ -72,7 +72,7 @@ export default function DetailsDialog({
     const loadExplanation = async () => {
       if (!explanation) {
         const { data } = await axios.post(
-          "http://localhost:3001/concept/explain",
+          `${backendURL}/concept/explain`,
           {
             id: nodeData.conceptId,
             title: nodeData.conceptTitle,
@@ -96,7 +96,7 @@ export default function DetailsDialog({
     const loadDetailsExplanation = async () => {
       if (explanation && !explanation.interest) {
         const { data } = await axios.post(
-          "http://localhost:3001/concept/explain",
+          `${backendURL}/concept/explain`,
           {
             id: nodeData.conceptId,
             title: nodeData.conceptTitle,
