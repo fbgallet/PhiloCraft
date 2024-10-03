@@ -7,4 +7,7 @@ export default defineConfig({
   esbuild: {
     logOverride: { "this-is-undefined-in-esm": "silent" },
   },
+  define: {
+    "import.meta.env.VITE_API_KEY": JSON.stringify(process.env.VITE_API_KEY),
+  },
 });
