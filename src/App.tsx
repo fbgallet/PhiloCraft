@@ -45,12 +45,6 @@ export const backendURL =
 
 export type Language = "EN" | "FR";
 
-const getApiKeyOnServer = async () => {
-  const response = await fetch("/api.php");
-  const data = await response.json();
-  console.log("data :>> ", data);
-  return data.apiKey;
-};
 const apiKey = import.meta.env.VITE_API_KEY;
 
 export const headers = {
@@ -117,9 +111,18 @@ function InfiniteConcepts() {
     }
   };
   const fetchConcepts = async (): Promise<void> => {
+    const getApiKeyOnServer = async () => {
+      const response = await fetch("/api.php");
+      const data = await response.json();
+      console.log("data :>> ", data);
+      return data["VITE_API_KEY"];
+    };
+
     try {
+      console.log("before:", headers.headers["x-api-key"]);
       if (!headers.headers["x-api-key"]) {
         headers.headers["x-api-key"] = await getApiKeyOnServer();
+        console.log("after:", headers.headers["x-api-key"]);
       }
       if (!basicConcepts.length && !loadingBasics.current) {
         loadingBasics.current = true;
