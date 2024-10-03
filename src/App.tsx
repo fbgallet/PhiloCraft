@@ -45,7 +45,13 @@ export const backendURL =
 
 export type Language = "EN" | "FR";
 
-const apiKey = import.meta.env.VITE_API_KEY;
+const getApiKeyOnServer = async () => {
+  const response = await fetch("/api.php");
+  const data = await response.json();
+  return data.apiKey;
+};
+const apiKey = import.meta.env.VITE_API_KEY || (await getApiKeyOnServer());
+console.log("has apiKey :>> ", apiKey.length);
 export const headers = {
   headers: {
     "x-api-key": apiKey,
