@@ -50,7 +50,7 @@ const getApiKeyOnServer = async () => {
   const data = await response.json();
   return data.apiKey;
 };
-const apiKey = import.meta.env.VITE_API_KEY || (await getApiKeyOnServer());
+const apiKey = import.meta.env.VITE_API_KEY;
 console.log("has apiKey :>> ", apiKey.length);
 export const headers = {
   headers: {
@@ -117,6 +117,9 @@ function InfiniteConcepts() {
   };
   const fetchConcepts = async (): Promise<void> => {
     try {
+      if (!headers.headers["x-api-key"]) {
+        headers.headers["x-api-key"] = await getApiKeyOnServer();
+      }
       if (!basicConcepts.length && !loadingBasics.current) {
         loadingBasics.current = true;
         const { data } = await axios.post(
