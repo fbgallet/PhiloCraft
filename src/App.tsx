@@ -97,7 +97,6 @@ function InfiniteConcepts() {
       const { data } = await axios.get(`${backendURL}/combinations`, headers);
       console.log("combinations from DB:>> ", data);
       if (data) {
-        console.log("data.length :>> ", data.length);
         setNbOfCombinations(data.length);
         setNbOfReleasedCombinations(
           data.reduce((sum: number, combination: Combination) => {
@@ -119,10 +118,8 @@ function InfiniteConcepts() {
     };
 
     try {
-      console.log("before:", headers.headers["x-api-key"]);
       if (!headers.headers["x-api-key"]) {
         headers.headers["x-api-key"] = await getApiKeyOnServer();
-        console.log("after:", headers.headers["x-api-key"]);
       }
       if (!basicConcepts.length && !loadingBasics.current) {
         loadingBasics.current = true;
@@ -299,7 +296,6 @@ function InfiniteConcepts() {
 
   const onNodeRightClick = (e: MouseEvent, node: Node) => {
     e.preventDefault();
-    console.log("e :>> ", e);
     console.log("node :>> ", node);
     setNodes((ns) => ns.filter((n) => n.id !== node.id));
   };
