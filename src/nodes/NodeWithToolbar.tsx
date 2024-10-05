@@ -7,9 +7,10 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 // import { faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import DetailsDialog from "../components/DetailsDialog";
 import JustifyDialog from "../components/JustifyDialog";
+import { Icon } from "@blueprintjs/core";
 
 interface NodeWithToolBarProps {
   id: string;
@@ -44,11 +45,12 @@ export function NodeWithToolBar({ id, data }: NodeWithToolBarProps) {
         position={data.toolbarPosition}
         align="start"
       >
-        <FontAwesomeIcon
+        <Icon icon="intersection" size={18} onClick={handleJustify} />
+        {/* <FontAwesomeIcon
           icon={faRightToBracket}
           size="lg"
           onClick={handleJustify}
-        />
+        /> */}
 
         <FontAwesomeIcon
           icon={faCircleQuestion}

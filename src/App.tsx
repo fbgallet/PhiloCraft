@@ -166,6 +166,7 @@ function InfiniteConcepts() {
     localStorage.language = language;
     headers.headers.language = language;
     const storedBasicConcepts = getStoredBasicConcepts(language);
+    console.log("storedBasicConcepts :>> ", storedBasicConcepts);
     if (storedBasicConcepts) setBasicConcepts(storedBasicConcepts);
     else fetchConcepts();
     setUserConcepts(getStoredUserConcepts(language) || []);
@@ -202,6 +203,7 @@ function InfiniteConcepts() {
             n.id === combinationToCreate?.targetNodeId
               ? {
                   ...n,
+                  selected: true,
                   data: {
                     label: resultingConcept.icon + " " + resultingConcept.title,
                     conceptId: resultingConcept._id,
@@ -510,6 +512,7 @@ function InfiniteConcepts() {
         x: (droppedNode.position.x + targetNode.position.x) / 2,
         y: (droppedNode.position.y + targetNode.position.y) / 2,
       },
+      selected: true,
       data: {
         label: resultingConcept ? (
           resultingConcept.icon + " " + resultingConcept.title
