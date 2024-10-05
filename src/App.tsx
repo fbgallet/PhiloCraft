@@ -117,9 +117,9 @@ function InfiniteConcepts() {
     };
 
     try {
-      if (!headers.headers["x-api-key"]) {
-        headers.headers["x-api-key"] = await getApiKeyOnServer();
-      }
+      // if (!headers.headers["x-api-key"]) {
+      //   headers.headers["x-api-key"] = await getApiKeyOnServer();
+      // }
       if (!basicConcepts.length && !loadingBasics.current) {
         loadingBasics.current = true;
         const { data } = await axios.post(
