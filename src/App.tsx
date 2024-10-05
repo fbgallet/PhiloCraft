@@ -46,6 +46,7 @@ export const backendURL =
 export type Language = "EN" | "FR";
 
 const apiKey = import.meta.env.VITE_API_KEY;
+console.log("apiKey at loading :>> ", apiKey);
 
 export const headers = {
   headers: {
