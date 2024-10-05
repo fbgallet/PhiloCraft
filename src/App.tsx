@@ -113,7 +113,6 @@ function InfiniteConcepts() {
     const getApiKeyOnServer = async () => {
       const response = await fetch("/api.php");
       const data = await response.json();
-      console.log("data :>> ", data);
       return data["VITE_API_KEY"];
     };
 
