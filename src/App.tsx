@@ -40,6 +40,7 @@ import InfinitySpinner from "./components/InfinitySpinner.tsx";
 // import FieldSelect from "./components/FieldSelect.tsx";
 
 export const backendURL =
+  import.meta.env.VITE_API_URL ||
   "https://site--philocraft-back--2bhrm4wg9nqn.code.run";
 //const backendURL = "http://localhost:3001/";
 
