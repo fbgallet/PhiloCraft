@@ -46,7 +46,6 @@ export const backendURL =
 export type Language = "EN" | "FR";
 
 const apiKey = import.meta.env.VITE_API_KEY;
-console.log("apiKey at loading :>> ", apiKey);
 
 export const headers = {
   headers: {
@@ -118,9 +117,9 @@ function InfiniteConcepts() {
     };
 
     try {
-      // if (!headers.headers["x-api-key"]) {
-      //   headers.headers["x-api-key"] = await getApiKeyOnServer();
-      // }
+      if (!headers.headers["x-api-key"]) {
+        headers.headers["x-api-key"] = await getApiKeyOnServer();
+      }
       if (!basicConcepts.length && !loadingBasics.current) {
         loadingBasics.current = true;
         const { data } = await axios.post(

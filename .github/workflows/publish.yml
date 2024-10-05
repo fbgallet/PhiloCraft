@@ -8,7 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: "Deploy to Hostinger"
     name: Build and Push
     steps:
       - name: git-checkout
@@ -16,9 +15,6 @@ jobs:
 
       - name: Install all dependencies
         run: npm install
-
-      - name: Create .env file
-        run: echo "VITE_API_KEY=${{ secrets.VITE_API_KEY }}" > .env
 
       - name: Build
         run: npm run build # The build command of your project
