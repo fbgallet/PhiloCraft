@@ -9,7 +9,7 @@ interface BasicConcept {
 
 export interface Concept extends BasicConcept {
   _id: string;
-  isBasic?: boolean;
+  isBasic: boolean;
   category: string;
   explanation: [{ model: string; content: {} }];
   logic: [string];

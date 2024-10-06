@@ -17,6 +17,7 @@ import {
   useRef,
   useEffect,
   StrictMode,
+  RefObject,
 } from "react";
 import {
   applyEdgeChanges,
@@ -99,7 +100,7 @@ function InfiniteConcepts() {
   const { getIntersectingNodes } = useReactFlow();
   const { screenToFlowPosition } = useReactFlow();
   const loadingBasics = useRef(false);
-  const flowRef = useRef<HTMLElement>(null);
+  const flowRef = useRef<HTMLDivElement>(null);
 
   const fetchCombinations = async (): Promise<void> => {
     try {
