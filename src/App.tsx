@@ -1,4 +1,11 @@
-import type { Edge, Node, OnConnect, Rect, XYPosition } from "@xyflow/react";
+import type {
+  Edge,
+  Node,
+  OnConnect,
+  Position,
+  Rect,
+  XYPosition,
+} from "@xyflow/react";
 import { Icon, Menu, MenuItem, Popover } from "@blueprintjs/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
@@ -56,7 +63,7 @@ export const headers = {
 };
 
 let id: number = 1;
-const getId = (): string => `${(id++).toString()}`;
+export const getId = (): string => `${(id++).toString()}`;
 
 interface PendingCombination {
   idsToCombine: [string, string];
@@ -92,6 +99,7 @@ function InfiniteConcepts() {
   const { getIntersectingNodes } = useReactFlow();
   const { screenToFlowPosition } = useReactFlow();
   const loadingBasics = useRef(false);
+  const flowRef = useRef<HTMLElement>(null);
 
   const fetchCombinations = async (): Promise<void> => {
     try {
@@ -394,42 +402,11 @@ function InfiniteConcepts() {
       if (typeof conceptId === "undefined" || !conceptId) {
         return;
       }
-
-      const droppedConcept: Concept | undefined = isBasic
-        ? basicConcepts.find((concept) => concept._id === conceptId)
-        : userConcepts.find((concept) => concept._id === conceptId);
-      if (!droppedConcept) return;
-
-      console.log("droppedConcept :>> ", droppedConcept);
-
       const position: XYPosition = screenToFlowPosition({
         x: event.clientX - 80,
         y: event.clientY - 25,
       });
-      const newNode: Node = {
-        id: getId(),
-        type: "node-toolbar",
-        position,
-        data: {
-          label: `${droppedConcept.icon} ${droppedConcept.title}`,
-          conceptId,
-          conceptTitle: droppedConcept.title,
-          explanation: getExplanationByModel(droppedConcept.explanation, model),
-          logic: droppedConcept.logic,
-          category: droppedConcept.category,
-          philosopher: droppedConcept.philosopher || "",
-          model,
-        },
-        height: 40,
-        width: 173,
-      };
-
-      setNodes((nds) => nds.concat(newNode));
-
-      setTimeout(() => {
-        const intersections: Node[] = getIntersectingNodes(newNode);
-        if (intersections.length) combineTwoNodesInOne(newNode, intersections);
-      }, 20);
+      insertNewNode(conceptId, isBasic, position);
     },
     [screenToFlowPosition, nodes, userConcepts]
   );
@@ -536,10 +513,63 @@ function InfiniteConcepts() {
     );
   };
 
+  const insertNewNode = (
+    conceptId: string,
+    isBasic: boolean,
+    position: { x: number; y: number } | undefined
+  ) => {
+    if (!position) {
+      position = getFlowCenterPosition() || { x: 100, y: 100 };
+    }
+    const droppedConcept: Concept | undefined = isBasic
+      ? basicConcepts.find((concept) => concept._id === conceptId)
+      : userConcepts.find((concept) => concept._id === conceptId);
+    if (!droppedConcept) return;
+
+    const newNode: Node = {
+      id: getId(),
+      type: "node-toolbar",
+      position,
+      data: {
+        label: `${droppedConcept.icon} ${droppedConcept.title}`,
+        conceptId,
+        conceptTitle: droppedConcept.title,
+        explanation: getExplanationByModel(droppedConcept.explanation, model),
+        logic: droppedConcept.logic,
+        category: droppedConcept.category,
+        philosopher: droppedConcept.philosopher || "",
+        model,
+      },
+      height: 40,
+      width: 173,
+    };
+
+    setNodes((nds: Node[]) => nds.concat(newNode));
+
+    setTimeout(() => {
+      const intersections: Node[] = getIntersectingNodes(newNode);
+      if (intersections.length) combineTwoNodesInOne(newNode, intersections);
+    }, 20);
+  };
+
+  const getFlowCenterPosition = () => {
+    if (flowRef.current) {
+      const rect = flowRef.current.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const position = screenToFlowPosition({
+        x: centerX - 70,
+        y: centerY - 25,
+      });
+      return position;
+    }
+  };
+
   return (
     <div className="dndflow">
       <div className="reactflow-wrapper" ref={reactFlowWrapper}>
         <ReactFlow
+          ref={flowRef}
           className="intersection-flow"
           colorMode={colorMode}
           nodes={nodes}
@@ -610,6 +640,7 @@ function InfiniteConcepts() {
           userConcepts={userConcepts}
           setUserConcepts={setUserConcepts}
           setIsSortChange={setIsSortChange}
+          insertNewNode={insertNewNode}
           language={language}
         />
       ) : null}

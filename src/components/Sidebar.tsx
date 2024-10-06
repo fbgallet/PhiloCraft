@@ -11,6 +11,7 @@ interface SideBarProps {
   userConcepts: Concept[];
   setUserConcepts: Function;
   setIsSortChange: Function;
+  insertNewNode: Function;
   language: Language;
 }
 
@@ -19,6 +20,7 @@ export default function SideBar({
   userConcepts,
   setUserConcepts,
   setIsSortChange,
+  insertNewNode,
   language,
 }: SideBarProps) {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -48,7 +50,11 @@ export default function SideBar({
               concept.field[0] === selectedField.title["EN"].toLowerCase()
           )
           .map((concept: Concept, index: number) => (
-            <SideConcept {...concept} key={index} />
+            <SideConcept
+              {...concept}
+              insertNewNode={insertNewNode}
+              key={index}
+            />
           ))}
       </div>
       <Divider />
@@ -66,10 +72,18 @@ export default function SideBar({
       <div className="nodes user-concepts">
         {searchQuery || filter
           ? visibleUserConcepts.map((concept: Concept, index: number) => (
-              <SideConcept {...concept} key={index} />
+              <SideConcept
+                {...concept}
+                insertNewNode={insertNewNode}
+                key={index}
+              />
             ))
           : userConcepts.map((concept: Concept, index: number) => (
-              <SideConcept {...concept} key={index} />
+              <SideConcept
+                {...concept}
+                insertNewNode={insertNewNode}
+                key={index}
+              />
             ))}
       </div>
     </aside>

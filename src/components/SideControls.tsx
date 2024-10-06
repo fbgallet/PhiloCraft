@@ -41,7 +41,7 @@ const itemsTitle: any = {
     FR: "Concepts propriétaires",
   },
   cla: {
-    EN: "Classificator concepts",
+    EN: "Classificatory concepts",
     FR: "Concepts classificatoires",
   },
 };

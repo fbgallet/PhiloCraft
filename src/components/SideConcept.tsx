@@ -1,6 +1,41 @@
-import { Concept } from "../data/concept";
+import { useCallback } from "react";
+import { useLongPress } from "use-long-press";
 
-const SideConcept = ({ _id, title, icon, isBasic, isNew }: Concept) => {
+interface SideConcept {
+  _id: string;
+  title: string;
+  icon: string;
+  isBasic: boolean;
+  isNew: boolean;
+  insertNewNode: Function;
+}
+enum LongPressEventType {
+  Mouse = "mouse",
+  Touch = "touch",
+  Pointer = "pointer",
+}
+
+const SideConcept = ({
+  _id,
+  title,
+  icon,
+  isBasic,
+  isNew,
+  insertNewNode,
+}: SideConcept) => {
+  const onLongPress = useCallback(
+    (event: MouseEvent | TouchEvent | PointerEvent | any) => {
+      event.preventDefault();
+      console.log("Long pressed!", event);
+
+      insertNewNode(_id, isBasic);
+    },
+    []
+  );
+  const bind = useLongPress(onLongPress, {
+    detect: LongPressEventType.Touch,
+  });
+
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,
     conceptId: string
@@ -17,6 +52,8 @@ const SideConcept = ({ _id, title, icon, isBasic, isNew }: Concept) => {
       className={"sideconcept" + (isNew ? " sideconcept-new" : "")}
       onDragStart={(event) => onDragStart(event, _id)}
       draggable
+      {...bind()}
+      onContextMenu={(event) => event.preventDefault()}
     >
       <span>{icon}</span>
       <span>{title}</span>
