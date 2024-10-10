@@ -176,8 +176,8 @@ function InfiniteConcepts() {
     headers.headers.language = language;
     const storedBasicConcepts = getStoredBasicConcepts(language);
     console.log("storedBasicConcepts :>> ", storedBasicConcepts);
-    if (storedBasicConcepts) setBasicConcepts(storedBasicConcepts);
-    else fetchConcepts();
+    // if (storedBasicConcepts) setBasicConcepts(storedBasicConcepts);
+    fetchConcepts();
     setUserConcepts(getStoredUserConcepts(language) || []);
     setNodes(initialNodes);
   }, [language]);
@@ -205,6 +205,7 @@ function InfiniteConcepts() {
         if (resultingConcept.isNew) {
           setThrowConfetti(true);
         }
+        if (resultingConcept.isNew) setNbOfConcepts((prev) => ++prev);
         setNbOfCombinations((prev) => ++prev);
         combination && combinations.push(combination);
         setNodes((ns) =>
@@ -319,7 +320,9 @@ function InfiniteConcepts() {
     setNodes((ns) =>
       ns.map((n) => ({
         ...n,
-        className: intersections.includes(n.id) ? "highlight" : "",
+        className: intersections.includes(n.id)
+          ? n.className + " highlight"
+          : n.className?.replace("highlight", ""),
       }))
     );
   }, []);
@@ -384,7 +387,9 @@ function InfiniteConcepts() {
       setNodes((ns) =>
         ns.map((n) => ({
           ...n,
-          className: intersections.includes(n.id) ? "highlight" : "",
+          className: intersections.includes(n.id)
+            ? n.className + " highlight"
+            : n.className?.replace("highlight", ""),
         }))
       );
     },
@@ -486,6 +491,11 @@ function InfiniteConcepts() {
     const newNode: Node = {
       id: newNodeId,
       type: "node-toolbar",
+      className: resultingConcept
+        ? `${resultingConcept.category}${
+            resultingConcept.isBasic ? "isBasic" : ""
+          }`
+        : "",
       position: {
         x: (droppedNode.position.x + targetNode.position.x) / 2,
         y: (droppedNode.position.y + targetNode.position.y) / 2,
@@ -527,9 +537,13 @@ function InfiniteConcepts() {
       : userConcepts.find((concept) => concept._id === conceptId);
     if (!droppedConcept) return;
 
+    console.log("droppedConcept.category :>> ", droppedConcept.category);
+
     const newNode: Node = {
       id: getId(),
       type: "node-toolbar",
+      className:
+        droppedConcept.category + (droppedConcept.isBasic ? " isBasic" : ""),
       position,
       data: {
         label: `${droppedConcept.icon} ${droppedConcept.title}`,
@@ -542,7 +556,7 @@ function InfiniteConcepts() {
         model,
       },
       height: 40,
-      width: 173,
+      width: 170,
     };
 
     setNodes((nds: Node[]) => nds.concat(newNode));

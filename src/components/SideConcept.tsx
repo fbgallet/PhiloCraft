@@ -7,6 +7,7 @@ interface SideConcept {
   icon: string;
   isBasic: boolean;
   isNew: boolean;
+  category: string;
   insertNewNode: Function;
 }
 enum LongPressEventType {
@@ -21,6 +22,7 @@ const SideConcept = ({
   icon,
   isBasic,
   isNew,
+  category,
   insertNewNode,
 }: SideConcept) => {
   const onLongPress = useCallback(
@@ -49,7 +51,9 @@ const SideConcept = ({
 
   return (
     <div
-      className={"sideconcept" + (isNew ? " sideconcept-new" : "")}
+      className={`sideconcept${isNew ? " sideconcept-new" : ""}${
+        isBasic ? " isBasic" : ""
+      } ${category}`}
       onDragStart={(event) => onDragStart(event, _id)}
       draggable
       {...bind()}

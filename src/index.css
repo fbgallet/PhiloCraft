@@ -113,6 +113,15 @@ body,
   margin-top: -20px;
   margin-bottom: -20px;
 }
+.react-flow__node.isBasic .react-flow__node-default {
+  border-width: 2px;
+}
+.react-flow__node.Proprietary .react-flow__node-default {
+  border-color: rgba(255, 166, 0, 0.2);
+}
+.react-flow__node.Classificatory .react-flow__node-default {
+  border-color: rgba(255, 0, 255, 0.2);
+}
 
 .react-flow__node-toolbar {
   opacity: 0.5;
@@ -183,6 +192,16 @@ body,
   transform: scale(1.1);
   z-index: 2;
   box-shadow: 7px 4px 4px rgba(0, 0, 0, 0.2);
+}
+
+.dndflow aside .nodes .sideconcept.isBasic {
+  border-width: 2px;
+}
+.dndflow aside .nodes .sideconcept.Proprietary {
+  border-color: rgba(255, 166, 0, 0.2);
+}
+.dndflow aside .nodes .sideconcept.Classificatory {
+  border-color: rgba(255, 0, 255, 0.2);
 }
 
 .sideconcept-new {
