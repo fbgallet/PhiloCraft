@@ -33,8 +33,6 @@ export function NodeWithToolBar({ id, data }: NodeWithToolBarProps) {
   };
 
   const handleRemove = async () => {
-    console.log("data :>> ", data);
-    console.log("id :>> ", id);
     reactFlow.setNodes((ns) => ns.filter((n) => n.id !== id));
   };
 

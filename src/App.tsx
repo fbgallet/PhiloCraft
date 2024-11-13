@@ -32,6 +32,7 @@ import {
   useReactFlow,
   Panel,
   ControlButton,
+  useOnSelectionChange,
 } from "@xyflow/react";
 
 import Sidebar from "./components/Sidebar.tsx";
@@ -50,7 +51,7 @@ import InfinitySpinner from "./components/InfinitySpinner.tsx";
 export const backendURL =
   import.meta.env.VITE_API_URL ||
   "https://site--philocraft-back--2bhrm4wg9nqn.code.run";
-//const backendURL = "http://localhost:3001/";
+// const backendURL = "http://localhost:3001/";
 
 export type Language = "EN" | "FR";
 
@@ -101,6 +102,7 @@ function InfiniteConcepts() {
   const { screenToFlowPosition } = useReactFlow();
   const loadingBasics = useRef(false);
   const flowRef = useRef<HTMLDivElement>(null);
+  const lastSelectedId = useRef<string>("");
 
   const fetchCombinations = async (): Promise<void> => {
     try {
@@ -176,7 +178,7 @@ function InfiniteConcepts() {
     headers.headers.language = language;
     const storedBasicConcepts = getStoredBasicConcepts(language);
     console.log("storedBasicConcepts :>> ", storedBasicConcepts);
-    // if (storedBasicConcepts) setBasicConcepts(storedBasicConcepts);
+    setBasicConcepts(storedBasicConcepts || []);
     fetchConcepts();
     setUserConcepts(getStoredUserConcepts(language) || []);
     setNodes(initialNodes);
@@ -296,10 +298,22 @@ function InfiniteConcepts() {
     []
   );
 
-  const onNodesChange = useCallback(
-    (changes: any) => setNodes((nds) => applyNodeChanges(changes, nds)),
-    []
-  );
+  const onNodesChange = useCallback((changes: any) => {
+    if (changes.length === 2) {
+      if (
+        changes[0].type === "select" &&
+        changes[0].selected !== changes[1].selected
+      ) {
+        const selectedNode = changes[0].selected ? changes[0] : changes[1];
+        lastSelectedId.current = selectedNode?.id || "";
+      } else if (changes[0].type === "position") {
+        changes = changes.filter(
+          (chg: any) => chg.id === lastSelectedId.current
+        );
+      }
+    }
+    setNodes((nds) => applyNodeChanges(changes, nds));
+  }, []);
 
   const onEdgesChange = useCallback(
     (changes: any) => setEdges((eds) => applyEdgeChanges(changes, eds)),

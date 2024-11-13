@@ -15,12 +15,11 @@ export const combinationsDB: ConceptsCombination[] =
     JSON.parse(localStorage.InfinitCombinations)) ||
   [];
 
-export const getStoredUserConcepts = (
-  language: string
-): Concept[] | undefined => {
+export const getStoredUserConcepts = (language: string): Concept[] | [] => {
   return (
-    localStorage[`userConcepts_${language}`] &&
-    JSON.parse(localStorage[`userConcepts_${language}`])
+    (localStorage[`userConcepts_${language}`] &&
+      JSON.parse(localStorage[`userConcepts_${language}`])) ||
+    []
   );
 };
 export const getStoredBasicConcepts = (
