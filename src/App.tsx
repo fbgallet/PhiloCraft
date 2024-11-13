@@ -299,13 +299,24 @@ function InfiniteConcepts() {
   );
 
   const onNodesChange = useCallback((changes: any) => {
+    if (
+      changes.length === 1 &&
+      changes[0].type === "select" &&
+      changes[0].selected
+    )
+      lastSelectedId.current = changes[0].id;
     if (changes.length === 2) {
-      if (
-        changes[0].type === "select" &&
-        changes[0].selected !== changes[1].selected
-      ) {
-        const selectedNode = changes[0].selected ? changes[0] : changes[1];
-        lastSelectedId.current = selectedNode?.id || "";
+      if (changes[0].type === "select") {
+        const selectedNode = changes[0].selected
+          ? changes[0]
+          : changes[1].selected
+          ? changes[1]
+          : null;
+        lastSelectedId.current =
+          selectedNode?.id ||
+          (changes[0].id === lastSelectedId.current
+            ? changes[1].id
+            : changes[0].id);
       } else if (changes[0].type === "position") {
         changes = changes.filter(
           (chg: any) => chg.id === lastSelectedId.current
