@@ -6,7 +6,7 @@ Explore the numerous concepts in the history of philosophy, discover their meani
 
 Try to be the first to discover them! And let yourself be surprised by the amazing combinations made by the generative AI (OpenAI GPT-4o model).
 
-###🇫🇷
+### 🇫🇷
 Jeu philosophique inspiré par [Infinite Craft](https://neal.fun/infinite-craft/) de Neal Agarwal.
 
 Nb: Vous pouvez afficher tout le contenu du jeu en français via le menu (trois barres horizontales) en bas à gauche.
@@ -18,7 +18,7 @@ Essayez d'être le premier à les découvrir! Et laissez-vous surprendre par les
 ## Sponsoring
 Do you enjoy this little philosophical game, would you like it to be enriched with new features, or do you simply want to promote a use of AI that encourages reflection? You can help fund the operating costs of this project and support its development by [sponsoring it through this link](https://github.com/sponsors/fbgallet). PhiloCraft relies on a MongoDB Atlas server and numerous requests to the OpenAI API. Thank you in advance for your support!
 
-###🇫🇷
+### 🇫🇷
 Vous aimez ce petit jeu philosophique, vous voudriez qu'il s'enrichisse de nouvelles fonctionalités ou vous souhaitez simplement promovoir un usage de l'IA qui donne à réfléchir ? Vous pouvez m'aider à payer les coûts de fonctionnement de ce projet et encourager son développement en me [sponsorisant via ce lien](https://github.com/sponsors/fbgallet). PhiloCraft mobilise un serveur MongoDB Atlas et envoie des requêtes à l'API d'OpenAI. Merci d'avance pour votre support !
 
 ---
