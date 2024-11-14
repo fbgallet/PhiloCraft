@@ -2,6 +2,7 @@
 
 Philosophical game inspired by [Infinite Craft](https://neal.fun/infinite-craft/) by Neal Agarwal.
 
+<<<<<<< Updated upstream
 Explore the numerous concepts in the history of philosophy, discover their meanings, what philosophers say about them, and why it's worth thinking about them, by combining the fundamental concepts from different areas of philosophy.
 
 Try to be the first to discover them! And let yourself be surprised by the amazing combinations made by the generative AI (OpenAI GPT-4o model).
@@ -26,3 +27,7 @@ Vous aimez ce petit jeu philosophique, vous voudriez qu'il s'enrichisse de nouve
 ## Stack
 - Front: **React**, **TypeScript**, **ReactFlow**
 - Back: **Node.js**, **MongoDB** (currently private)
+=======
+Front: TypeScript, React, ReactFlow
+Back: Node.js, MongoDB (currently private)
+>>>>>>> Stashed changes

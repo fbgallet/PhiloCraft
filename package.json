@@ -1,6 +1,6 @@
 {
-  "name": "vite-react-flow-template",
-  "version": "0.0.0",
+  "name": "vite-philocraft",
+  "version": "0.0.9",
   "type": "module",
   "scripts": {
     "dev:local": "vite",

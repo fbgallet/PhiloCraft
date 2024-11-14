@@ -38,15 +38,6 @@ body,
   opacity: 0.2;
 }
 
-.react-flow__node.highlight > .react-flow__node-default {
-  background: #4d9f5f;
-  color: white;
-}
-.dndflow:has(.dark) .react-flow__node.highlight > .react-flow__node-default {
-  background: #4f0000;
-  color: white;
-}
-
 .dndflow {
   flex-direction: column;
   display: flex;
@@ -104,6 +95,7 @@ body,
 /*************/
 
 .react-flow__node-default {
+  border-width: 2px;
   width: fit-content;
   text-wrap: nowrap;
   min-width: 120px;
@@ -136,13 +128,22 @@ body,
   );
 }
 .react-flow__node.isBasic .react-flow__node-default {
-  border-width: 2px;
+  border-width: 3px;
 }
 .react-flow__node.Proprietary .react-flow__node-default {
   border-color: rgba(255, 166, 0, 0.2);
 }
 .react-flow__node.Classificatory .react-flow__node-default {
   border-color: rgba(255, 0, 255, 0.2);
+}
+
+.react-flow__node.highlight > .react-flow__node-default {
+  background: #4d9f5f;
+  color: white;
+}
+.dndflow:has(.dark) .react-flow__node.highlight > .react-flow__node-default {
+  background: #4f0000;
+  color: white;
 }
 
 .react-flow__node-toolbar {
@@ -286,6 +287,44 @@ body:has(.react-flow.dark) .bp5-dialog {
   .dndflow > aside {
     width: 100%;
     flex: 1;
-    /* max-height: 450px; */
+    max-height: 50%;
+  }
+}
+@media screen and (max-width: 450px) {
+  .react-flow__panel.top.left > div {
+    font-size: 10px;
+  }
+
+  .dndflow aside {
+    gap: 2px;
+  }
+  .dndflow aside > div:first-child {
+    font-size: 12px;
+    margin-bottom: 3px;
+    gap: 8px;
+  }
+  .dndflow aside .nodes .sideconcept {
+    gap: 5px;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  .bp5-dialog-header > h6 {
+    font-size: 15px !important;
+  }
+  .bp5-dialog {
+    font-size: 13px;
+  }
+  .bp5-dialog-body-scroll-container {
+    max-height: 90vh;
+    padding: 15px;
+  }
+  .bp5-button {
+    font-size: 12px;
+    padding: 5px;
+  }
+  .bp5-menu,
+  .bp5-input {
+    min-width: 150px;
+    font-size: 12px;
   }
 }

@@ -1,12 +1,5 @@
-import type {
-  Edge,
-  Node,
-  OnConnect,
-  Position,
-  Rect,
-  XYPosition,
-} from "@xyflow/react";
-import { Icon, Menu, MenuItem, Popover } from "@blueprintjs/core";
+import type { Edge, Node, OnConnect, Rect, XYPosition } from "@xyflow/react";
+import { Menu, MenuItem, Popover } from "@blueprintjs/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 
@@ -17,7 +10,6 @@ import {
   useRef,
   useEffect,
   StrictMode,
-  RefObject,
 } from "react";
 import {
   applyEdgeChanges,
@@ -32,7 +24,6 @@ import {
   useReactFlow,
   Panel,
   ControlButton,
-  useOnSelectionChange,
 } from "@xyflow/react";
 
 import Sidebar from "./components/Sidebar.tsx";
@@ -46,12 +37,12 @@ import { Concept } from "./data/concept.ts";
 import { Combination } from "./data/combination.ts";
 import Confetti from "./components/Confetti.tsx";
 import InfinitySpinner from "./components/InfinitySpinner.tsx";
+import HelpDialog from "./components/HelpDialog.tsx";
 // import FieldSelect from "./components/FieldSelect.tsx";
 
 export const backendURL =
   import.meta.env.VITE_API_URL ||
   "https://site--philocraft-back--2bhrm4wg9nqn.code.run";
-// const backendURL = "http://localhost:3001/";
 
 export type Language = "EN" | "FR";
 
@@ -91,6 +82,7 @@ function InfiniteConcepts() {
   const [combinations, setCombinations] = useState<Combination[]>([]);
   const [combinationToCreate, setCombinationToCreate] =
     useState<PendingCombination | null>(null);
+  const [isHelpDialogOpen, setIsHelpDialogOpen] = useState<boolean>(false);
   const [model, setModel] = useState<string>("gpt-4o");
   const [throwConfetti, setThrowConfetti] = useState<boolean>(false);
   const [isSortChange, setIsSortChange] = useState<boolean>(false);
@@ -230,7 +222,6 @@ function InfiniteConcepts() {
               : n
           )
         );
-        // console.log("nodeToUpdate :>> ", nodeToUpdate);
 
         const existingUserConcept = userConcepts.find(
           (concept) => concept._id === resultingConcept._id
@@ -245,13 +236,9 @@ function InfiniteConcepts() {
           setUserConcepts((prev) =>
             combination ? [...prev, resultingConcept] : prev
           );
-          // resultingConcept &&
-          //   (localStorage.userConcepts = JSON.stringify(
-          //     userConcepts.concat(resultingConcept)
-          //   ));
         }
       }
-      // setNodes((ns) => [...ns]);
+
       setCombinationToCreate(null);
     };
     if (combinationToCreate !== null) {
@@ -321,8 +308,9 @@ function InfiniteConcepts() {
       ns.map((n) => ({
         ...n,
         className: intersections.includes(n.id)
-          ? n.className + " highlight"
-          : n.className?.replace("highlight", ""),
+          ? n.className +
+            (n.className?.includes("highlight") ? "" : " highlight")
+          : n.className?.replace(" highlight", ""),
       }))
     );
   }, []);
@@ -388,8 +376,9 @@ function InfiniteConcepts() {
         ns.map((n) => ({
           ...n,
           className: intersections.includes(n.id)
-            ? n.className + " highlight"
-            : n.className?.replace("highlight", ""),
+            ? n.className +
+              (n.className?.includes("highlight") ? "" : " highlight")
+            : n.className?.replace(" highlight", ""),
         }))
       );
     },
@@ -492,7 +481,7 @@ function InfiniteConcepts() {
       id: newNodeId,
       type: "node-toolbar",
       className: resultingConcept
-        ? `${resultingConcept.category}${
+        ? `${resultingConcept.category} ${
             resultingConcept.isBasic ? "isBasic" : ""
           }`
         : "",
@@ -536,8 +525,6 @@ function InfiniteConcepts() {
       ? basicConcepts.find((concept) => concept._id === conceptId)
       : userConcepts.find((concept) => concept._id === conceptId);
     if (!droppedConcept) return;
-
-    console.log("droppedConcept.category :>> ", droppedConcept.category);
 
     const newNode: Node = {
       id: getId(),
@@ -633,6 +620,11 @@ function InfiniteConcepts() {
                       onClick={() => setLanguage("FR")}
                     />
                   </MenuItem>
+                  <MenuItem
+                    text="Infos"
+                    icon="help"
+                    onClick={() => setIsHelpDialogOpen((prev) => !prev)}
+                  />
                 </Menu>
               }
             >
@@ -650,6 +642,7 @@ function InfiniteConcepts() {
             <div>{nbOfConcepts} concepts in DB</div>
           </Panel>
         </ReactFlow>
+        <HelpDialog isOpen={isHelpDialogOpen} setIsOpen={setIsHelpDialogOpen} />
       </div>
       {userConcepts ? (
         <Sidebar
