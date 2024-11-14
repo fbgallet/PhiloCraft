@@ -24,5 +24,5 @@ Vous aimez ce petit jeu philosophique, vous voudriez qu'il s'enrichisse de nouve
 ---
 
 ## Stack
-Front: React, TypeScript
-Back: Node.js, MongoDB (currently private)
+- Front: **React**, **TypeScript**, **ReactFlow**
+- Back: **Node.js**, **MongoDB** (currently private)
