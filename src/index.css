@@ -24,17 +24,22 @@ body,
   align-items: flex-start;
   margin-top: 10px;
 }
-.react-flow__panel.top.left > p {
+.react-flow__panel.top.left > a {
+  color: grey;
+  font-weight: 700;
+  letter-spacing: 2px;
   opacity: 1;
   font-size: larger;
   margin-bottom: 5px;
+  cursor: pointer;
+  text-decoration: none;
 }
 .react-flow__panel.top.left > div {
   opacity: 0.2;
 }
 
 .react-flow__node.highlight > .react-flow__node-default {
-  background: #ff0072;
+  background: #4d9f5f;
   color: white;
 }
 .dndflow:has(.dark) .react-flow__node.highlight > .react-flow__node-default {
@@ -55,7 +60,8 @@ body,
 .dndflow:has(.dark) .react-flow__node-default {
   border-color: #3c3c3c;
 }
-.dndflow .react-flow__node-default:hover {
+.dndflow .react-flow__node-default:hover,
+.react-flow__node.selected .react-flow__node-default {
   transform: scale(1.1);
   z-index: 10;
   box-shadow: 7px 4px 4px rgba(0, 0, 0, 0.2);
@@ -113,6 +119,22 @@ body,
   margin-top: -20px;
   margin-bottom: -20px;
 }
+.react-flow__node.selected .react-flow__node-default {
+  color: var(--xy-node-color-default);
+  background: radial-gradient(
+    circle at top left,
+    rgba(240, 240, 240, 0.85),
+    white 90%
+  );
+}
+.dndflow:has(.dark) .react-flow__node.selected .react-flow__node-default {
+  color: var(--xy-node-color-default);
+  background: radial-gradient(
+    circle at top,
+    rgba(255, 255, 255, 0.15),
+    var(--xy-node-background-color-default) 70%
+  );
+}
 .react-flow__node.isBasic .react-flow__node-default {
   border-width: 2px;
 }
@@ -124,7 +146,7 @@ body,
 }
 
 .react-flow__node-toolbar {
-  opacity: 0.5;
+  opacity: 0.25;
   display: flex;
   align-items: center;
   gap: 10px;

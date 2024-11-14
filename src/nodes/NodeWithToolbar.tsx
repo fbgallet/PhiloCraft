@@ -14,10 +14,11 @@ import { Icon } from "@blueprintjs/core";
 
 interface NodeWithToolBarProps {
   id: string;
+  dragging: boolean;
   data: any;
 }
 
-export function NodeWithToolBar({ id, data }: NodeWithToolBarProps) {
+export function NodeWithToolBar({ id, dragging, data }: NodeWithToolBarProps) {
   const reactFlow = useReactFlow();
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] =
     useState<boolean>(false);
@@ -38,26 +39,30 @@ export function NodeWithToolBar({ id, data }: NodeWithToolBarProps) {
 
   return (
     <>
-      <NodeToolbar
-        isVisible={data.forceToolbarVisible || undefined}
-        position={data.toolbarPosition}
-        align="start"
-      >
-        <Icon icon="intersection" size={18} onClick={handleJustify} />
-        {/* <FontAwesomeIcon
+      {!dragging ? (
+        <NodeToolbar
+          isVisible={data.forceToolbarVisible || undefined}
+          position={data.toolbarPosition}
+          align="start"
+        >
+          {data.logic ? (
+            <Icon icon="intersection" size={18} onClick={handleJustify} />
+          ) : null}
+          {/* <FontAwesomeIcon
           icon={faRightToBracket}
           size="lg"
           onClick={handleJustify}
         /> */}
 
-        <FontAwesomeIcon
-          icon={faCircleQuestion}
-          size="lg"
-          onClick={handleExplain}
-        />
+          <FontAwesomeIcon
+            icon={faCircleQuestion}
+            size="lg"
+            onClick={handleExplain}
+          />
 
-        <FontAwesomeIcon icon={faTrash} onClick={handleRemove} />
-      </NodeToolbar>
+          <FontAwesomeIcon icon={faTrash} onClick={handleRemove} />
+        </NodeToolbar>
+      ) : null}
       <div className="react-flow__node-default">{data?.label}</div>
       <DetailsDialog
         isOpen={isDetailsDialogOpen}

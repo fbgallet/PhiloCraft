@@ -68,6 +68,7 @@ export default function SideBar({
         setIsSortChange={setIsSortChange}
         setVisibleUserConcepts={setVisibleUserConcepts}
         language={language}
+        field={selectedField.title.EN}
       />
       <div className="nodes user-concepts">
         {searchQuery || filter

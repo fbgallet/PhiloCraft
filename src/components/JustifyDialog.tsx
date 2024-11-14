@@ -19,7 +19,9 @@ export default function JustifyDialog({
 
   return (
     <Dialog
-      title={`${nodeData.label} (${nodeData.category} concept)`}
+      title={`${nodeData.label} (${nodeData.category} concept${
+        nodeData.philosopher ? " of " + nodeData.philosopher : ""
+      })`}
       // icon={nodeData.icon}
       isOpen={isOpen}
       onClose={toggleOverlay}

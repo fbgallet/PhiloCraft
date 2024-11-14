@@ -7,7 +7,7 @@ import {
   Popover,
 } from "@blueprintjs/core";
 import { Concept } from "../data/concept";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ConfirmDialog from "./ConfirmDialog";
 import { Language } from "../App";
 
@@ -21,16 +21,13 @@ interface SideControlsProps {
   setIsSortChange: Function;
   setVisibleUserConcepts: Function;
   language: Language;
+  field: string;
 }
 
 const itemsTitle: any = {
   all: {
     EN: "All",
     FR: "Tout",
-  },
-  dis: {
-    EN: "Discovered 🎉",
-    FR: "Découverts 🎉",
   },
   com: {
     EN: "Common concepts",
@@ -44,6 +41,14 @@ const itemsTitle: any = {
     EN: "Classificatory concepts",
     FR: "Concepts classificatoires",
   },
+  dis: {
+    EN: "Discovered 🎉",
+    FR: "Découverts 🎉",
+  },
+  fie: {
+    EN: "Limited to current field 📌",
+    FR: "Limité au domaine sélectionné 📌",
+  },
 };
 
 export default function SideControls({
@@ -56,8 +61,20 @@ export default function SideControls({
   setIsSortChange,
   setVisibleUserConcepts,
   language,
+  field,
 }: SideControlsProps) {
   const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
+  const lcField =
+    field === "Other fields" ? "general philosophy" : field.toLowerCase();
+
+  useEffect(() => {
+    filter.includes("Limit") &&
+      setVisibleUserConcepts([
+        ...userConcepts.filter((concept: Concept) =>
+          concept.field?.includes(lcField)
+        ),
+      ]);
+  }, [field]);
 
   const getEnglishTitle = (title: string): string => {
     let titleEN = "";
@@ -86,6 +103,8 @@ export default function SideControls({
         ...userConcepts.filter((concept: Concept) =>
           value === "Discovered 🎉"
             ? concept.isNew
+            : value.includes("Limit")
+            ? concept.field?.includes(lcField)
             : value.toLowerCase().includes(concept.category.toLowerCase()) ||
               (value === "Common concepts" && !concept.category)
         ),
@@ -160,11 +179,6 @@ export default function SideControls({
               onClick={handleFilter}
             />
             <MenuItem
-              text={itemsTitle.dis[language]}
-              icon={filter === itemsTitle.dis[language] ? "small-tick" : null}
-              onClick={handleFilter}
-            />
-            <MenuItem
               text={itemsTitle.com[language]}
               icon={filter === itemsTitle.com[language] ? "small-tick" : null}
               //   icon={selectedField.title === field.title ? "small-tick" : null}
@@ -178,6 +192,16 @@ export default function SideControls({
             <MenuItem
               text={itemsTitle.cla[language]}
               icon={filter === itemsTitle.cla[language] ? "small-tick" : null}
+              onClick={handleFilter}
+            />
+            <MenuItem
+              text={itemsTitle.fie[language]}
+              icon={filter === itemsTitle.fie[language] ? "small-tick" : null}
+              onClick={handleFilter}
+            />
+            <MenuItem
+              text={itemsTitle.dis[language]}
+              icon={filter === itemsTitle.dis[language] ? "small-tick" : null}
               onClick={handleFilter}
             />
           </Menu>

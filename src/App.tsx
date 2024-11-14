@@ -91,7 +91,7 @@ function InfiniteConcepts() {
   const [combinations, setCombinations] = useState<Combination[]>([]);
   const [combinationToCreate, setCombinationToCreate] =
     useState<PendingCombination | null>(null);
-  const [model, setModel] = useState<string>("gpt-4o-mini");
+  const [model, setModel] = useState<string>("gpt-4o");
   const [throwConfetti, setThrowConfetti] = useState<boolean>(false);
   const [isSortChange, setIsSortChange] = useState<boolean>(false);
   const [nbOfCombinations, setNbOfCombinations] = useState<number>(0);
@@ -642,7 +642,9 @@ function InfiniteConcepts() {
             </Popover>
           </Controls>
           <Panel position="top-left">
-            <p>PHILO🧩CRAFT</p>
+            <a href="https://github.com/fbgallet/PhiloCraft" target="_blank">
+              PHILO🧩CRAFT
+            </a>
             <div>{nbOfReleasedCombinations} released combinations</div>
             <div>{nbOfCombinations} combinations in DB</div>
             <div>{nbOfConcepts} concepts in DB</div>
