@@ -634,7 +634,7 @@ function InfiniteConcepts() {
             </Popover>
           </Controls>
           <Panel position="top-left">
-            <a href="https://github.com/fbgallet/PhiloCraft" target="_blank">
+            <a onClick={() => setIsHelpDialogOpen((prev) => !prev)}>
               PHILO🧩CRAFT
             </a>
             <div>{nbOfReleasedCombinations} released combinations</div>

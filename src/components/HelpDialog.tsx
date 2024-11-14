@@ -61,7 +61,7 @@ export default function HelpDialog({ isOpen, setIsOpen }: HelpDialogProps) {
           stimulate thinking!
           <ul>
             <li>
-              Follow me on X
+              Follow me on X:{" "}
               <a
                 href="https://twitter.com/fbgallet"
                 target="_blank"
@@ -76,8 +76,10 @@ export default function HelpDialog({ isOpen, setIsOpen }: HelpDialogProps) {
                 href="https://github.com/sponsors/fbgallet"
                 target="_blank"
                 rel="noopener noreferrer"
-              ></a>
-              via Github sponsor or{" "}
+              >
+                via Github sponsor
+              </a>{" "}
+              or{" "}
               <a
                 href="buymeacoffee.com/fbgallet"
                 target="_blank"
