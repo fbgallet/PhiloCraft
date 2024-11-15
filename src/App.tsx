@@ -223,9 +223,9 @@ function InfiniteConcepts() {
           )
         );
 
-        const existingUserConcept = userConcepts.find(
-          (concept) => concept._id === resultingConcept._id
-        );
+        const existingUserConcept = userConcepts
+          .concat(basicConcepts)
+          .find((concept) => concept._id === resultingConcept._id);
 
         if (existingUserConcept) {
           existingUserConcept.logic.push(combination.logic);

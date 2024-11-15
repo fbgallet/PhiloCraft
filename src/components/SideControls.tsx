@@ -63,6 +63,7 @@ export default function SideControls({
   language,
   field,
 }: SideControlsProps) {
+  const [sortOrder, setSortOrder] = useState<string>("");
   const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
   const lcField =
     field === "Other fields" ? "general philosophy" : field.toLowerCase();
@@ -75,6 +76,16 @@ export default function SideControls({
         ),
       ]);
   }, [field]);
+
+  // TODO
+  // useEffect(() => {
+  //   if (userConcepts.length) {
+  //     let updatedVisibleUserConcepts;
+  //     if (filter) updatedVisibleUserConcepts = userConcepts.filter((concept:Concept) => filterTest(filter, concept))
+  //     if (sortOrder) updatedVisibleUserConcepts =
+  //       setVisibleUserConcepts(prev => filter ? ...prev. )
+  //   }
+  // }, [userConcepts]);
 
   const getEnglishTitle = (title: string): string => {
     let titleEN = "";
@@ -90,28 +101,34 @@ export default function SideControls({
     return titleEN;
   };
 
+  const filterTest = (filterTitle: string, concept: Concept) => {
+    return filterTitle === "Discovered 🎉"
+      ? concept.isNew
+      : filterTitle.includes("Limit")
+      ? concept.field?.includes(lcField)
+      : filterTitle.toLowerCase().includes(concept.category.toLowerCase()) ||
+        (filterTitle === "Common concepts" && !concept.category);
+  };
+
   // React.MouseEvent<HTMLElement, MouseEvent>
   const handleFilter = (evt: any) => {
     let title = evt.target.textContent;
-    let value: string = language === "EN" ? title : getEnglishTitle(title);
-    if (value === "All") {
-      value = title = "";
+    let filterTitle: string =
+      language === "EN" ? title : getEnglishTitle(title);
+    if (filterTitle === "All") {
+      filterTitle = title = "";
     }
     setFilter(title);
-    value &&
+    filterTitle &&
       setVisibleUserConcepts([
         ...userConcepts.filter((concept: Concept) =>
-          value === "Discovered 🎉"
-            ? concept.isNew
-            : value.includes("Limit")
-            ? concept.field?.includes(lcField)
-            : value.toLowerCase().includes(concept.category.toLowerCase()) ||
-              (value === "Common concepts" && !concept.category)
+          filterTest(filterTitle, concept)
         ),
       ]);
   };
 
-  const handleSort = (order: String) => {
+  const handleSort = (order: string) => {
+    setSortOrder(order);
     const sortCallback = (prev: Concept[]) => {
       return [
         ...prev.sort((a: Concept, b: Concept) => {
