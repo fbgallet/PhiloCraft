@@ -642,7 +642,11 @@ function InfiniteConcepts() {
             <div>{nbOfConcepts} concepts in DB</div>
           </Panel>
         </ReactFlow>
-        <HelpDialog isOpen={isHelpDialogOpen} setIsOpen={setIsHelpDialogOpen} />
+        <HelpDialog
+          isOpen={isHelpDialogOpen}
+          setIsOpen={setIsHelpDialogOpen}
+          language={language}
+        />
       </div>
       {userConcepts ? (
         <Sidebar
