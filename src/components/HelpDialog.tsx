@@ -128,8 +128,10 @@ export default function HelpDialog({
             assistée par l'IA.
           </h4>
           <h4>
-            Combinez des concepts de élémentaires et découvrez des idées
-            fascinantes et qui donnent à réfléchir !
+            Combinez les concepts élémentaires des différents domaines de la
+            philosophie et découvrez des idées fascinantes, qui donnent à
+            réfléchir ! Soyez le premier à tenter les combinaisons les plus
+            étonnantes !
           </h4>
           <Divider />
           <h3>Commandes</h3>

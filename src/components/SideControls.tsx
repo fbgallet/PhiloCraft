@@ -78,14 +78,22 @@ export default function SideControls({
   }, [field]);
 
   // TODO
-  // useEffect(() => {
-  //   if (userConcepts.length) {
-  //     let updatedVisibleUserConcepts;
-  //     if (filter) updatedVisibleUserConcepts = userConcepts.filter((concept:Concept) => filterTest(filter, concept))
-  //     if (sortOrder) updatedVisibleUserConcepts =
-  //       setVisibleUserConcepts(prev => filter ? ...prev. )
-  //   }
-  // }, [userConcepts]);
+  useEffect(() => {
+    if (userConcepts.length) {
+      let isToAddToVisibleConcepts = filterTest(
+        filter,
+        userConcepts[userConcepts.length - 1]
+      );
+      if (isToAddToVisibleConcepts) {
+        if (sortOrder) handleSort(sortOrder);
+        else
+          setVisibleUserConcepts((prev: Concept[]) => [
+            ...prev,
+            userConcepts[userConcepts.length - 1],
+          ]);
+      }
+    }
+  }, [userConcepts]);
 
   const getEnglishTitle = (title: string): string => {
     let titleEN = "";
