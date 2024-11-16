@@ -34,17 +34,30 @@ export default function HelpDialog({
         <DialogBody>
           <h4>
             Philo🧩Craft is an AI-powered crafting game to explore philosophical
-            concepts.
+            concepts developed by{" "}
+            <a
+              href="https://twitter.com/fbgallet"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Fabrice Gallet
+            </a>
+            .
           </h4>
           <h4>
             Combine basic concepts and discover fascinating ideas that make you
-            think!
+            think! Be the first to try the most amazing combinations!
           </h4>
           <Divider />
           <h3>Commands</h3>
           <p>
             Simply drag some concept over another concept, they will be replaced
             by a concept that could result of their combination.
+          </p>
+          <p>
+            Did you know about this concept? Do you know who developed it? Who
+            criticized it? What it can bring or change to our way of thinking
+            and living? Explore, let yourself be surprised!
           </p>
           <p>
             A small menu appear above a concept node when you left click on it.
@@ -85,7 +98,8 @@ export default function HelpDialog({
                   rel="noopener noreferrer"
                 >
                   @fbgallet
-                </a>
+                </a>{" "}
+                and
               </li>
               <li>
                 or make a small donation{" "}
@@ -124,8 +138,16 @@ export default function HelpDialog({
       ) : (
         <DialogBody>
           <h4>
-            Philo🧩Craft est un jeu d'exploration des concepts philosophiques
-            assistée par l'IA.
+            Philo🧩Craft est un jeu de combinaison et d'exploration de concepts
+            philosophiques assisté par l'IA, développé par{" "}
+            <a
+              href="https://twitter.com/fbgallet"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Fabrice Gallet
+            </a>
+            .
           </h4>
           <h4>
             Combinez les concepts élémentaires des différents domaines de la
@@ -141,20 +163,25 @@ export default function HelpDialog({
             résulter de leur combinaison.
           </p>
           <p>
+            Connaissiez-vous ce concept ? Savez-vous qui l'a forgé ? Qui l'a
+            critiqué ? Ce qui peut apporter à votre manière de penser et de vire
+            ? Explorez et laissez vous étonner !
+          </p>
+          <p>
             Un petit menu apparaît au-dessus d'un concept lorsque vous cliquez
             dessus avec le bouton gauche. Cliquez sur :
           </p>
           <ul>
             <li>
               <Icon icon="intersection" size={18} /> pour une explication rapide
-              de la logique de la combinaison suvie par l'IA.
+              de la logique de la combinaison suivie par l'IA.
             </li>
             <li>
               <FontAwesomeIcon icon={faCircleQuestion} size="lg" /> pour en
               savoir plus sur la signification du concept, éclairée un exemple
               frappant, comprendre pourquoi la réflexion sur ce concept mérite
               d'être approfondie, et découvrir la confrontation argumentée de
-              deux grands philosophes sur la question !
+              deux grands philosophes autour de ce concept !
             </li>
             <li>
               <FontAwesomeIcon icon={faTrash} /> ou clic droit pour retirer le
@@ -168,21 +195,24 @@ export default function HelpDialog({
           <Divider />
           <h3>Soutien</h3>
           <p>
-            Aidez-moi à développer ce jeu et d'autres outils utilisant l'IA pour
-            stimuler la réflexion !
+            Si vous souhaitez m'aidez-moi à développer ce jeu et d'autres outils
+            pour favoriser la découverte de la philosophie et l'utilisation l'IA
+            pour stimuler la réflexion:
             <ul>
               <li>
-                Suivez-moi sur X :{" "}
+                vous pouvez me suivre sur X :{" "}
                 <a
                   href="https://twitter.com/fbgallet"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   @fbgallet
-                </a>
+                </a>{" "}
+                et me faire savoir ce que vous avez pensé de ce jeu, ce que vous
+                avez appris, ce que vous voudriez voir améliorer,
               </li>
               <li>
-                ou faites un petit don{" "}
+                ou me faire un petit don{" "}
                 <a
                   href="https://github.com/sponsors/fbgallet"
                   target="_blank"
@@ -196,7 +226,7 @@ export default function HelpDialog({
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  offrez-moi un café
+                  ou m'offrir un café
                 </a>
               </li>
             </ul>

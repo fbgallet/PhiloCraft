@@ -107,6 +107,7 @@ body,
   visibility: hidden;
 }
 .react-flow__node-default > svg {
+  min-width: 130px;
   padding-right: 40px;
   margin-top: -20px;
   margin-bottom: -20px;

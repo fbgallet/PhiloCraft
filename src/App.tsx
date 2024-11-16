@@ -206,6 +206,11 @@ function InfiniteConcepts() {
             n.id === combinationToCreate?.targetNodeId
               ? {
                   ...n,
+                  className: resultingConcept
+                    ? `${resultingConcept.category} ${
+                        resultingConcept.isBasic ? "isBasic" : ""
+                      }`
+                    : "",
                   selected: true,
                   data: {
                     label: resultingConcept.icon + " " + resultingConcept.title,
