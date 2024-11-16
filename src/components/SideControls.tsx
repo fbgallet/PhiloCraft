@@ -80,17 +80,15 @@ export default function SideControls({
   // TODO
   useEffect(() => {
     if (userConcepts.length) {
-      let isToAddToVisibleConcepts = filterTest(
-        filter,
-        userConcepts[userConcepts.length - 1]
-      );
+      const addedConcept = userConcepts[userConcepts.length - 1];
+      let isToAddToVisibleConcepts = filterTest(filter, addedConcept);
       if (isToAddToVisibleConcepts) {
-        if (sortOrder) handleSort(sortOrder);
-        else
-          setVisibleUserConcepts((prev: Concept[]) => [
-            ...prev,
-            userConcepts[userConcepts.length - 1],
-          ]);
+        if (sortOrder) {
+          setVisibleUserConcepts((prev: Concept[]) =>
+            sortCallback([...prev, addedConcept], sortOrder)
+          );
+        } else
+          setVisibleUserConcepts((prev: Concept[]) => [...prev, addedConcept]);
       }
     }
   }, [userConcepts]);
@@ -126,7 +124,7 @@ export default function SideControls({
     if (filterTitle === "All") {
       filterTitle = title = "";
     }
-    setFilter(title);
+    setFilter(filterTitle);
     filterTitle &&
       setVisibleUserConcepts([
         ...userConcepts.filter((concept: Concept) =>
@@ -135,28 +133,28 @@ export default function SideControls({
       ]);
   };
 
+  const sortCallback = (concepts: Concept[], order: string) => {
+    return [
+      ...concepts.sort((a: Concept, b: Concept) => {
+        switch (order) {
+          case "AlphaAsc":
+            return a.title.localeCompare(b.title);
+          case "AlphaDes":
+            return b.title.localeCompare(a.title);
+          case "ChronoDes":
+            return a.timestamp && b.timestamp ? b.timestamp - a.timestamp : 0;
+          default:
+            return a.timestamp && b.timestamp ? a.timestamp - b.timestamp : 0;
+        }
+      }),
+    ];
+  };
   const handleSort = (order: string) => {
     setSortOrder(order);
-    const sortCallback = (prev: Concept[]) => {
-      return [
-        ...prev.sort((a: Concept, b: Concept) => {
-          switch (order) {
-            case "AlphaAsc":
-              return a.title.localeCompare(b.title);
-            case "AlphaDes":
-              return b.title.localeCompare(a.title);
-            case "ChronoDes":
-              return a.timestamp && b.timestamp ? b.timestamp - a.timestamp : 0;
-            default:
-              return a.timestamp && b.timestamp ? a.timestamp - b.timestamp : 0;
-          }
-        }),
-      ];
-    };
     setIsSortChange(true);
     filter
-      ? setVisibleUserConcepts(sortCallback)
-      : setUserConcepts(sortCallback);
+      ? setVisibleUserConcepts((prev: Concept[]) => sortCallback(prev, order))
+      : setUserConcepts((prev: Concept[]) => sortCallback(prev, order));
   };
 
   const handleClearConcepts = () => {
