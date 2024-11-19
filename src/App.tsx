@@ -449,8 +449,8 @@ function InfiniteConcepts() {
     );
     console.log("existing combination :>> ", combination);
 
-    droppedNode.className = "hidden-node";
-    targetNode.className = "hidden-node";
+    // droppedNode.className = "hidden-node";
+    // targetNode.className = "hidden-node";
     const newNodeId = getId();
 
     if (!combination) {
@@ -459,6 +459,7 @@ function InfiniteConcepts() {
         targetNodeId: newNodeId,
       });
     } else {
+      droppedNode.data.label = <InfinitySpinner />;
       axios.put(
         `${backendURL}/combination/use/${combination._id}`,
         {},
@@ -480,6 +481,7 @@ function InfiniteConcepts() {
           resultingConcept ? [...prev, resultingConcept] : prev
         );
       }
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     }
 
     const newNode: Node = {
@@ -509,6 +511,7 @@ function InfiniteConcepts() {
         model,
       },
     };
+
     console.log("newNode :>> ", newNode);
 
     setNodes((nds) =>
