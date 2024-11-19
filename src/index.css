@@ -200,7 +200,7 @@ body,
   flex-wrap: wrap;
   gap: 8px;
 }
-.dndflow aside .nodes .sideconcept {
+.sideconcept {
   display: flex;
   gap: 8px;
   padding: 8px 12px;
@@ -208,7 +208,7 @@ body,
   border: 1px solid #c7c7c7;
   border-radius: 6px;
 }
-.dndflow:has(.dark) aside .nodes .sideconcept {
+.dndflow:has(.dark) .sideconcept {
   border-color: #3c3c3c;
   background-color: #1e1e1e;
 }
@@ -218,13 +218,13 @@ body,
   box-shadow: 7px 4px 4px rgba(0, 0, 0, 0.2);
 }
 
-.dndflow aside .nodes .sideconcept.isBasic {
+.sideconcept.isBasic {
   border-width: 2px;
 }
-.dndflow aside .nodes .sideconcept.Proprietary {
+.sideconcept.Proprietary {
   border-color: rgba(255, 166, 0, 0.2);
 }
-.dndflow aside .nodes .sideconcept.Classificatory {
+.sideconcept.Classificatory {
   border-color: rgba(255, 0, 255, 0.2);
 }
 
