@@ -128,6 +128,7 @@ export default function HelpDialog({
                 >
                   buy me a coffee
                 </a>
+                .
               </li>
             </ul>
             Even the most modest support is a huge source of motivation! 🙏
@@ -174,8 +175,8 @@ export default function HelpDialog({
           </p>
           <p>
             Connaissiez-vous ce concept ? Savez-vous qui l'a forgé ? Qui l'a
-            critiqué ? Ce qui peut apporter à votre manière de penser et de vire
-            ? Explorez et laissez vous étonner !
+            critiqué ? Ce qu'il peut apporter à votre manière de penser et de
+            vivre ? Explorez et laissez vous étonner !
           </p>
           <p>
             Un petit menu apparaît au-dessus d'un concept lorsque vous cliquez
@@ -188,10 +189,11 @@ export default function HelpDialog({
             </li>
             <li>
               <FontAwesomeIcon icon={faCircleQuestion} size="lg" /> pour en
-              savoir plus sur la signification du concept, éclairée un exemple
-              frappant, comprendre pourquoi la réflexion sur ce concept mérite
-              d'être approfondie, et découvrir la confrontation argumentée de
-              deux grands philosophes autour de ce concept !
+              savoir plus sur la signification du concept grâce à une définition
+              concise et un exemple frappant, comprendre pourquoi la réflexion
+              sur ce concept mérite d'être approfondie, et découvrir la
+              confrontation argumentée de deux grands philosophes autour de ce
+              concept !
             </li>
             <li>
               <Icon icon="git-branch" size={18} /> afin d'afficher un résultat
@@ -206,9 +208,9 @@ export default function HelpDialog({
           <Divider />
           <h3>Soutien</h3>
           <p>
-            Si vous souhaitez m'aidez-moi à développer ce jeu et d'autres outils
+            Si vous souhaitez m'aider à développer ce jeu et d'autres outils
             pour favoriser la découverte de la philosophie et l'utilisation l'IA
-            pour stimuler la réflexion:
+            pour stimuler la réflexion au lieu de l'endormir:
             <ul>
               <li>
                 vous pouvez me suivre sur X{" "}
