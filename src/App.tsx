@@ -290,6 +290,8 @@ function InfiniteConcepts() {
         await new Promise((resolve) => setTimeout(resolve, delay));
       }
 
+      setNbOfReleasedCombinations((prev) => ++prev);
+
       setNodes((ns) =>
         ns.map((n) =>
           n.id === combinationToCreate?.targetNodeId &&
@@ -536,7 +538,6 @@ function InfiniteConcepts() {
       .find((concept) => concept._id === targetNode.data.conceptId);
     if (!droppedConcept || !targetConcept) return;
 
-    setNbOfReleasedCombinations((prev) => ++prev);
     droppedConcept.usedCounter++;
     targetConcept.usedCounter++;
 
