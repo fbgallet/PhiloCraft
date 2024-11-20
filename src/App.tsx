@@ -25,6 +25,7 @@ import {
   Panel,
   ControlButton,
 } from "@xyflow/react";
+import { isMobile } from "react-device-detect";
 
 import Sidebar from "./components/Sidebar.tsx";
 
@@ -130,7 +131,12 @@ function InfiniteConcepts() {
       if (!headers.headers["x-api-key"]) {
         headers.headers["x-api-key"] = await getApiKeyOnServer();
       }
-      if (!basicConcepts.length && !loadingBasics.current) {
+      const basicStored = getStoredBasicConcepts(language);
+      if (
+        (!basicConcepts.length && !loadingBasics.current) ||
+        !basicStored ||
+        !basicStored.length
+      ) {
         loadingBasics.current = true;
         const { data } = await axios.post(
           `${backendURL}/concepts`,
@@ -662,7 +668,7 @@ function InfiniteConcepts() {
         >
           <Background />
           <MiniMap pannable position="bottom-right" />
-          <Controls showInteractive={false}>
+          <Controls showInteractive={false} showZoom={isMobile ? false : true}>
             <ControlButton onClick={onColorModeChange}>
               {colorMode === "light" ? (
                 <FontAwesomeIcon icon={faMoon} />

@@ -16,7 +16,7 @@ body,
 
 .react-flow__panel.bottom.right {
   opacity: 0.7;
-  transform: scale(0.8) translate(30px, 25px);
+  transform: scale(0.8) translate(35px, 30px);
 }
 .react-flow__panel.top.left {
   display: flex;
@@ -36,6 +36,10 @@ body,
 }
 .react-flow__panel.top.left > div {
   opacity: 0.2;
+}
+.react-flow__panel.bottom.left {
+  opacity: 0.8;
+  transform: translate(-5px, 8px);
 }
 
 .dndflow {
@@ -156,7 +160,12 @@ body,
   opacity: 0.25;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 1px;
+  margin-left: -5px;
+  margin-top: 5px;
+}
+.react-flow__node-toolbar > * {
+  padding: 7px;
 }
 
 /*************/
@@ -283,20 +292,38 @@ body:has(.react-flow.dark) .bp5-dialog {
 }
 
 @media screen and (max-width: 768px) {
+  .dndflow > aside {
+    width: 100%;
+    flex: 1;
+    max-height: 50%;
+  }
   .dndflow {
     flex-direction: column;
   }
   .dndflow > .reactflow-wrapper {
     flex: 2;
   }
+  .react-flow__panel.react-flow__minimap.bottom.right {
+    transform: scale(0.6) translate(75px, 60px);
+  }
 
-  .dndflow > aside {
-    width: 100%;
-    flex: 1;
-    max-height: 50%;
+  .dndflow aside .nodes.user-concepts {
+    padding-right: 20px;
   }
 }
-@media screen and (max-width: 450px) {
+@media screen and (max-width: 768px) and (max-height: 400px) {
+  .dndflow {
+    flex-direction: row;
+  }
+
+  .dndflow > aside {
+    width: 45%;
+    max-width: 380px;
+    max-height: 100%;
+  }
+}
+
+@media screen and (max-width: 450px), (max-height: 500px) {
   .react-flow__panel.top.left > div {
     font-size: 10px;
   }
