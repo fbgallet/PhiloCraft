@@ -11,6 +11,7 @@ import { useCallback, useState } from "react";
 import DetailsDialog from "../components/DetailsDialog";
 import JustifyDialog from "../components/JustifyDialog";
 import { Icon } from "@blueprintjs/core";
+import { InfinitySpin } from "react-loader-spinner";
 
 interface NodeWithToolBarProps {
   id: string;
@@ -31,6 +32,22 @@ export function NodeWithToolBar({ id, dragging, data }: NodeWithToolBarProps) {
 
   const handleExplain = async () => {
     setIsDetailsDialogOpen(true);
+  };
+
+  const handleOther = async () => {
+    data.setCombinationToCreate({
+      idsToCombine: [
+        data.sourceCombination.combined[0],
+        data.sourceCombination.combined[1],
+      ],
+      combination: data.sourceCombination,
+      targetNodeId: id,
+    });
+    reactFlow.setNodes((ns) =>
+      ns.map((n) =>
+        n.id !== id ? n : { ...n, data: { icon: "", label: <InfinitySpin /> } }
+      )
+    );
   };
 
   const handleRemove = async () => {
@@ -59,6 +76,10 @@ export function NodeWithToolBar({ id, dragging, data }: NodeWithToolBarProps) {
             size="lg"
             onClick={handleExplain}
           />
+
+          {data.sourceCombination ? (
+            <Icon icon="git-branch" size={18} onClick={handleOther} />
+          ) : null}
 
           <FontAwesomeIcon icon={faTrash} onClick={handleRemove} />
         </NodeToolbar>

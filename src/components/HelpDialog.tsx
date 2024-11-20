@@ -26,7 +26,7 @@ export default function HelpDialog({
 
   return (
     <Dialog
-      title={"Philo🧩Craft v.0.1 11-2024"}
+      title={"Philo🧩Craft v.0.12 2024-11-20"}
       isOpen={isOpen}
       onClose={toggleOverlay}
     >
@@ -74,6 +74,11 @@ export default function HelpDialog({
               example, understand why it's worth exploring, and engage in a
               reasoned discussion with two great philosophers who have worked on
               this concept!
+            </li>
+            <li>
+              <Icon icon="git-branch" size={18} />
+              to display another possible resulting concept from the same
+              combination.
             </li>
             <li>
               <FontAwesomeIcon icon={faTrash} /> or right click or long touch to
@@ -178,6 +183,10 @@ export default function HelpDialog({
               frappant, comprendre pourquoi la réflexion sur ce concept mérite
               d'être approfondie, et découvrir la confrontation argumentée de
               deux grands philosophes autour de ce concept !
+            </li>
+            <li>
+              <Icon icon="git-branch" size={18} /> afin d'afficher un autre
+              résultat possible de la même combinaison.
             </li>
             <li>
               <FontAwesomeIcon icon={faTrash} /> ou clic droit pour retirer le

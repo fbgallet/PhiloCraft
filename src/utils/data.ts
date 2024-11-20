@@ -67,3 +67,22 @@ export const getStoredCombination = (
   }
   return null;
 };
+
+export function getRandomElement<T>(array: T[]): T | null {
+  if (array.length === 0) {
+    return null;
+  }
+  const randomIndex = Math.floor(Math.random() * array.length);
+  return array[randomIndex];
+}
+
+export const getSplittedConceptAndLogic = (str: string) => {
+  const splitted = str.split(">>");
+
+  return splitted.length === 2
+    ? {
+        concept: splitted[1].trim(),
+        logic: splitted[0].trim(),
+      }
+    : { concept: undefined, logic: undefined };
+};

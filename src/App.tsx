@@ -31,7 +31,12 @@ import Sidebar from "./components/Sidebar.tsx";
 import { initialNodes, nodeTypes } from "./nodes";
 import { initialEdges, edgeTypes } from "./edges";
 
-import { getStoredBasicConcepts, getStoredUserConcepts } from "./utils/data.ts";
+import {
+  getRandomElement,
+  getSplittedConceptAndLogic,
+  getStoredBasicConcepts,
+  getStoredUserConcepts,
+} from "./utils/data.ts";
 import axios from "axios";
 import { Concept } from "./data/concept.ts";
 import { Combination } from "./data/combination.ts";
@@ -181,6 +186,7 @@ function InfiniteConcepts() {
       let combination: Combination | undefined =
         combinationToCreate?.combination;
       let resultingConcept: string | Concept | undefined;
+      let delay = 0;
 
       if (!combination) {
         const { data } = await axios.post(
@@ -225,6 +231,7 @@ function InfiniteConcepts() {
         resultingConcept = userConcepts.find(
           (concept) => concept._id === newConceptId
         );
+        delay = 500;
         if (!resultingConcept) {
           const { data } = await axios.put(
             `${backendURL}/concept/${newConceptId}`,
@@ -236,8 +243,41 @@ function InfiniteConcepts() {
           // setUserConcepts((prev) =>
           //   newConcept ? [...prev, newConcept] : prev
           // );
+        } else {
+          const anotherResult = getRandomElement(
+            combination.otherResults.concat(
+              `${combination.logic} >> ${resultingConcept.title}`
+            )
+          );
+          if (anotherResult) {
+            const { concept, logic } =
+              getSplittedConceptAndLogic(anotherResult);
+            if (concept && logic) {
+              resultingConcept = userConcepts.find(
+                (userCpt) =>
+                  userCpt.title.toLowerCase() === concept.toLowerCase()
+              );
+              if (!resultingConcept) {
+                delay = 500;
+                const { data } = await axios.post(
+                  `${backendURL}/concept/create`,
+                  { title: concept, logic },
+                  headers
+                );
+                const newConcept: Concept = data;
+                resultingConcept = newConcept;
+                if (resultingConcept.craftedCounter === 1) {
+                  delay = 0;
+                  resultingConcept.isNew = true;
+                  setThrowConfetti(true);
+                }
+                //console.log("resultingConcept :>> ", resultingConcept);
+              }
+              combination.logic = logic;
+            }
+          }
         }
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, delay));
       }
 
       setNodes((ns) =>
@@ -260,6 +300,8 @@ function InfiniteConcepts() {
                   category: resultingConcept?.category,
                   philosopher: resultingConcept?.philosopher,
                   isNew: resultingConcept?.isNew,
+                  sourceCombination: combination,
+                  setCombinationToCreate,
                   model,
                 },
               }
@@ -278,7 +320,8 @@ function InfiniteConcepts() {
 
         if (existingUserConcept) {
           if (
-            combination?.logic.length &&
+            existingUserConcept.logic?.length &&
+            combination?.logic &&
             !existingUserConcept.logic.includes(combination?.logic)
           )
             existingUserConcept.logic.push(combination.logic);
