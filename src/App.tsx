@@ -278,7 +278,7 @@ function InfiniteConcepts() {
 
         if (existingUserConcept) {
           if (
-            combination?.logic &&
+            combination?.logic.length &&
             !existingUserConcept.logic.includes(combination?.logic)
           )
             existingUserConcept.logic.push(combination.logic);
