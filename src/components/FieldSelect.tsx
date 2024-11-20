@@ -1,5 +1,6 @@
 import { Button, MenuItem, Colors } from "@blueprintjs/core";
 import { Select } from "@blueprintjs/select";
+import { isMobile } from "react-device-detect";
 import { useState } from "react";
 import { Language } from "../App";
 
@@ -130,10 +131,16 @@ export function FieldSelect({
   return (
     <div style={{ display: "flex", flexDirection: "row", gap: "5px" }}>
       <SelectAny
+        filterable={isMobile ? false : true}
         placeholder={language === "EN" ? "Filter..." : "Filtrer..."}
         items={FIELDS_LIST}
         itemRenderer={renderfield}
-        noResults={<MenuItem disabled text="No results." />}
+        noResults={
+          <MenuItem
+            disabled
+            text={language === "EN" ? "No results" : "Aucun résultat"}
+          />
+        }
         onItemSelect={handleFieldSelect}
         tagRenderer={renderTag}
         selectedItems={selectedField}

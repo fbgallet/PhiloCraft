@@ -622,7 +622,7 @@ function InfiniteConcepts() {
               interactionKind="click"
               content={
                 <Menu small className="main-menu">
-                  <MenuItem text="Language">
+                  <MenuItem text={language === "EN" ? "Language" : "Langue"}>
                     <MenuItem
                       text="English"
                       icon={language === "EN" ? "tick" : null}
@@ -651,9 +651,22 @@ function InfiniteConcepts() {
             <a onClick={() => setIsHelpDialogOpen((prev) => !prev)}>
               PHILO🧩CRAFT
             </a>
-            <div>{nbOfReleasedCombinations} released combinations</div>
-            <div>{nbOfCombinations} combinations in DB</div>
-            <div>{nbOfConcepts} concepts in DB</div>
+            <div>
+              {nbOfReleasedCombinations}{" "}
+              {language === "EN"
+                ? "released combinations"
+                : "combinaisons effectuées"}
+            </div>
+            <div>
+              {nbOfCombinations}{" "}
+              {language === "EN"
+                ? "combinations in DB"
+                : "combinaisons dans la BD"}
+            </div>
+            <div>
+              {nbOfConcepts}{" "}
+              {language === "EN" ? "concepts in DB" : "concepts dans la BD"}
+            </div>
           </Panel>
         </ReactFlow>
         <HelpDialog

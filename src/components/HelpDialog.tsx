@@ -76,14 +76,10 @@ export default function HelpDialog({
               this concept!
             </li>
             <li>
-              <FontAwesomeIcon icon={faTrash} /> or right click to remove the
-              concept from the canvas.
+              <FontAwesomeIcon icon={faTrash} /> or right click or long touch to
+              remove the concept from the canvas.
             </li>
           </ul>
-          <p>
-            On Mobile, <strong>long press</strong> on a concept in the sidebar
-            to insert it in the canvas.
-          </p>
           <Divider />
           <h3>Sponsoring</h3>
           <p>
@@ -188,10 +184,6 @@ export default function HelpDialog({
               concept du canevas.
             </li>
           </ul>
-          <p>
-            Sur mobile, <strong>appuyez longuement</strong> sur un concept dans
-            la barre latérale pour l'insérer dans le canevas.
-          </p>
           <Divider />
           <h3>Soutien</h3>
           <p>
