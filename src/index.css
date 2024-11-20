@@ -222,10 +222,10 @@ body,
   border-width: 2px;
 }
 .sideconcept.Proprietary {
-  border-color: rgba(255, 166, 0, 0.2);
+  border-color: rgba(255, 166, 0, 0.2) !important;
 }
 .sideconcept.Classificatory {
-  border-color: rgba(255, 0, 255, 0.2);
+  border-color: rgba(255, 0, 255, 0.2) !important;
 }
 
 .sideconcept-new {

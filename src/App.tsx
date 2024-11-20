@@ -60,6 +60,7 @@ export const getId = (): string => `${(id++).toString()}`;
 
 interface PendingCombination {
   idsToCombine: [string, string];
+  combination: Combination | undefined;
   targetNodeId: string;
 }
 
@@ -177,69 +178,116 @@ function InfiniteConcepts() {
 
   useEffect(() => {
     const createCombination = async () => {
-      const { data } = await axios.post(
-        `${backendURL}/combination/create`,
-        {
-          toCombine: combinationToCreate && [
-            combinationToCreate.idsToCombine[0],
-            combinationToCreate.idsToCombine[1],
-          ],
-          model,
-        },
-        headers
-      );
-      console.log("data from /combination/create :>> ", data);
-      if (data) {
-        let combination = data.combination;
-        let resultingConcept = combination.result;
-        combination.result = resultingConcept._id;
-        if (!resultingConcept) return;
-        resultingConcept.isNew = data.isNewResultingConcept;
-        if (resultingConcept.isNew) {
-          setThrowConfetti(true);
-        }
-        if (resultingConcept.isNew) setNbOfConcepts((prev) => ++prev);
-        setNbOfCombinations((prev) => ++prev);
-        combination && combinations.push(combination);
-        setNodes((ns) =>
-          ns.map((n) =>
-            n.id === combinationToCreate?.targetNodeId
-              ? {
-                  ...n,
-                  className: resultingConcept
-                    ? `${resultingConcept.category} ${
-                        resultingConcept.isBasic ? "isBasic" : ""
-                      }`
-                    : "",
-                  selected: true,
-                  data: {
-                    label: resultingConcept.icon + " " + resultingConcept.title,
-                    conceptId: resultingConcept._id,
-                    conceptTitle: resultingConcept.title,
-                    alternativeConcepts: combination.otherResults,
-                    logic: [combination.logic],
-                    category: resultingConcept.category,
-                    philosopher: resultingConcept.philosopher,
-                    isNew: resultingConcept.isNew,
-                    model,
-                  },
-                }
-              : n
-          )
-        );
+      let combination: Combination | undefined =
+        combinationToCreate?.combination;
+      let resultingConcept: string | Concept | undefined;
 
+      if (!combination) {
+        const { data } = await axios.post(
+          `${backendURL}/combination/create`,
+          {
+            toCombine: combinationToCreate && [
+              combinationToCreate.idsToCombine[0],
+              combinationToCreate.idsToCombine[1],
+            ],
+            model,
+          },
+          headers
+        );
+        console.log("data from /combination/create :>> ", data);
+        if (data) {
+          combination = data.combination;
+          if (!combination) return;
+          resultingConcept = combination.result;
+          // combination.result = resultingConcept._id;
+          // }
+          if (!resultingConcept || typeof resultingConcept === "string") return;
+          resultingConcept.isNew = data.isNewResultingConcept;
+          if (resultingConcept.isNew) {
+            setThrowConfetti(true);
+          }
+          if (resultingConcept.isNew) setNbOfConcepts((prev) => ++prev);
+          setNbOfCombinations((prev) => ++prev);
+          combination && combinations.push(combination);
+        }
+      } else {
+        axios.put(
+          `${backendURL}/combination/use/${combination._id}`,
+          {},
+          headers
+        );
+        combination.counter++;
+        // combination.result?.craftedCounter++;
+        const newConceptId =
+          typeof combination.result === "string"
+            ? combination.result
+            : combination.result._id;
+        resultingConcept = userConcepts.find(
+          (concept) => concept._id === newConceptId
+        );
+        if (!resultingConcept) {
+          const { data } = await axios.put(
+            `${backendURL}/concept/${newConceptId}`,
+            {},
+            headers
+          );
+          const newConcept: Concept = data;
+          resultingConcept = newConcept;
+          // setUserConcepts((prev) =>
+          //   newConcept ? [...prev, newConcept] : prev
+          // );
+        }
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
+
+      setNodes((ns) =>
+        ns.map((n) =>
+          n.id === combinationToCreate?.targetNodeId &&
+          resultingConcept &&
+          typeof resultingConcept !== "string"
+            ? {
+                ...n,
+                className: `${resultingConcept.category} ${
+                  resultingConcept.isBasic ? "isBasic" : ""
+                }`,
+                selected: true,
+                data: {
+                  label: resultingConcept?.icon + " " + resultingConcept?.title,
+                  conceptId: resultingConcept?._id,
+                  conceptTitle: resultingConcept?.title,
+                  alternativeConcepts: combination?.otherResults,
+                  logic: [combination?.logic],
+                  category: resultingConcept?.category,
+                  philosopher: resultingConcept?.philosopher,
+                  isNew: resultingConcept?.isNew,
+                  model,
+                },
+              }
+            : {
+                ...n,
+                selected: false,
+              }
+        )
+      );
+
+      if (resultingConcept && typeof resultingConcept !== "string") {
+        const newConcept: Concept = resultingConcept;
         const existingUserConcept = userConcepts
           .concat(basicConcepts)
-          .find((concept) => concept._id === resultingConcept._id);
+          .find((concept) => concept._id === newConcept._id);
 
         if (existingUserConcept) {
-          existingUserConcept.logic.push(combination.logic);
+          if (
+            combination?.logic &&
+            !existingUserConcept.logic.includes(combination?.logic)
+          )
+            existingUserConcept.logic.push(combination.logic);
           setUserConcepts((prev) => [...prev]);
         } else {
-          resultingConcept.logic = [combination.logic];
-          resultingConcept.timestamp = Date.now();
-          setUserConcepts((prev) =>
-            combination ? [...prev, resultingConcept] : prev
+          newConcept.logic = [combination?.logic || ""];
+          newConcept.timestamp = Date.now();
+          setUserConcepts((prev: Concept[]) =>
+            newConcept ? [...prev, newConcept] : prev
           );
         }
       }
@@ -300,7 +348,6 @@ function InfiniteConcepts() {
 
   const onNodeRightClick = (e: MouseEvent, node: Node) => {
     e.preventDefault();
-    console.log("node :>> ", node);
     setNodes((ns) => ns.filter((n) => n.id !== node.id));
   };
 
@@ -324,8 +371,7 @@ function InfiniteConcepts() {
     async (_: MouseEvent, node: Node) => {
       const intersections: Node[] = getIntersectingNodes(node);
 
-      console.log("node :>> ", node);
-      console.log("intersections :>> ", intersections);
+      // console.log("intersections :>> ", intersections);
 
       if (intersections.length) {
         combineTwoNodesInOne(node, intersections);
@@ -427,7 +473,6 @@ function InfiniteConcepts() {
     droppedNode: Node,
     intersections: Node[]
   ): Promise<void> => {
-    let resultingConcept: Concept | undefined;
     const targetNode = intersections[0];
 
     const droppedConcept: Concept | undefined = basicConcepts
@@ -444,75 +489,34 @@ function InfiniteConcepts() {
 
     let combination: Combination | undefined = combinations.find(
       (combi) =>
-        combi.combined[0] === droppedConcept._id &&
-        combi.combined[1] === targetConcept._id
+        (combi.combined[0] === droppedConcept._id &&
+          combi.combined[1] === targetConcept._id) ||
+        (combi.combined[1] === droppedConcept._id &&
+          combi.combined[0] === targetConcept._id)
     );
-    console.log("existing combination :>> ", combination);
 
-    // droppedNode.className = "hidden-node";
-    // targetNode.className = "hidden-node";
+    droppedNode.className = "hidden-node";
+    targetNode.className = "hidden-node";
     const newNodeId = getId();
 
-    if (!combination) {
-      setCombinationToCreate({
-        idsToCombine: [droppedConcept._id, targetConcept._id],
-        targetNodeId: newNodeId,
-      });
-    } else {
-      droppedNode.data.label = <InfinitySpinner />;
-      axios.put(
-        `${backendURL}/combination/use/${combination._id}`,
-        {},
-        headers
-      );
-      combination.counter++;
-      // combination.result?.craftedCounter++;
-      resultingConcept = userConcepts.find(
-        (concept) => concept._id === combination?.result
-      );
-      if (!resultingConcept) {
-        const { data } = await axios.put(
-          `${backendURL}/concept/${combination.result}`,
-          {},
-          headers
-        );
-        resultingConcept = data;
-        setUserConcepts((prev) =>
-          resultingConcept ? [...prev, resultingConcept] : prev
-        );
-      }
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    }
+    setCombinationToCreate({
+      idsToCombine: [droppedConcept._id, targetConcept._id],
+      combination,
+      targetNodeId: newNodeId,
+    });
 
     const newNode: Node = {
       id: newNodeId,
       type: "node-toolbar",
-      className: resultingConcept
-        ? `${resultingConcept.category} ${
-            resultingConcept.isBasic ? "isBasic" : ""
-          }`
-        : "",
       position: {
         x: (droppedNode.position.x + targetNode.position.x) / 2,
         y: (droppedNode.position.y + targetNode.position.y) / 2,
       },
       selected: true,
       data: {
-        label: resultingConcept ? (
-          resultingConcept.icon + " " + resultingConcept.title
-        ) : (
-          <InfinitySpinner />
-        ),
-        conceptId: resultingConcept && resultingConcept._id,
-        conceptTitle: resultingConcept && resultingConcept.title,
-        category: resultingConcept && resultingConcept.category,
-        logic: combination ? combination.logic : [],
-        isNew: resultingConcept && resultingConcept.isNew,
-        model,
+        label: <InfinitySpinner />,
       },
     };
-
-    console.log("newNode :>> ", newNode);
 
     setNodes((nds) =>
       nds
@@ -553,6 +557,8 @@ function InfiniteConcepts() {
       height: 40,
       width: 170,
     };
+
+    console.log("newNode :>> ", newNode);
 
     setNodes((nds: Node[]) => nds.concat(newNode));
 
