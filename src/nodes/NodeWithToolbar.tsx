@@ -42,6 +42,7 @@ export function NodeWithToolBar({ id, dragging, data }: NodeWithToolBarProps) {
       ],
       combination: data.sourceCombination,
       targetNodeId: id,
+      currentLabel: data.conceptTitle,
     });
     reactFlow.setNodes((ns) =>
       ns.map((n) =>

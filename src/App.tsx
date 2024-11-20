@@ -67,6 +67,7 @@ interface PendingCombination {
   idsToCombine: [string, string];
   combination: Combination | undefined;
   targetNodeId: string;
+  currentLabel: string | undefined;
 }
 
 function InfiniteConcepts() {
@@ -244,11 +245,20 @@ function InfiniteConcepts() {
           //   newConcept ? [...prev, newConcept] : prev
           // );
         } else {
-          const anotherResult = getRandomElement(
-            combination.otherResults.concat(
-              `${combination.logic} >> ${resultingConcept.title}`
-            )
+          let resultsList = combination.otherResults.concat(
+            `${combination.logic} >> ${resultingConcept.title}`
           );
+          resultsList = !combinationToCreate?.currentLabel
+            ? resultsList
+            : resultsList.filter(
+                (reslt) =>
+                  combinationToCreate?.currentLabel &&
+                  !reslt
+                    .split(">>")[1]
+                    .toLowerCase()
+                    .includes(combinationToCreate?.currentLabel.toLowerCase())
+              );
+          const anotherResult = getRandomElement(resultsList);
           if (anotherResult) {
             const { concept, logic } =
               getSplittedConceptAndLogic(anotherResult);
@@ -546,6 +556,7 @@ function InfiniteConcepts() {
       idsToCombine: [droppedConcept._id, targetConcept._id],
       combination,
       targetNodeId: newNodeId,
+      currentLabel: undefined,
     });
 
     const newNode: Node = {
