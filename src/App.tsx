@@ -2,6 +2,7 @@ import type { Edge, Node, OnConnect, Rect, XYPosition } from "@xyflow/react";
 import { Menu, MenuItem, Popover } from "@blueprintjs/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
+import { useParams } from "react-router-dom";
 
 import {
   useState,
@@ -71,7 +72,7 @@ interface PendingCombination {
   currentLabel: string | undefined;
 }
 
-function InfiniteConcepts() {
+function InfiniteConcepts({ routeLang }) {
   const reactFlowWrapper = useRef(null);
   const [colorMode, setColorMode] = useState<ColorMode>(
     localStorage.colorMode || "light"
@@ -79,7 +80,11 @@ function InfiniteConcepts() {
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
   const [language, setLanguage] = useState<Language>(
-    localStorage.language || "EN"
+    (routeLang
+      ? routeLang.toLowerCase() === "fr"
+        ? "FR"
+        : "EN"
+      : localStorage.language) || "EN"
   );
   const [basicConcepts, setBasicConcepts] = useState<Concept[]>(
     getStoredBasicConcepts(language) || []
@@ -178,7 +183,7 @@ function InfiniteConcepts() {
   }, []);
 
   useEffect(() => {
-    localStorage.language = language;
+    if (!routeLang) localStorage.language = language;
     headers.headers.language = language;
     const storedBasicConcepts = getStoredBasicConcepts(language);
     console.log("storedBasicConcepts :>> ", storedBasicConcepts);
@@ -752,11 +757,10 @@ function InfiniteConcepts() {
 }
 
 export default function App() {
+  const { lang } = useParams();
   return (
-    <StrictMode>
-      <ReactFlowProvider>
-        <InfiniteConcepts />
-      </ReactFlowProvider>
-    </StrictMode>
+    <ReactFlowProvider>
+      <InfiniteConcepts routeLang={lang} />
+    </ReactFlowProvider>
   );
 }
