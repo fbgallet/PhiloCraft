@@ -747,11 +747,10 @@ function InfiniteConcepts({ routeLang }: AppProps) {
               openOnTargetFocus={false}
               disabled={isMobile}
             >
-              <ControlButton>
-                <FontAwesomeIcon
-                  icon={faCircleQuestion}
-                  onClick={() => setIsHelpDialogOpen((prev) => !prev)}
-                />
+              <ControlButton
+                onClick={() => setIsHelpDialogOpen((prev) => !prev)}
+              >
+                <FontAwesomeIcon icon={faCircleQuestion} size="xl" />
               </ControlButton>
             </Tooltip>
           </Controls>
