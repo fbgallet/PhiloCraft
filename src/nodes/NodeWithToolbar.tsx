@@ -11,6 +11,7 @@ import DetailsDialog from "../components/DetailsDialog";
 import JustifyDialog from "../components/JustifyDialog";
 import { Icon, Tooltip } from "@blueprintjs/core";
 import { InfinitySpin } from "react-loader-spinner";
+import { isMobile } from "react-device-detect";
 import { currentLgg } from "../App";
 
 interface NodeWithToolBarProps {
@@ -74,6 +75,7 @@ export function NodeWithToolBar({ id, dragging, data }: NodeWithToolBarProps) {
               position="top"
               compact={true}
               openOnTargetFocus={false}
+              disabled={isMobile}
             >
               <Icon icon="intersection" size={18} onClick={handleJustify} />
             </Tooltip>
@@ -93,6 +95,7 @@ export function NodeWithToolBar({ id, dragging, data }: NodeWithToolBarProps) {
             position="top"
             compact={true}
             openOnTargetFocus={false}
+            disabled={isMobile}
           >
             <FontAwesomeIcon
               icon={faCircleQuestion}
@@ -111,6 +114,7 @@ export function NodeWithToolBar({ id, dragging, data }: NodeWithToolBarProps) {
               position="top"
               compact={true}
               openOnTargetFocus={false}
+              disabled={isMobile}
             >
               <Icon icon="git-branch" size={18} onClick={handleOther} />
             </Tooltip>
@@ -121,6 +125,7 @@ export function NodeWithToolBar({ id, dragging, data }: NodeWithToolBarProps) {
             position="top"
             compact={true}
             openOnTargetFocus={false}
+            disabled={isMobile}
           >
             <FontAwesomeIcon icon={faTrash} onClick={handleRemove} />
           </Tooltip>

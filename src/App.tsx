@@ -2,7 +2,6 @@ import type { Edge, Node, OnConnect, Rect, XYPosition } from "@xyflow/react";
 import { Menu, MenuItem, Popover, Tooltip } from "@blueprintjs/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBars,
   faCircleQuestion,
   faMoon,
   faSun,
@@ -692,6 +691,7 @@ function InfiniteConcepts({ routeLang }: AppProps) {
               position="top"
               compact={true}
               openOnTargetFocus={false}
+              disabled={isMobile}
             >
               <ControlButton onClick={onColorModeChange}>
                 {colorMode === "light" ? (
@@ -728,6 +728,7 @@ function InfiniteConcepts({ routeLang }: AppProps) {
                 position="top"
                 compact={true}
                 openOnTargetFocus={false}
+                disabled={isMobile}
               >
                 <ControlButton>
                   <FontAwesomeIcon icon={faLanguage} />
@@ -744,6 +745,7 @@ function InfiniteConcepts({ routeLang }: AppProps) {
               position="top"
               compact={true}
               openOnTargetFocus={false}
+              disabled={isMobile}
             >
               <ControlButton>
                 <FontAwesomeIcon
