@@ -1,17 +1,16 @@
 import type { Edge, Node, OnConnect, Rect, XYPosition } from "@xyflow/react";
-import { Menu, MenuItem, Popover } from "@blueprintjs/core";
+import { Menu, MenuItem, Popover, Tooltip } from "@blueprintjs/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBars,
+  faCircleQuestion,
+  faMoon,
+  faSun,
+  faLanguage,
+} from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
 
-import {
-  useState,
-  useCallback,
-  MouseEvent,
-  useRef,
-  useEffect,
-  StrictMode,
-} from "react";
+import { useState, useCallback, MouseEvent, useRef, useEffect } from "react";
 import {
   applyEdgeChanges,
   applyNodeChanges,
@@ -47,13 +46,24 @@ import InfinitySpinner from "./components/InfinitySpinner.tsx";
 import HelpDialog from "./components/HelpDialog.tsx";
 // import FieldSelect from "./components/FieldSelect.tsx";
 
+interface PendingCombination {
+  idsToCombine: [string, string];
+  combination: Combination | undefined;
+  targetNodeId: string;
+  currentLabel: string | undefined;
+}
+
+interface AppProps {
+  routeLang: string | undefined;
+}
+
 export const backendURL =
   import.meta.env.VITE_API_URL ||
   "https://site--philocraft-back--2bhrm4wg9nqn.code.run";
+const apiKey = import.meta.env.VITE_API_KEY;
 
 export type Language = "EN" | "FR";
-
-const apiKey = import.meta.env.VITE_API_KEY;
+export let currentLgg: string | undefined;
 
 export const headers = {
   headers: {
@@ -65,14 +75,7 @@ export const headers = {
 let id: number = 1;
 export const getId = (): string => `${(id++).toString()}`;
 
-interface PendingCombination {
-  idsToCombine: [string, string];
-  combination: Combination | undefined;
-  targetNodeId: string;
-  currentLabel: string | undefined;
-}
-
-function InfiniteConcepts({ routeLang }) {
+function InfiniteConcepts({ routeLang }: AppProps) {
   const reactFlowWrapper = useRef(null);
   const [colorMode, setColorMode] = useState<ColorMode>(
     localStorage.colorMode || "light"
@@ -184,6 +187,7 @@ function InfiniteConcepts({ routeLang }) {
 
   useEffect(() => {
     if (!routeLang) localStorage.language = language;
+    currentLgg = language;
     headers.headers.language = language;
     const storedBasicConcepts = getStoredBasicConcepts(language);
     console.log("storedBasicConcepts :>> ", storedBasicConcepts);
@@ -674,44 +678,80 @@ function InfiniteConcepts({ routeLang }) {
           <Background />
           <MiniMap pannable position="bottom-right" />
           <Controls showInteractive={false} showZoom={isMobile ? false : true}>
-            <ControlButton onClick={onColorModeChange}>
-              {colorMode === "light" ? (
-                <FontAwesomeIcon icon={faMoon} />
-              ) : (
-                <FontAwesomeIcon icon={faSun} />
-              )}
-            </ControlButton>
-
+            <Tooltip
+              content={
+                colorMode === "light"
+                  ? language === "EN"
+                    ? "Switch to dark mode"
+                    : "Mode sombre"
+                  : language === "EN"
+                  ? "Swith to light mode"
+                  : "Mode clair"
+              }
+              hoverOpenDelay={400}
+              position="top"
+              compact={true}
+              openOnTargetFocus={false}
+            >
+              <ControlButton onClick={onColorModeChange}>
+                {colorMode === "light" ? (
+                  <FontAwesomeIcon icon={faMoon} />
+                ) : (
+                  <FontAwesomeIcon icon={faSun} />
+                )}
+              </ControlButton>
+            </Tooltip>
             <Popover
               canEscapeKeyClose
               minimal
               interactionKind="click"
               content={
                 <Menu small className="main-menu">
-                  <MenuItem text={language === "EN" ? "Language" : "Langue"}>
-                    <MenuItem
-                      text="English"
-                      icon={language === "EN" ? "tick" : null}
-                      onClick={() => setLanguage("EN")}
-                    />
-                    <MenuItem
-                      text="Français"
-                      icon={language === "FR" ? "tick" : null}
-                      onClick={() => setLanguage("FR")}
-                    />
-                  </MenuItem>
                   <MenuItem
-                    text="Infos"
-                    icon="help"
-                    onClick={() => setIsHelpDialogOpen((prev) => !prev)}
+                    text="English"
+                    icon={language === "EN" ? "tick" : null}
+                    onClick={() => setLanguage("EN")}
+                  />
+                  <MenuItem
+                    text="Français"
+                    icon={language === "FR" ? "tick" : null}
+                    onClick={() => setLanguage("FR")}
                   />
                 </Menu>
               }
             >
-              <ControlButton>
-                <FontAwesomeIcon icon={faBars} />
-              </ControlButton>
+              <Tooltip
+                content={
+                  language === "EN" ? "Language: EN / FR" : "Language: FR / EN"
+                }
+                hoverOpenDelay={400}
+                position="top"
+                compact={true}
+                openOnTargetFocus={false}
+              >
+                <ControlButton>
+                  <FontAwesomeIcon icon={faLanguage} />
+                </ControlButton>
+              </Tooltip>
             </Popover>
+            <Tooltip
+              content={
+                language === "EN"
+                  ? "Info, commands & credits"
+                  : "Infos et commandes"
+              }
+              hoverOpenDelay={400}
+              position="top"
+              compact={true}
+              openOnTargetFocus={false}
+            >
+              <ControlButton>
+                <FontAwesomeIcon
+                  icon={faCircleQuestion}
+                  onClick={() => setIsHelpDialogOpen((prev) => !prev)}
+                />
+              </ControlButton>
+            </Tooltip>
           </Controls>
           <Panel position="top-left">
             <a onClick={() => setIsHelpDialogOpen((prev) => !prev)}>

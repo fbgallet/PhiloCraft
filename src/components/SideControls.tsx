@@ -201,12 +201,14 @@ export default function SideControls({
               icon={!filter ? "small-tick" : null}
               onClick={handleFilter}
             />
+
             <MenuItem
               text={itemsTitle.com[language]}
               icon={filter === itemsTitle.com[language] ? "small-tick" : null}
               //   icon={selectedField.title === field.title ? "small-tick" : null}
               onClick={handleFilter}
             />
+
             <MenuItem
               text={itemsTitle.pro[language]}
               icon={filter === itemsTitle.pro[language] ? "small-tick" : null}

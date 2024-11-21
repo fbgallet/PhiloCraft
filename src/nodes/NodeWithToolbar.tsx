@@ -3,15 +3,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   // faQuestion,
   faCircleQuestion,
-  faRightToBracket,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 // import { faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
 import { useCallback, useState } from "react";
 import DetailsDialog from "../components/DetailsDialog";
 import JustifyDialog from "../components/JustifyDialog";
-import { Icon } from "@blueprintjs/core";
+import { Icon, Tooltip } from "@blueprintjs/core";
 import { InfinitySpin } from "react-loader-spinner";
+import { currentLgg } from "../App";
 
 interface NodeWithToolBarProps {
   id: string;
@@ -64,25 +64,66 @@ export function NodeWithToolBar({ id, dragging, data }: NodeWithToolBarProps) {
           align="start"
         >
           {data.logic ? (
-            <Icon icon="intersection" size={18} onClick={handleJustify} />
+            <Tooltip
+              content={
+                currentLgg === "EN"
+                  ? "Combination logic"
+                  : "Logique de la combinaison"
+              }
+              hoverOpenDelay={400}
+              position="top"
+              compact={true}
+              openOnTargetFocus={false}
+            >
+              <Icon icon="intersection" size={18} onClick={handleJustify} />
+            </Tooltip>
           ) : null}
           {/* <FontAwesomeIcon
           icon={faRightToBracket}
           size="lg"
           onClick={handleJustify}
         /> */}
-
-          <FontAwesomeIcon
-            icon={faCircleQuestion}
-            size="lg"
-            onClick={handleExplain}
-          />
-
+          <Tooltip
+            content={
+              currentLgg === "EN"
+                ? "Meaning & further exploration"
+                : "Signification et réflexion"
+            }
+            hoverOpenDelay={400}
+            position="top"
+            compact={true}
+            openOnTargetFocus={false}
+          >
+            <FontAwesomeIcon
+              icon={faCircleQuestion}
+              size="lg"
+              onClick={handleExplain}
+            />
+          </Tooltip>
           {data.sourceCombination ? (
-            <Icon icon="git-branch" size={18} onClick={handleOther} />
+            <Tooltip
+              content={
+                currentLgg === "EN"
+                  ? "Alternative result"
+                  : "Résultat alternatif"
+              }
+              hoverOpenDelay={400}
+              position="top"
+              compact={true}
+              openOnTargetFocus={false}
+            >
+              <Icon icon="git-branch" size={18} onClick={handleOther} />
+            </Tooltip>
           ) : null}
-
-          <FontAwesomeIcon icon={faTrash} onClick={handleRemove} />
+          <Tooltip
+            content={currentLgg === "EN" ? "Delete from canvas" : "Effacer"}
+            hoverOpenDelay={400}
+            position="top"
+            compact={true}
+            openOnTargetFocus={false}
+          >
+            <FontAwesomeIcon icon={faTrash} onClick={handleRemove} />
+          </Tooltip>
         </NodeToolbar>
       ) : null}
       <div className="react-flow__node-default">{data?.label}</div>
