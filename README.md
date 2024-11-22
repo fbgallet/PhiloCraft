@@ -1,6 +1,6 @@
 # Philo🧩Craft
 
-A philosophical game inspired by [Infinite Craft](https://neal.fun/infinite-craft/) by Neal Agarwal.
+PhiloCraft is a philosophical game inspired by [Infinite Craft](https://neal.fun/infinite-craft/) by Neal Agarwal.
 
 Explore the numerous and fascinating concepts in the history of philosophy, discover their meanings, what philosophers say about them, and why it's worth thinking about them, by combining the basic concepts from different fields of philosophy.
 
@@ -16,7 +16,7 @@ Do you enjoy this little philosophical game, would you like it to be enriched wi
 
 ## 🇫🇷
 
-Un jeu philosophique inspiré par [Infinite Craft](https://neal.fun/infinite-craft/) de Neal Agarwal.
+PhiloCraft est un jeu philosophique inspiré par [Infinite Craft](https://neal.fun/infinite-craft/) de Neal Agarwal.
 
 Explorez les innombrables et fascinants concepts issus de l'histoire de la philosophie en combinant les concepts fondamentaux des différents domaine de la philosophie. Découvrez leur sens, ce qu'en disent les philosophes et pourquoi ça vaut la peine d'y réfléchir!
 
