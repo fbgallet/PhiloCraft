@@ -77,7 +77,7 @@ export const getId = (): string => `${(id++).toString()}`;
 function InfiniteConcepts({ routeLang }: AppProps) {
   const reactFlowWrapper = useRef(null);
   const [colorMode, setColorMode] = useState<ColorMode>(
-    localStorage.colorMode || "light"
+    localStorage.colorMode || "light",
   );
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
@@ -86,19 +86,21 @@ function InfiniteConcepts({ routeLang }: AppProps) {
       ? routeLang.toLowerCase() === "fr"
         ? "FR"
         : "EN"
-      : localStorage.language) || "EN"
+      : localStorage.language) || "EN",
   );
   const [basicConcepts, setBasicConcepts] = useState<Concept[]>(
-    getStoredBasicConcepts(language) || []
+    getStoredBasicConcepts(language) || [],
   );
   const [userConcepts, setUserConcepts] = useState<Concept[]>(
-    getStoredUserConcepts(language) || []
+    getStoredUserConcepts(language) || [],
   );
   const [combinations, setCombinations] = useState<Combination[]>([]);
   const [combinationToCreate, setCombinationToCreate] =
     useState<PendingCombination | null>(null);
   const [isHelpDialogOpen, setIsHelpDialogOpen] = useState<boolean>(false);
-  const [model, setModel] = useState<string>("gpt-4o");
+  // Must match a slug of SUPPORTED_MODELS in the backend (ai/ai-api-requests.js);
+  // an unknown slug silently falls back to the backend default.
+  const [model, setModel] = useState<string>("openai/gpt-5.6-luna");
   const [throwConfetti, setThrowConfetti] = useState<boolean>(false);
   const [isSortChange, setIsSortChange] = useState<boolean>(false);
   const [nbOfCombinations, setNbOfCombinations] = useState<number>(0);
@@ -119,7 +121,7 @@ function InfiniteConcepts({ routeLang }: AppProps) {
         setNbOfReleasedCombinations(
           data.reduce((sum: number, combination: Combination) => {
             return sum + combination.counter;
-          }, 0)
+          }, 0),
         );
         setCombinations(data);
       }
@@ -150,12 +152,12 @@ function InfiniteConcepts({ routeLang }: AppProps) {
           {
             onlyBasics: true,
           },
-          headers
+          headers,
         );
         console.log("concepts loaded from DB:>> ", data);
         if (data && data.concepts.length) {
           localStorage[`basicConcepts_${language}`] = JSON.stringify(
-            data.concepts
+            data.concepts,
           );
           setBasicConcepts(data.concepts);
           setNbOfConcepts(data.conceptsNb);
@@ -169,7 +171,7 @@ function InfiniteConcepts({ routeLang }: AppProps) {
           {
             getOnlyNb: true,
           },
-          headers
+          headers,
         );
         data && setNbOfConcepts(data.conceptsNb);
       }
@@ -213,7 +215,7 @@ function InfiniteConcepts({ routeLang }: AppProps) {
             ],
             model,
           },
-          headers
+          headers,
         );
         console.log("data from /combination/create :>> ", data);
         if (data) {
@@ -235,7 +237,7 @@ function InfiniteConcepts({ routeLang }: AppProps) {
         axios.put(
           `${backendURL}/combination/use/${combination._id}`,
           {},
-          headers
+          headers,
         );
         combination.counter++;
         // combination.result?.craftedCounter++;
@@ -244,14 +246,14 @@ function InfiniteConcepts({ routeLang }: AppProps) {
             ? combination.result
             : combination.result._id;
         resultingConcept = userConcepts.find(
-          (concept) => concept._id === newConceptId
+          (concept) => concept._id === newConceptId,
         );
         delay = 500;
         if (!resultingConcept) {
           const { data } = await axios.put(
             `${backendURL}/concept/${newConceptId}`,
             {},
-            headers
+            headers,
           );
           const newConcept: Concept = data;
           resultingConcept = newConcept;
@@ -260,7 +262,7 @@ function InfiniteConcepts({ routeLang }: AppProps) {
           // );
         } else {
           let resultsList = combination.otherResults.concat(
-            `${combination.logic} >> ${resultingConcept.title}`
+            `${combination.logic} >> ${resultingConcept.title}`,
           );
           resultsList = !combinationToCreate?.currentLabel
             ? resultsList
@@ -270,7 +272,7 @@ function InfiniteConcepts({ routeLang }: AppProps) {
                   !reslt
                     .split(">>")[1]
                     .toLowerCase()
-                    .includes(combinationToCreate?.currentLabel.toLowerCase())
+                    .includes(combinationToCreate?.currentLabel.toLowerCase()),
               );
           const anotherResult = getRandomElement(resultsList);
           if (anotherResult) {
@@ -279,14 +281,14 @@ function InfiniteConcepts({ routeLang }: AppProps) {
             if (concept && logic) {
               resultingConcept = userConcepts.find(
                 (userCpt) =>
-                  userCpt.title.toLowerCase() === concept.toLowerCase()
+                  userCpt.title.toLowerCase() === concept.toLowerCase(),
               );
               if (!resultingConcept) {
                 delay = 500;
                 const { data } = await axios.post(
                   `${backendURL}/concept/create`,
                   { title: concept, logic },
-                  headers
+                  headers,
                 );
                 const newConcept: Concept = data;
                 resultingConcept = newConcept;
@@ -334,8 +336,8 @@ function InfiniteConcepts({ routeLang }: AppProps) {
             : {
                 ...n,
                 selected: false,
-              }
-        )
+              },
+        ),
       );
 
       if (resultingConcept && typeof resultingConcept !== "string") {
@@ -356,7 +358,7 @@ function InfiniteConcepts({ routeLang }: AppProps) {
           newConcept.logic = [combination?.logic || ""];
           newConcept.timestamp = Date.now();
           setUserConcepts((prev: Concept[]) =>
-            newConcept ? [...prev, newConcept] : prev
+            newConcept ? [...prev, newConcept] : prev,
           );
         }
       }
@@ -403,7 +405,7 @@ function InfiniteConcepts({ routeLang }: AppProps) {
 
   const onConnect: OnConnect = useCallback(
     (connection) => setEdges((edges) => addEdge(connection, edges)),
-    []
+    [],
   );
 
   const onNodesChange = useCallback((changes: any) => {
@@ -412,7 +414,7 @@ function InfiniteConcepts({ routeLang }: AppProps) {
 
   const onEdgesChange = useCallback(
     (changes: any) => setEdges((eds) => applyEdgeChanges(changes, eds)),
-    []
+    [],
   );
 
   const onNodeRightClick = (e: MouseEvent, node: Node) => {
@@ -432,7 +434,7 @@ function InfiniteConcepts({ routeLang }: AppProps) {
           ? n.className +
             (n.className?.includes("highlight") ? "" : " highlight")
           : n.className?.replace(" highlight", ""),
-      }))
+      })),
     );
   }, []);
 
@@ -446,7 +448,7 @@ function InfiniteConcepts({ routeLang }: AppProps) {
         combineTwoNodesInOne(node, intersections);
       }
     },
-    [userConcepts, combinations]
+    [userConcepts, combinations],
   );
 
   // const onPaneClick = async (event: React.MouseEvent): Promise<void> => {
@@ -499,10 +501,10 @@ function InfiniteConcepts({ routeLang }: AppProps) {
             ? n.className +
               (n.className?.includes("highlight") ? "" : " highlight")
             : n.className?.replace(" highlight", ""),
-        }))
+        })),
       );
     },
-    [screenToFlowPosition]
+    [screenToFlowPosition],
   );
 
   const onDrop = useCallback(
@@ -511,7 +513,7 @@ function InfiniteConcepts({ routeLang }: AppProps) {
       event.preventDefault();
 
       const { conceptId, isBasic } = JSON.parse(
-        event.dataTransfer.getData("application/reactflow")
+        event.dataTransfer.getData("application/reactflow"),
       );
       // check if the dropped element is valid
       if (typeof conceptId === "undefined" || !conceptId) {
@@ -523,16 +525,16 @@ function InfiniteConcepts({ routeLang }: AppProps) {
       });
       insertNewNode(conceptId, isBasic, position);
     },
-    [screenToFlowPosition, nodes, userConcepts]
+    [screenToFlowPosition, nodes, userConcepts],
   );
 
   const getExplanationByModel = (
     explanationsArray: [{ model: string; content: {} }],
-    model: string
+    model: string,
   ) => {
     if (!explanationsArray.length) return undefined;
     const explanationForModel = explanationsArray.find(
-      (expl) => expl.model === model
+      (expl) => expl.model === model,
     );
     if (explanationForModel) return explanationForModel.content;
     else return undefined;
@@ -540,7 +542,7 @@ function InfiniteConcepts({ routeLang }: AppProps) {
 
   const combineTwoNodesInOne = async (
     droppedNode: Node,
-    intersections: Node[]
+    intersections: Node[],
   ): Promise<void> => {
     const targetNode = intersections[0];
 
@@ -560,7 +562,7 @@ function InfiniteConcepts({ routeLang }: AppProps) {
         (combi.combined[0] === droppedConcept._id &&
           combi.combined[1] === targetConcept._id) ||
         (combi.combined[1] === droppedConcept._id &&
-          combi.combined[0] === targetConcept._id)
+          combi.combined[0] === targetConcept._id),
     );
 
     droppedNode.className = "hidden-node";
@@ -590,14 +592,14 @@ function InfiniteConcepts({ routeLang }: AppProps) {
     setNodes((nds) =>
       nds
         .filter((ns) => !(ns.id === droppedNode.id || ns.id === targetNode.id))
-        .concat(newNode)
+        .concat(newNode),
     );
   };
 
   const insertNewNode = (
     conceptId: string,
     isBasic: boolean,
-    position: { x: number; y: number } | undefined
+    position: { x: number; y: number } | undefined,
   ) => {
     if (!position) {
       position = getFlowCenterPosition() || { x: 100, y: 100 };
@@ -684,8 +686,8 @@ function InfiniteConcepts({ routeLang }: AppProps) {
                     ? "Switch to dark mode"
                     : "Mode sombre"
                   : language === "EN"
-                  ? "Swith to light mode"
-                  : "Mode clair"
+                    ? "Swith to light mode"
+                    : "Mode clair"
               }
               hoverOpenDelay={400}
               position="top"
